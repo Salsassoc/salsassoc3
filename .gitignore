@@ -1,1 +1,5 @@
 node_modules
+api/composer.lock
+api/vendor
+api/*.sqlite
+
