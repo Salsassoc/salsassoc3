@@ -1,0 +1,2 @@
+ALTER TABLE membership ADD COLUMN phonenumber2 VARCHAR(150) NULL;
+ALTER TABLE person ADD COLUMN phonenumber2 VARCHAR(150) NULL;
