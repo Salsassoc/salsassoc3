@@ -4,6 +4,11 @@ import { BrowserRouter } from 'react-router-dom';
 import AppRoutes from './layout/AppRoutes.js'
 import AppContextProvider from './layout/AppContext.js';
 
+import style from "./style.js"
+ConfigProvider.config({
+    theme: style
+});
+
 //import {getCurrentLocaleShort, getAntdLocale} from './utils/i18n.js';
 
 const App = () => {
@@ -17,11 +22,13 @@ const App = () => {
   }*/
 
   return (
-    <AppContextProvider>
-      <BrowserRouter>
-        <AppRoutes />
-      </BrowserRouter>
-    </AppContextProvider>
+    <ConfigProvider locale={getAntdLocale()} theme={style}>
+      <AppContextProvider>
+        <BrowserRouter>
+          <AppRoutes />
+        </BrowserRouter>
+      </AppContextProvider>
+    </ConfigProvider>
   );
 };
 

@@ -72,7 +72,7 @@ const AppLayout = (props) => {
     return {
       //bgLayout: '#ff0000',
       header: {
-        colorBgHeader: '#6200ee',
+        colorBgHeader: '#90CAF9',
         colorHeaderTitle: '#ffffff',
       },/*
       sider: {
@@ -97,6 +97,7 @@ const AppLayout = (props) => {
         layout={navBar ? "mix" : "top"}
         navTheme="dark"
         title={appTitle}
+        //colorPrimary="#6200ee"
         //logo={appLogo}
         {...menuProps}
         rightContentRender={() => (
