@@ -1,0 +1,13 @@
+{
+	"menu": {
+		"dashboard": "Dashboard",
+		"settings": "Settings"
+	},
+	"pages": {
+		"login": {
+			"login": "Connection",
+			"username": "Username",
+			"password": "Password"
+		}
+	}
+}

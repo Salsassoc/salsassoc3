@@ -5,6 +5,8 @@ import {
   SettingOutlined,
 } from '@ant-design/icons';
 
+import i18n from '../utils/i18n.js';
+
 export function getAppMenu()
 {
     function getAdminUrl(path){
@@ -19,14 +21,14 @@ export function getAppMenu()
     }
 
     appMenu.route.routes.push({
-        name: 'Dashboard',
-        path: getAdminUrl("/home"),
+        name: i18n.t('menu.dashboard'),
+        path: getAdminUrl("/home"), 
         icon: <DashboardOutlined />,
     });
 
     //About
     appMenu.route.routes.push({
-        name: 'Settings',
+        name: i18n.t('menu.settings'),
         path: getAdminUrl("/settings"),
         icon: <SettingOutlined />
     });

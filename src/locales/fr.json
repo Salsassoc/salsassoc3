@@ -1,0 +1,13 @@
+{
+	"menu": {
+		"dashboard": "Tableau de bord",
+		"settings": "Paramètres"
+	},
+	"pages": {
+		"login": {
+			"login": "Connexion",
+			"username": "Utilisateur",
+			"password": "Mot de passe"
+		}
+	}
+}

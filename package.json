@@ -14,17 +14,22 @@
   "author": "",
   "license": "GPL-3.0-only",
   "dependencies": {
-    "@ant-design/pro-layout": "^7.10.0",
-    "antd": "^5.5.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^7.7.0",
-    "react-scripts": "latest"
+    "@ant-design/charts": "^2.4.0",
+    "@ant-design/pro-layout": "^7.22.6",
+    "antd": "^5.26.1",
+    "i18next": "^25.2.1",
+    "i18next-browser-languagedetector": "^8.2.0",
+    "i18next-http-backend": "^3.0.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^7.6.2",
+    "react-i18next": "^15.5.3"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^14.4.3"
+    "@testing-library/user-event": "^14.4.3",
+    "react-scripts": "latest"
   },
   "browserslist": {
     "production": [
