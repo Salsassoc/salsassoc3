@@ -13,6 +13,7 @@ export function getAppMenu()
         return path;
     }
 
+    let subRoutes = [];
     let appMenu = {
         route: {
             path: getAdminUrl("/"),
@@ -20,17 +21,37 @@ export function getAppMenu()
         }
     }
 
+    // Dahsboard
     appMenu.route.routes.push({
         name: i18n.t('menu.dashboard'),
-        path: getAdminUrl("/home"), 
+        path: getAdminUrl("/dashboard"), 
         icon: <DashboardOutlined />,
     });
 
-    //About
+
+    // Settings
+    subRoutes = [];
+    subRoutes.push({
+        name: i18n.t('menu.settings_fiscal_years'),
+        path: getAdminUrl("/settings/fiscalyears"),
+        exact: true,
+    });
+    subRoutes.push({
+        name: i18n.t('menu.settings_cotisations'),
+        path: getAdminUrl("/settings/cotisations"),
+        exact: true,
+    });
+    subRoutes.push({
+        name: i18n.t('menu.settings_operation_categories'),
+        path: getAdminUrl("/settings/operation_categories"),
+        exact: true,
+    });
+
     appMenu.route.routes.push({
         name: i18n.t('menu.settings'),
         path: getAdminUrl("/settings"),
-        icon: <SettingOutlined />
+        icon: <SettingOutlined />,
+        routes: subRoutes,
     });
 
     return appMenu;

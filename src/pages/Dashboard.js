@@ -2,7 +2,7 @@ import React from 'react';
 
 import AppLayout from '../layout/AppLayout.js';
 
-const Home = () => {
+const Dashboard = () => {
 
   return (
     <AppLayout>
@@ -12,4 +12,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Dashboard;

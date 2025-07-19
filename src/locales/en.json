@@ -1,7 +1,10 @@
 {
 	"menu": {
 		"dashboard": "Dashboard",
-		"settings": "Settings"
+		"settings": "Settings",
+		"settings_fiscal_years": "Fiscal years",
+		"settings_cotisations": "Cotisations",
+		"settings_operation_categories": "Operation categories"
 	},
 	"pages": {
 		"login": {

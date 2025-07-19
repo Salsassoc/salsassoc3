@@ -2,11 +2,13 @@ import React from 'react';
 import { Button, Card, Form, Input } from 'antd';
 
 import i18n from '../utils/i18n.js';
+import Password from 'antd/lib/input/Password.js';
 
 const Login = ({ onLogin }) => {
-  const onFinish = (values) => {
-    console.log('Login Success:', values);
-    onLogin();
+
+  function onFinish(values){
+    const user = {username: values.username};
+    onLogin(user);
   };
 
   return (
@@ -15,7 +17,7 @@ const Login = ({ onLogin }) => {
         <Form
           name="login"
           layout="vertical"
-          initialValues={{ remember: true }}
+          initialValues={{ username: 'admin', password: 'password', remember: true }}
           onFinish={onFinish}
         >
           <Form.Item

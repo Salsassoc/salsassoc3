@@ -1,7 +1,10 @@
 {
 	"menu": {
 		"dashboard": "Tableau de bord",
-		"settings": "Paramètres"
+		"settings": "Paramètres",
+		"settings_fiscal_years": "Années fiscales",
+		"settings_cotisations": "Cotisations",
+		"settings_operation_categories": "Catégories d'opération"
 	},
 	"pages": {
 		"login": {
