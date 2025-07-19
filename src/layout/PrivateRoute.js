@@ -5,8 +5,6 @@ const PrivateRoute = () => {
     const location = useLocation();
     const auth = localStorage.getItem('user');
 
-      console.log(location, auth);
-
     if(auth){
         // If authorized, return an outlet that will render child elements
         return <Outlet />;

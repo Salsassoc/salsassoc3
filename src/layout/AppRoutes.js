@@ -23,7 +23,7 @@ const AppRoutes = () => {
 
     function handleLogin(user)
     {
-      localStorage.setItem('user', user);
+      localStorage.setItem('user', JSON.stringify(user));
 
       //const { from } = props.router.location.state || { from: { pathname: "/" } };
       const { from } = { from: { pathname: "/" } };

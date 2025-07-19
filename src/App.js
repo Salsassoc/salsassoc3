@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
 import AppRoutes from './layout/AppRoutes.js'
+import AppContextProvider from './layout/AppContext.js';
 
 //import {getCurrentLocaleShort, getAntdLocale} from './utils/i18n.js';
 
@@ -16,9 +17,11 @@ const App = () => {
   }*/
 
   return (
-    <BrowserRouter>
-      <AppRoutes />
-    </BrowserRouter>
+    <AppContextProvider>
+      <BrowserRouter>
+        <AppRoutes />
+      </BrowserRouter>
+    </AppContextProvider>
   );
 };
 

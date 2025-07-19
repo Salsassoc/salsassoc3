@@ -8,14 +8,20 @@ import {
     CaretDownOutlined,
 } from '@ant-design/icons';
 
+import User from '../models/User.js';
+
+import {AppContext} from "../layout/AppContext.js";
+
 const { useBreakpoint } = Grid;
 
 const AppHeader = () => {
 
+    // Get application context
+    const appContext = useContext(AppContext);
+    const user = appContext.user;
+
     // Get responsive active sizes
     const screens = useBreakpoint();
-
-    const user = null;
 
     // Display logged in infos
     const userIsLogged = (user !== null);
