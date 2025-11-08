@@ -5,19 +5,29 @@ namespace App\Middleware;
 use Slim\Exception\HttpException;
 use Slim\Exception\HttpUnauthorizedException;
 use Slim\Exception\HttpForbiddenException;
+use Slim\Exception\HttpNotFoundException;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Server\MiddlewareInterface as MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface as RequestHandlerInterface;
 
+require_once("authentication.php");
+
 // Middleware to handle CORS errors
-/*
-$app->add(function ($req, $res, $next) {
-    $response = $next($req, $res);
+$app->options('/{routes:.+}', function ($request, $response, $args) {
+    return $response;
+});
+$app->add(function ($request, $handler) {
+    $response = $handler->handle($request);
     return $response
         ->withHeader('Access-Control-Allow-Origin', '*')
-        ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+        ->withHeader('Access-Control-Allow-Headers', 'Content-Type, Accept, Origin, Authorization')
         ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+});
+
+/*
+$app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function ($request, $response) {
+    throw new HttpNotFoundException($request);
 });
 */
 
@@ -51,76 +61,21 @@ final class Authorization
     }
 }
 
-/**
- * Validate HTTP Basic Authorization header against credentials
- */
-function isBasicAuthValid(Request $request): bool
-{
-    // Extract Authorization header
-    $header = $request->getHeaderLine('Authorization');
-    if (!$header) {
-        return false;
-    }
-    // Must start with "Basic "
-    if (stripos($header, 'Basic ') !== 0) {
-        return false;
-    }
-
-    $b64 = trim(substr($header, 6));
-    if ($b64 === '') {
-        return false;
-    }
-
-    $decoded = base64_decode($b64, true);
-    if ($decoded === false) {
-        return false;
-    }
-
-    // Expect format username:password
-    $parts = explode(':', $decoded, 2);
-    if (count($parts) !== 2) {
-        return false;
-    }
-    [$username, $password] = $parts;
-
-    // Load expected credentials
-    require __DIR__ . '/password.php';
-    // Use timing-safe comparison when available
-    $userOk = function_exists('hash_equals') ? hash_equals($LOGIN_USERNAME, $username) : ($LOGIN_USERNAME === $username);
-    $passOk = function_exists('hash_equals') ? hash_equals($LOGIN_PASSWORD, $password) : ($LOGIN_PASSWORD === $password);
-
-    return $userOk && $passOk;
-}
-
-/**
- * Build a 401 Unauthorized JSON response with WWW-Authenticate header
- */
-function buildUnauthorizedResponse($app): Response
-{
-    $response = $app->getResponseFactory()->createResponse(401);
-    $response->getBody()->write(json_encode(['error' => 'Unauthorized']));
-    return $response
-        ->withHeader('Content-Type', 'application/json')
-        ->withHeader('WWW-Authenticate', 'Basic realm="API", charset="UTF-8"');
-}
-
 // Middleware to check authentication via HTTP Basic
 $authMiddleware = function (Request $request, $handler) use ($app) {
     $hasBasic = isBasicAuthValid($request);
-
     if (!($hasBasic)) {
         return buildUnauthorizedResponse($app);
     }
-
     return $handler->handle($request);
 };
 
 // Middleware to check if the user is admin (same as authenticated for now)
 $adminMiddleware = function (Request $request, $handler) use ($app) {
-    $hasBasic = isBasicAuthValid($request);
+    $username = null;
+    $hasBasic = isBasicAuthValid($request, $username);
     if (!($hasBasic)) {
         return buildUnauthorizedResponse($app);
     }
-
     return $handler->handle($request);
 };

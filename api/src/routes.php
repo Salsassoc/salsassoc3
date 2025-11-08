@@ -3,6 +3,8 @@
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
+require_once("authentication.php");
+
 // Exemple de route GET
 $app->get('/api/hello', function (Request $request, Response $response) {
     $response->getBody()->write(json_encode(['message' => 'Hello, World!']));
@@ -18,19 +20,16 @@ $app->post('/api/data', function (Request $request, Response $response) {
 
 // Simple session-based authentication routes
 $app->post('/api/authenticate', function (Request $request, Response $response) use ($app) {
-    require __DIR__ . '/password.php';
-    $data = $request->getParsedBody();
-    $username = $data['username'] ?? '';
-    $password = $data['password'] ?? '';
-
-    if ($username === $LOGIN_USERNAME && $password === $LOGIN_PASSWORD) {
-        $_SESSION['user'] = true;
-        $response->getBody()->write(json_encode(['success' => true, 'user' => ['username' => $username]]));
-        return $response->withHeader('Content-Type', 'application/json');
+    $username = null;
+    $hasBasic = isBasicAuthValid($request, $username);
+    if (!($hasBasic)) {
+        return buildUnauthorizedResponse($app);
     }
 
-    $resp = $app->getResponseFactory()->createResponse(401);
-    $resp->getBody()->write(json_encode(['error' => 'Invalid credentials']));
+    $user = ['user' => ['username' => $username]];
+
+    $resp = $app->getResponseFactory()->createResponse(200);
+    $resp->getBody()->write(json_encode($user));
     return $resp->withHeader('Content-Type', 'application/json');
 });
 
