@@ -3,3 +3,4 @@ api/composer.lock
 api/vendor
 api/*.sqlite
 package-lock.json
+public/config.js

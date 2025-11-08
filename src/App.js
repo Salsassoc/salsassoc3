@@ -1,6 +1,8 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
+import { ConfigProvider } from 'antd';
+
 import AppRoutes from './layout/AppRoutes.js'
 import AppContextProvider from './layout/AppContext.js';
 
@@ -9,7 +11,7 @@ ConfigProvider.config({
     theme: style
 });
 
-//import {getCurrentLocaleShort, getAntdLocale} from './utils/i18n.js';
+import {getCurrentLocaleShort, getAntdLocale} from './utils/i18n.js';
 
 const App = () => {
 

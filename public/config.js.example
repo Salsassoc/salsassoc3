@@ -1,0 +1,14 @@
+var Config = {
+  application: {
+    codename: "Salsassoc",
+  },
+  server: {
+    protocole: "http",
+    hostname: "localhost",
+    port: 25000,
+    username: "admin",
+    password: "password"
+  }
+};
+
+//export default config;

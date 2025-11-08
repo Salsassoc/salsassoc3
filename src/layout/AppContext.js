@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import ServiceInstance from '../utils/service-instance.js';
+
 import User from '../models/User.js';
 
 const AppContext = React.createContext();
@@ -9,6 +11,10 @@ class AppContextProvider extends Component {
     constructor(props) {
         super(props);
 
+        // Service instance
+        this.serviceInstance = new ServiceInstance(new Config());
+
+        // Current user
         let user = null;
         if(localStorage.getItem('user')) {
             user = new User(JSON.parse(localStorage.getItem('user')));
@@ -38,6 +44,7 @@ class AppContextProvider extends Component {
 
     render() {
         const value = {
+            serviceInstance: this.serviceInstance,
             // Session data
             user: this.state.user,
             setUser: this.setUser,

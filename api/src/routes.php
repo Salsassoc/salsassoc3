@@ -16,19 +16,22 @@ $app->post('/api/data', function (Request $request, Response $response) {
     return $response->withHeader('Content-Type', 'application/json');
 });
 
-// Route pour l'authentification
-$app->post('/api/auth', function (Request $request, Response $response) {
+// Simple session-based authentication routes
+$app->post('/api/authenticate', function (Request $request, Response $response) use ($app) {
+    require __DIR__ . '/password.php';
     $data = $request->getParsedBody();
-    $email = $data['email'] ?? '';
+    $username = $data['username'] ?? '';
     $password = $data['password'] ?? '';
 
-    // Exemple de vérification (remplacez par une vraie logique)
-    if ($email === 'admin@example.com' && $password === 'password') {
-        $response->getBody()->write(json_encode(['token' => 'your-secret-token']));
-    } else {
-        return $response->withStatus(401)->withJson(['error' => 'Invalid credentials']);
+    if ($username === $LOGIN_USERNAME && $password === $LOGIN_PASSWORD) {
+        $_SESSION['user'] = true;
+        $response->getBody()->write(json_encode(['success' => true, 'user' => ['username' => $username]]));
+        return $response->withHeader('Content-Type', 'application/json');
     }
-    return $response->withHeader('Content-Type', 'application/json');
+
+    $resp = $app->getResponseFactory()->createResponse(401);
+    $resp->getBody()->write(json_encode(['error' => 'Invalid credentials']));
+    return $resp->withHeader('Content-Type', 'application/json');
 });
 
 require __DIR__ . '/services/fiscal_years.php';
