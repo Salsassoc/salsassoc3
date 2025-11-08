@@ -1,5 +1,3 @@
-//import { fetchJSON } from '../authentication/backend.js';
-
 class ServiceInstance
 {
     constructor(config) {
@@ -17,7 +15,7 @@ class ServiceInstance
 
     createAdminUrl(path)
     {
-        return '/admin' + path;
+        return path;
     }
 
     getServiceBaseUrl()
@@ -34,7 +32,7 @@ class ServiceInstance
 
     createServiceUrl(path)
     {
-        return this.getServiceBaseUrl() + '/service' + path;
+        return this.getServiceBaseUrl() + '/api' + path;
     }
 }
 

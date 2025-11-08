@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 
 import ServiceInstance from '../utils/service-instance.js';
+import PageLoader from '../utils/PageLoader.js';
+
+import Config from '../Config.js';
 
 import User from '../models/User.js';
 
@@ -20,9 +23,14 @@ class AppContextProvider extends Component {
             user = new User(JSON.parse(localStorage.getItem('user')));
         }
 
+        // Define page loader
+        let pageLoader = new PageLoader();
+        pageLoader.setStatusHandler(this.handlePageLoaderStatus);
+
         // Set default state
         this.state = {
             user: user,
+            pageLoader: pageLoader,
         };
     }
 
@@ -45,6 +53,9 @@ class AppContextProvider extends Component {
     render() {
         const value = {
             serviceInstance: this.serviceInstance,
+            // Page loader
+            pageLoader: this.state.pageLoader,
+            setPageLoader: this.setPageLoader,
             // Session data
             user: this.state.user,
             setUser: this.setUser,

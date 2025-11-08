@@ -15,7 +15,7 @@ const AppLayout = (props) => {
 
   const [pathname, setPathname] = useState(window.location.pathname);
 
-  const navBar = true;
+  const navBar = props.navBar;
 
   function getAppTitle () {
     return "Salsassoc";

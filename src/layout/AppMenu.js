@@ -5,12 +5,17 @@ import {
   SettingOutlined,
 } from '@ant-design/icons';
 
+import {AppContext} from "../layout/AppContext.js";
+
 import i18n from '../utils/i18n.js';
 
 export function getAppMenu()
 {
+    const appContext = React.useContext(AppContext);
+    const serviceInstance = appContext.serviceInstance;
+
     function getAdminUrl(path){
-        return path;
+        return serviceInstance.createAdminUrl(path);
     }
 
     let subRoutes = [];
@@ -33,7 +38,7 @@ export function getAppMenu()
     subRoutes = [];
     subRoutes.push({
         name: i18n.t('menu.settings_fiscal_years'),
-        path: getAdminUrl("/settings/fiscalyears"),
+        path: getAdminUrl("/settings/fiscal_years"),
         exact: true,
     });
     subRoutes.push({

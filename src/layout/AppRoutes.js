@@ -5,7 +5,9 @@ import PrivateRoute from '../layout/PrivateRoute.js';
 import NotFound from '../layout/NotFound.js';
 
 import Login from '../pages/Login.js';
+import Logout from '../pages/Logout.js';
 import Dashboard from '../pages/Dashboard.js';
+import FiscalYearsList from '../pages/FiscalYearsList.js';
 
 export const AppRouteWrapper = ({ component, ...rest }) => {
     const router = {
@@ -19,21 +21,6 @@ export const AppRouteWrapper = ({ component, ...rest }) => {
 
 const AppRoutes = () => {
 
-    const navigate = useNavigate(); 
-
-    function handleLogin(user)
-    {
-      localStorage.setItem('user', JSON.stringify(user));
-
-      //const { from } = props.router.location.state || { from: { pathname: "/" } };
-      const { from } = { from: { pathname: "/" } };
-      navigate(from);
-    };
-
-    const handleLogout = () => {
-      localStorage.removeItem('user');
-    };
-
     let privateRoutesConfig = [
         {
             path: "/",
@@ -45,7 +32,7 @@ const AppRoutes = () => {
         },
         {
             path: "/settings/fiscal_years",
-            element: <AppRouteWrapper component={Dashboard} />,
+            element: <AppRouteWrapper component={FiscalYearsList} />,
         },
     ];
 
@@ -76,8 +63,8 @@ const AppRoutes = () => {
         <Route exact path='/' element={<PrivateRoute />}>
             {privateRoutes}
         </Route>
-        <Route path='/logout' element={<AppRouteWrapper component={Login} onLogin={handleLogin} /> } />
-        <Route path='/login' element={<AppRouteWrapper component={Login} onLogin={handleLogin} /> } />
+        <Route path='/logout' element={<AppRouteWrapper component={Logout} /> } />
+        <Route path='/login' element={<AppRouteWrapper component={Login} /> } />
         <Route path="*" element={<AppRouteWrapper component={NotFound} /> } />
       </Routes>
     );
