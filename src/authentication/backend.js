@@ -185,7 +185,7 @@ export function fetchXML(url, opts) {
                 }
             } else {
                 if (response.status === 401) {
-                    window.location.replace("/login");
+                    //window.location.replace("/login");
                 }
                 console.log("[FecthJXML] Unable to fetch data: ", response.statusText);
                 return response.text().then((text) => {
@@ -218,7 +218,7 @@ export function fetchJSON(url, opts, json_reviver) {
                 }
             } else {
                 if (response.status === 401) {
-                    window.location.replace("/login");
+                    //window.location.replace("/login");
                 }
                 console.log("[FecthJSON] Unable to fetch data: ", response.statusText);
                 return response.text().then((text) => {
@@ -417,7 +417,7 @@ export function configureBackend() {
         }
 
         // Allow server t odisable prompt login
-        opts.headers.set('X-Requested-With', 'WebSRPV');
+        opts.headers.set('X-Requested-With', 'Salsassoc');
 
         return realFetch(url, opts);
     }

@@ -7,7 +7,7 @@ import NotFound from '../layout/NotFound.js';
 import Login from '../pages/Login.js';
 import Logout from '../pages/Logout.js';
 import Dashboard from '../pages/Dashboard.js';
-import FiscalYearsList from '../pages/FiscalYearsList.js';
+import FiscalYearsList from '../pages/fiscalyears/FiscalYearsList.js';
 
 export const AppRouteWrapper = ({ component, ...rest }) => {
     const router = {

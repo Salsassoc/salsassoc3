@@ -61,7 +61,7 @@ function PageContentLayout(props) {
     }, []);
 
     React.useEffect(() => {
-        if(appContext.status){
+        //if(appContext.status){
             // Tell that global loading are finished
             setIsPreloadFinished(true);
 
@@ -70,8 +70,9 @@ function PageContentLayout(props) {
                 // Load all data from service if needed
                 pageLoader.loadData(props.loadData, props.updateDataState);
             }
-        }
-    }, [appContext.status]);
+        //}
+    //}, [appContext.status]);
+    }, []);
 
     const tabActiveKey = (appContext.pageTabActiveKey || pageLayoutData.pageTabActiveKey);
 

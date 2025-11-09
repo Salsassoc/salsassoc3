@@ -6,11 +6,29 @@
 		"settings_cotisations": "Cotisations",
 		"settings_operation_categories": "Catégories d'opération"
 	},
+	"common": {
+		"home": "Acceuil",
+		"add": "Ajouter",
+		"actions": "Actions"
+	},
 	"pages": {
 		"login": {
 			"login": "Connexion",
 			"username": "Utilisateur",
 			"password": "Mot de passe"
+		},
+		"fiscal_years": {
+			"title": "Années fiscales",
+			"remove": "Supprimer l'année fiscal '{{label}}' ?",
+			"list": "Liste des années fiscales"
+		}
+	},
+	"models": {
+		"fiscal_years": {
+			"title": "Libellé",
+			"start_date": "Date de début",
+			"end_date": "Date de fin",
+			"is_current": "Année courante"
 		}
 	}
 }

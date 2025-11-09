@@ -9,7 +9,7 @@ export function getAppBreadcrumbRoutes(serviceInstance, layoutData)
     // Always add dashboard
     routes[0] = {
         href: serviceInstance.createAdminUrl('/dashboard'),
-        breadcrumbName: i18n.t("Common_Home"),
+        breadcrumbName: i18n.t("common.home"),
     };
 
     if(layoutData.pageBreadcrumb){

@@ -8,6 +8,9 @@ $app->get('/api/fiscal_years/list', function (Request $request, Response $respon
     $db = $this->get('db');
     $stmt = $db->query('SELECT * FROM fiscal_year');
     $fiscalYears = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    foreach ($fiscalYears as &$year) {
+        $year['is_current'] = (bool)($year['is_current'] == "true");
+    }
     $response->getBody()->write(json_encode($fiscalYears));
     return $response->withHeader('Content-Type', 'application/json');
 })->add($adminMiddleware);

@@ -8,10 +8,9 @@ const Dashboard = () => {
 
     function loadData()
     {
-        return loadMonitoring()
-            .then(_res => loadRecordingState())
-            .then(_res => loadPreferences())
-            .then(_res => loadUsers());
+		return new Promise((resolve, reject) => {
+			resolve();
+		});;
     }
 
 	// Compute layout data

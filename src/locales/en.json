@@ -6,11 +6,28 @@
 		"settings_cotisations": "Cotisations",
 		"settings_operation_categories": "Operation categories"
 	},
+	"common": {
+		"home": "Home",
+		"add": "Add",
+		"actions": "Actions"
+	},
 	"pages": {
 		"login": {
 			"login": "Connection",
 			"username": "Username",
 			"password": "Password"
+		},
+		"fiscal_years": {
+			"remove": "Remove fiscal year #{{label}} ?",
+			"list": "List of fiscal years"
+		}
+	},
+	"models": {
+		"fiscal_years": {
+			"title": "Label",
+			"start_date": "Start date",
+			"end_date": "End date",
+			"is_current": "Current year"
 		}
 	}
 }
