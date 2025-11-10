@@ -33,7 +33,12 @@
 			"list": "List of fiscal years",
 			"members": "Members",
 			"members_suffix": "members",
-			"membership_amount": "Membership amount"
+			"membership_amount": "Membership amount",
+			"operations": "Operations",
+			"operations_suffix": "operations",
+			"income": "Incomes",
+			"outcome": "Outcomes",
+			"balance": "Balance"
 		},
 		"fiscal_year": {
 			"add_title": "Add fiscal year",

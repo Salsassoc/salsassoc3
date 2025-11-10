@@ -6,25 +6,43 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 // List fiscal years
 $app->get('/api/fiscal_years/list', function (Request $request, Response $response)
 {
-    error_log('list');
     $params = $request->getQueryParams();
     $order = $params['order'] ?? null;
 
     $db = $this->get('db');
 
-    // Load fiscal_year
+    // Load fiscal_year with aggregates from membership and accounting_operation
     $sql = 'SELECT fiscal_year.*, 
 		(
 			SELECT COUNT(1) 
-			FROM membership m 
-			WHERE m.fiscal_year_id = fiscal_year.id
+			FROM membership
+			WHERE membership.fiscal_year_id = fiscal_year.id
 		) AS membership_count,
 		(
-			SELECT IFNULL(SUM(mc.amount), 0)
-			FROM membership m
-			LEFT JOIN membership_cotisation mc ON mc.membership_id = m.id
-			WHERE m.fiscal_year_id = fiscal_year.id
-		) AS membership_amount
+			SELECT IFNULL(SUM(membership_cotisation.amount), 0)
+			FROM membership
+			LEFT JOIN membership_cotisation ON membership_cotisation.membership_id = membership.id
+			WHERE membership.fiscal_year_id = fiscal_year.id
+		) AS membership_amount,
+		(
+			SELECT COUNT(1)
+			FROM accounting_operation
+			WHERE accounting_operation.fiscalyear_id = fiscal_year.id
+		) AS operation_count,
+		(
+			SELECT IFNULL(SUM(accounting_operation.amount_credit), 0)
+			FROM accounting_operation, accounting_operation_category
+			WHERE accounting_operation.fiscalyear_id = fiscal_year.id
+			AND accounting_operation_category.id = accounting_operation.category
+			AND accounting_operation_category.is_internal_move = FALSE
+		) AS income_amount,
+		(
+			SELECT IFNULL(SUM(accounting_operation.amount_debit), 0)
+			FROM accounting_operation, accounting_operation_category
+			WHERE accounting_operation.fiscalyear_id = fiscal_year.id
+			AND accounting_operation_category.id = accounting_operation.category
+			AND accounting_operation_category.is_internal_move = FALSE
+		) AS outcome_amount
         FROM fiscal_year';
 
     if($order){
@@ -40,12 +58,11 @@ $app->get('/api/fiscal_years/list', function (Request $request, Response $respon
     foreach ($fiscalYears as &$year) {
         $year['is_current'] = (bool)($year['is_current'] == "true");
         // Cast numeric aggregates
-        if (isset($year['membership_count'])) {
-		$year['membership_count'] = (int)$year['membership_count'];
-	}
-        if (isset($year['membership_amount'])) {
-		$year['membership_amount'] = (float)$year['membership_amount'];
-	}
+        if (isset($year['membership_count'])) { $year['membership_count'] = (int)$year['membership_count']; }
+        if (isset($year['membership_amount'])) { $year['membership_amount'] = (float)$year['membership_amount']; }
+        if (isset($year['operation_count'])) { $year['operation_count'] = (int)$year['operation_count']; }
+        if (isset($year['income_amount'])) { $year['income_amount'] = (float)$year['income_amount']; }
+        if (isset($year['outcome_amount'])) { $year['outcome_amount'] = (float)$year['outcome_amount']; }
     }
     $response->getBody()->write(json_encode($fiscalYears));
     return $response->withHeader('Content-Type', 'application/json');

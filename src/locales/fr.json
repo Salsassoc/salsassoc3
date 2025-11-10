@@ -33,7 +33,12 @@
 			"list": "Liste des années fiscales",
 			"members": "Membres",
 			"members_suffix": "membres",
-			"membership_amount": "Montant des adhésions"
+			"membership_amount": "Montant des adhésions",
+			"operations": "Opérations",
+			"operations_suffix": "opérations",
+			"income": "Recettes",
+			"outcome": "Dépenses",
+			"balance": "Balance"
 		},
 		"fiscal_year": {
 			"add_title": "Ajouter une année fiscale",

@@ -89,6 +89,10 @@ const FiscalYearsList = (props) => {
         return <ButtonAdd title={i18n.t("common.add")} url={serviceInstance.createAdminUrl("/settings/fiscal_years/add")} />;
     }
 
+    function renderTitle(_text, record){
+        return <span style={{textWrap:'nowrap'}}>{record.title}</span>;
+    }
+
     function renderIsCurrent(_text, record)
     {
         return (
@@ -116,12 +120,35 @@ const FiscalYearsList = (props) => {
 
     function renderMembers(_text, record){
         const count = record.membership_count || 0;
-        return `${count} ${i18n.t('pages.fiscal_years.members_suffix')}`;
+        return <span style={{textWrap:'nowrap'}}>{count} {i18n.t('pages.fiscal_years.members_suffix')}</span>;
     }
 
     function renderAmount(_text, record){
         const amount = record.membership_amount || 0;
         return formatCurrency(amount);
+    }
+
+    function renderOperations(_text, record){
+        const count = record.operation_count || 0;
+        return <span style={{textWrap:'nowrap'}}>{count} {i18n.t('pages.fiscal_years.operations_suffix')}</span>;
+    }
+
+    function renderIncome(_text, record){
+        return formatCurrency(record.income_amount || 0);
+    }
+
+    function renderOutcome(_text, record){
+        return formatCurrency(record.outcome_amount || 0);
+    }
+
+    function getBalance(record){
+        return record.income_amount + record.outcome_amount;
+    }
+
+    function renderBalance(_text, record){
+        const value = getBalance(record) || 0;
+        const color = value > 0 ? '#3f8600' : (value < 0 ? '#cf1322' : undefined);
+        return (<span style={{ color }}>{formatCurrency(value)}</span>);
     }
 
     function getColums()
@@ -132,6 +159,7 @@ const FiscalYearsList = (props) => {
                 dataIndex: 'title',
                 key: 'title',
                 sorter: (a, b) => a.title.localeCompare(b.title),
+                render: renderTitle,
             },
             {
                 title: i18n.t('models.fiscal_years.start_date'),
@@ -162,6 +190,34 @@ const FiscalYearsList = (props) => {
                 align: 'right',
                 sorter: (a, b) => ((a.membership_amount||0) - (b.membership_amount||0)),
                 render: renderAmount
+            },
+            {
+                title: i18n.t('pages.fiscal_years.operations'),
+                key: 'operation_count',
+                align: 'right',
+                sorter: (a, b) => ((a.operation_count||0) - (b.operation_count||0)),
+                render: renderOperations
+            },
+            {
+                title: i18n.t('pages.fiscal_years.income'),
+                key: 'income_amount',
+                align: 'right',
+                sorter: (a, b) => ((a.income_amount||0) - (b.income_amount||0)),
+                render: renderIncome
+            },
+            {
+                title: i18n.t('pages.fiscal_years.outcome'),
+                key: 'outcome_amount',
+                align: 'right',
+                sorter: (a, b) => ((a.outcome_amount||0) - (b.outcome_amount||0)),
+                render: renderOutcome
+            },
+            {
+                title: i18n.t('pages.fiscal_years.balance'),
+                key: 'balance_amount',
+                align: 'right',
+                sorter: (a, b) => (getBalance(a) - getBalance(b)),
+                render: renderBalance
             },
             /*
             {
@@ -200,6 +256,7 @@ const FiscalYearsList = (props) => {
             pagination={{
                 defaultPageSize: 50
             }}
+            size="small"
         />
     );
     const tableActions = getTableHeaderExtra(serviceInstance);
