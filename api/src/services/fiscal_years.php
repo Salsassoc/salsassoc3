@@ -6,6 +6,10 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 // List fiscal years
 $app->get('/api/fiscal_years/list', function (Request $request, Response $response)
 {
+    error_log('list');
+    $params = $request->getQueryParams();
+    $order = $params['order'] ?? null;
+
     $db = $this->get('db');
 
     // Load fiscal_year
@@ -22,6 +26,13 @@ $app->get('/api/fiscal_years/list', function (Request $request, Response $respon
 			WHERE m.fiscal_year_id = fiscal_year.id
 		) AS membership_amount
         FROM fiscal_year';
+
+    if($order){
+       $sql .= " ORDER BY end_date ".($order == "desc" ? "DESC" : "ASC");
+    }
+
+    error_log($sql);
+
     $stmt = $db->query($sql);
 
     // Add data in response

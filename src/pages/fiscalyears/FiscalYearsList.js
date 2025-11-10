@@ -31,7 +31,7 @@ const FiscalYearsList = (props) => {
 
     function loadFiscalYearsList()
     {
-        let url = serviceInstance.createServiceUrl("/fiscal_years/list");
+        let url = serviceInstance.createServiceUrl("/fiscal_years/list?order=desc");
 
         return fetchJSON(url)
             .then((response) => {
