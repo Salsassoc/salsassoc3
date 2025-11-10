@@ -32,15 +32,15 @@ const AppRoutes = () => {
             element: <AppRouteWrapper component={Dashboard} />,
         },
         {
-            path: "/settings/fiscal_years/list",
+            path: "/fiscal_years/list",
             element: <AppRouteWrapper component={FiscalYearsList} />,
         },
         {
-            path: "/settings/fiscal_years/add",
+            path: "/fiscal_years/add",
             element: <AppRouteWrapper component={FiscalYearsEdit} />,
         },
         {
-            path: "/settings/fiscal_years/edit/:id",
+            path: "/fiscal_years/edit/:id",
             element: <AppRouteWrapper component={FiscalYearsEdit} />,
         },
     ];

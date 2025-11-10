@@ -3,6 +3,8 @@ import React from 'react';
 import {
   DashboardOutlined,
   SettingOutlined,
+  CalendarOutlined,
+  ProductOutlined
 } from '@ant-design/icons';
 
 import {AppContext} from "../layout/AppContext.js";
@@ -33,19 +35,24 @@ export function getAppMenu()
         icon: <DashboardOutlined />,
     });
 
+    // Fiscal years
+    appMenu.route.routes.push({
+        name: i18n.t('menu.settings_fiscal_years'),
+        path: getAdminUrl("/fiscal_years/list"),
+        icon: <CalendarOutlined />,
+        exact: true,
+    });
+
+    // Cotisations
+    appMenu.route.routes.push({
+        name: i18n.t('menu.settings_cotisations'),
+        path: getAdminUrl("/cotisations/list"),
+        icon: <ProductOutlined />,
+        exact: true,
+    });
 
     // Settings
     subRoutes = [];
-    subRoutes.push({
-        name: i18n.t('menu.settings_fiscal_years'),
-        path: getAdminUrl("/settings/fiscal_years/list"),
-        exact: true,
-    });
-    subRoutes.push({
-        name: i18n.t('menu.settings_cotisations'),
-        path: getAdminUrl("/settings/cotisations"),
-        exact: true,
-    });
     subRoutes.push({
         name: i18n.t('menu.settings_operation_categories'),
         path: getAdminUrl("/settings/operation_categories"),

@@ -86,7 +86,7 @@ const FiscalYearsList = (props) => {
     // Rendering data
     function getTableHeaderExtra(serviceInstance)
     {
-        return <ButtonAdd title={i18n.t("common.add")} url={serviceInstance.createAdminUrl("/settings/fiscal_years/add")} />;
+        return <ButtonAdd title={i18n.t("common.add")} url={serviceInstance.createAdminUrl("/fiscal_years/add")} />;
     }
 
     function renderTitle(_text, record){
@@ -235,7 +235,7 @@ const FiscalYearsList = (props) => {
                 key: 'actions',
                 render: (text, record) => (
                     <Space size="middle">
-                      <Link to={serviceInstance.createAdminUrl("/settings/fiscal_years/edit/"+record.id)}><EditOutlined /></Link>
+                      <Link to={serviceInstance.createAdminUrl("/fiscal_years/edit/"+record.id)}><EditOutlined /></Link>
                       <Popconfirm
                             title={i18n.t("pages.fiscal_years.remove", {label: record.title})}
                             onConfirm={() => onConfirmRemove(record)}

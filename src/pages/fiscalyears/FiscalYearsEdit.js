@@ -122,7 +122,7 @@ const FiscalYearsEdit = (props) => {
             .then((_result) => {
                 pageLoader.endSaving(i18n.t("pages.fiscal_year.saved"));
                 if(isModeAdd()){
-                    const url = serviceInstance.createAdminUrl("/settings/fiscal_years/list");
+                    const url = serviceInstance.createAdminUrl("/fiscal_years/list");
                     props.router.navigate(url);
                 }else{
                     return loadData();
@@ -150,7 +150,7 @@ const FiscalYearsEdit = (props) => {
                 breadcrumbName: i18n.t("menu.settings"),
             },
             {
-                href: serviceInstance.createAdminUrl('/settings/fiscal_years/list'),
+                href: serviceInstance.createAdminUrl('/fiscal_years/list'),
                 breadcrumbName: i18n.t("pages.fiscal_years.title"),
             }
         ];
