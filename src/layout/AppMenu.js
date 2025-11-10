@@ -38,7 +38,7 @@ export function getAppMenu()
     subRoutes = [];
     subRoutes.push({
         name: i18n.t('menu.settings_fiscal_years'),
-        path: getAdminUrl("/settings/fiscal_years"),
+        path: getAdminUrl("/settings/fiscal_years/list"),
         exact: true,
     });
     subRoutes.push({

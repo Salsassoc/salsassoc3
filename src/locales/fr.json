@@ -9,7 +9,17 @@
 	"common": {
 		"home": "Acceuil",
 		"add": "Ajouter",
-		"actions": "Actions"
+		"save": "Sauvegarder",
+		"actions": "Actions",
+		"action_save": {
+			"error": "Erreur lors de la sauvegarde",
+			"progress": "Sauvegarde en cours"
+		},
+		"action_delete": {
+			"error": "Erreur lors de la suppression",
+			"progress": "Supression en cours"
+		},
+		"date_format": "DD/MM/YYYY"
 	},
 	"pages": {
 		"login": {
@@ -21,6 +31,12 @@
 			"title": "Années fiscales",
 			"remove": "Supprimer l'année fiscal '{{label}}' ?",
 			"list": "Liste des années fiscales"
+		},
+		"fiscal_year": {
+			"add_title": "Ajouter une année fiscale",
+			"edit_title": "Modifier une année fiscale",
+			"section_general": "Général",
+			"saved": "L'année fiscale a bien été sauvegardée"
 		}
 	},
 	"models": {

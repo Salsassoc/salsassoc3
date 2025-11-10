@@ -9,7 +9,17 @@
 	"common": {
 		"home": "Home",
 		"add": "Add",
-		"actions": "Actions"
+		"save": "Save",
+		"actions": "Actions",
+		"action_save": {
+			"error": "Error when saving",
+			"progress": "Saving in progress"
+		},
+		"action_delete": {
+			"error": "Error when deleting",
+			"progress": "Deleting in progress"
+		},
+		"date_format": "MM/DD/YYYY"
 	},
 	"pages": {
 		"login": {
@@ -18,8 +28,15 @@
 			"password": "Password"
 		},
 		"fiscal_years": {
+			"title": "Fiscal years",
 			"remove": "Remove fiscal year #{{label}} ?",
 			"list": "List of fiscal years"
+		},
+		"fiscal_year": {
+			"add_title": "Add fiscal year",
+			"edit_title": "Edit fiscal year",
+			"section_general": "General",
+			"saved": "The fiscal year have been saved sucessfully"
 		}
 	},
 	"models": {

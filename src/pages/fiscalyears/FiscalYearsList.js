@@ -44,7 +44,7 @@ const FiscalYearsList = (props) => {
     {
         pageLoader.startRemoving();
 
-        let url = serviceInstance.createServiceUrl("/fiscal_years/remove?id="+record.id);
+        let url = serviceInstance.createServiceUrl("/fiscal_years/delete?id="+record.id);
 
         let opts = {
             method: "DELETE"
@@ -84,12 +84,11 @@ const FiscalYearsList = (props) => {
     // Rendering data
     function getTableHeaderExtra(serviceInstance)
     {
-        return <ButtonAdd title={i18n.t("common.add")} url={serviceInstance.createAdminUrl("/fiscal_years/add")} />;
+        return <ButtonAdd title={i18n.t("common.add")} url={serviceInstance.createAdminUrl("/settings/fiscal_years/add")} />;
     }
 
     function renderIsCurrent(_text, record)
     {
-        console.log(record);
         return (
             <Checkbox disabled checked={record.is_current} />
         );

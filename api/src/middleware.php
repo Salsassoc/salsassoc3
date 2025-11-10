@@ -2,6 +2,7 @@
 
 namespace App\Middleware;
 
+use App\Middleware\Throwable;
 use Slim\Exception\HttpException;
 use Slim\Exception\HttpUnauthorizedException;
 use Slim\Exception\HttpForbiddenException;
@@ -13,22 +14,24 @@ use Psr\Http\Server\RequestHandlerInterface as RequestHandlerInterface;
 
 require_once("authentication.php");
 
-// Middleware to handle CORS errors
+function writeCORS($request, $response){
+    $origin = $request->getHeaderLine('Origin');
+    if($origin != ""){
+        $response = $response->withHeader('Access-Control-Allow-Origin', $origin);
+    }
+    return $response
+        ->withHeader('Access-Control-Allow-Credentials', 'true')
+        ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+}
+
+// Middleware to handle CORS
 $app->options('/{routes:.+}', function ($request, $response, $args) {
     return $response;
 });
 $app->add(function ($request, $handler) {
     $response = $handler->handle($request);
-
-    $origin = $request->getHeaderLine('Origin');
-    if($origin != ""){
-        $response = $response->withHeader('Access-Control-Allow-Origin', $origin);
-    }
-
-    return $response
-        ->withHeader('Access-Control-Allow-Credentials', 'true')
-        ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
-        ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    return writeCORS($request, $response);
 });
 
 /*
@@ -38,20 +41,19 @@ $app->map(['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], '/{routes:.+}', function ($
 */
 
 // Middleware to handle errors
-$app->addErrorMiddleware(true, true, true);
-/*
-    ->setDefaultErrorHandler(function (Request $request, Throwable $exception, bool $displayErrorDetails) use ($app): Response {
-        $response = $app->getResponseFactory()->createResponse();
-        $statusCode = $exception instanceof HttpException ? $exception->getCode() : 500;
+$errorMiddleware = $app->addErrorMiddleware(true, true, true);
+$errorMiddleware->setDefaultErrorHandler(function (Request $request, \Throwable $exception, bool $displayErrorDetails) use ($app): Response {
+    $response = $app->getResponseFactory()->createResponse();
+    $statusCode = $exception instanceof HttpException ? $exception->getCode() : 500;
 
-        $response->getBody()->write(json_encode([
-            'error' => $exception->getMessage(),
-            'status' => $statusCode,
-        ]));
+    $response->getBody()->write(json_encode([
+        'error' => $exception->getMessage(),
+        'status' => $statusCode,
+    ]));
 
-        return $response->withHeader('Content-Type', 'application/json')->withStatus($statusCode);
-    });
-*/
+    $response = writeCORS($request, $response);
+    return $response->withHeader('Content-Type', 'application/json')->withStatus($statusCode);
+});
 
 final class Authorization
 {

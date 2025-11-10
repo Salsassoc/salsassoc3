@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Routes, Route, Navigate, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Routes, Route, useLocation, useNavigate, useParams } from "react-router-dom";
 
 import PrivateRoute from '../layout/PrivateRoute.js';
 import NotFound from '../layout/NotFound.js';
@@ -8,6 +8,7 @@ import Login from '../pages/Login.js';
 import Logout from '../pages/Logout.js';
 import Dashboard from '../pages/Dashboard.js';
 import FiscalYearsList from '../pages/fiscalyears/FiscalYearsList.js';
+import FiscalYearsEdit from '../pages/fiscalyears/FiscalYearsEdit.js';
 
 export const AppRouteWrapper = ({ component, ...rest }) => {
     const router = {
@@ -31,8 +32,16 @@ const AppRoutes = () => {
             element: <AppRouteWrapper component={Dashboard} />,
         },
         {
-            path: "/settings/fiscal_years",
+            path: "/settings/fiscal_years/list",
             element: <AppRouteWrapper component={FiscalYearsList} />,
+        },
+        {
+            path: "/settings/fiscal_years/add",
+            element: <AppRouteWrapper component={FiscalYearsEdit} />,
+        },
+        {
+            path: "/settings/fiscal_years/edit/:id",
+            element: <AppRouteWrapper component={FiscalYearsEdit} />,
         },
     ];
 

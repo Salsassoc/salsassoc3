@@ -191,7 +191,7 @@ class PageLoader
     // Saving function
 
     startSaving(msg) {
-        const realmsg = (msg ? msg : i18n.t("Common_Save_Progress"));
+        const realmsg = (msg ? msg : i18n.t("common.action_save.progress"));
         this.startProcessing(realmsg);
     }
 
@@ -200,14 +200,14 @@ class PageLoader
     }
 
     errorSaving(error, msg){
-        const realmsg = (msg ? msg : i18n.t("Common_Save_Error"));
+        const realmsg = (msg ? msg : i18n.t("common.action_save.error"));
         this.errorProcessing(error, realmsg);
     }
 
     // Remove function
 
     startRemoving(msg) {
-        const realmsg = (msg ? msg : i18n.t("Common_Remove_Progress"));
+        const realmsg = (msg ? msg : i18n.t("common.action_delete.progress"));
         this.startProcessing(realmsg);
     }
 
@@ -216,7 +216,7 @@ class PageLoader
     }
 
     errorRemoving(error, msg){
-        const realmsg = (msg ? msg : i18n.t("Common_Remove_Error"));
+        const realmsg = (msg ? msg : i18n.t("common.action_delete.error"));
         this.errorProcessing(error, realmsg);
     }
 
