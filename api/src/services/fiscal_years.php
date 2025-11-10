@@ -4,12 +4,37 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 // List fiscal years
-$app->get('/api/fiscal_years/list', function (Request $request, Response $response) {
+$app->get('/api/fiscal_years/list', function (Request $request, Response $response)
+{
     $db = $this->get('db');
-    $stmt = $db->query('SELECT * FROM fiscal_year');
+
+    // Load fiscal_year
+    $sql = 'SELECT fiscal_year.*, 
+		(
+			SELECT COUNT(1) 
+			FROM membership m 
+			WHERE m.fiscal_year_id = fiscal_year.id
+		) AS membership_count,
+		(
+			SELECT IFNULL(SUM(mc.amount), 0)
+			FROM membership m
+			LEFT JOIN membership_cotisation mc ON mc.membership_id = m.id
+			WHERE m.fiscal_year_id = fiscal_year.id
+		) AS membership_amount
+        FROM fiscal_year';
+    $stmt = $db->query($sql);
+
+    // Add data in response
     $fiscalYears = $stmt->fetchAll(PDO::FETCH_ASSOC);
     foreach ($fiscalYears as &$year) {
         $year['is_current'] = (bool)($year['is_current'] == "true");
+        // Cast numeric aggregates
+        if (isset($year['membership_count'])) {
+		$year['membership_count'] = (int)$year['membership_count'];
+	}
+        if (isset($year['membership_amount'])) {
+		$year['membership_amount'] = (float)$year['membership_amount'];
+	}
     }
     $response->getBody()->write(json_encode($fiscalYears));
     return $response->withHeader('Content-Type', 'application/json');

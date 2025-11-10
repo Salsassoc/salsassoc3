@@ -30,7 +30,10 @@
 		"fiscal_years": {
 			"title": "Fiscal years",
 			"remove": "Remove fiscal year #{{label}} ?",
-			"list": "List of fiscal years"
+			"list": "List of fiscal years",
+			"members": "Members",
+			"members_suffix": "members",
+			"membership_amount": "Membership amount"
 		},
 		"fiscal_year": {
 			"add_title": "Add fiscal year",

@@ -94,6 +94,24 @@ const FiscalYearsList = (props) => {
         );
     }
 
+    function formatCurrency(value) {
+        try {
+            return new Intl.NumberFormat(i18n.language || 'fr-FR', { style: 'currency', currency: 'EUR' }).format(value || 0);
+        } catch (e) {
+            return (value || 0).toFixed(2);
+        }
+    }
+
+    function renderMembers(_text, record){
+        const count = record.membership_count || 0;
+        return `${count} ${i18n.t('pages.fiscal_years.members_suffix')}`;
+    }
+
+    function renderAmount(_text, record){
+        const amount = record.membership_amount || 0;
+        return formatCurrency(amount);
+    }
+
     function getColums()
     {
         return [
@@ -118,6 +136,23 @@ const FiscalYearsList = (props) => {
                 sorter: (a, b) => (a.end_date - b.end_date),
             },
             {
+                title: i18n.t('pages.fiscal_years.members'),
+                dataIndex: 'membership_count',
+                key: 'membership_count',
+                align: 'right',
+                sorter: (a, b) => ((a.membership_count||0) - (b.membership_count||0)),
+                render: renderMembers
+            },
+            {
+                title: i18n.t('pages.fiscal_years.membership_amount'),
+                dataIndex: 'membership_amount',
+                key: 'membership_amount',
+                align: 'right',
+                sorter: (a, b) => ((a.membership_amount||0) - (b.membership_amount||0)),
+                render: renderAmount
+            },
+            /*
+            {
                 title: i18n.t('models.fiscal_years.is_current'),
                 dataIndex: 'is_current',
                 key: 'is_current',
@@ -125,6 +160,7 @@ const FiscalYearsList = (props) => {
                 sorter: (a, b) => (a.is_current - b.is_current),
                 render: renderIsCurrent
             },
+            */
             {
                 title: i18n.t('common.actions'),
                 align: 'center',
