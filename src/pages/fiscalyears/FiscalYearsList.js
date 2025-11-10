@@ -3,6 +3,8 @@ import {Link} from "react-router-dom";
 import {Space, Popconfirm, Table, Checkbox} from 'antd';
 import {EditOutlined, DeleteOutlined} from '@ant-design/icons';
 
+import dayjs from 'dayjs';
+
 import i18n from '../../utils/i18n.js';
 
 import {fetchJSON} from '../../authentication/backend.js';
@@ -94,6 +96,16 @@ const FiscalYearsList = (props) => {
         );
     }
 
+    function renderStartDate(_text, record)
+    {
+        return dayjs(record.start_date, "YYYY-MM-DD").format(i18n.t('common.date_format'));
+    }
+
+    function renderEndDate(_text, record)
+    {
+        return dayjs(record.end_date, "YYYY-MM-DD").format(i18n.t('common.date_format'));
+    }
+
     function formatCurrency(value) {
         try {
             return new Intl.NumberFormat(i18n.language || 'fr-FR', { style: 'currency', currency: 'EUR' }).format(value || 0);
@@ -127,6 +139,7 @@ const FiscalYearsList = (props) => {
                 key: 'start_date',
                 align: 'center',
                 sorter: (a, b) => (a.start_date - b.start_date),
+                render: renderStartDate,
             },
             {
                 title: i18n.t('models.fiscal_years.end_date'),
@@ -134,10 +147,10 @@ const FiscalYearsList = (props) => {
                 key: 'end_date',
                 align: 'center',
                 sorter: (a, b) => (a.end_date - b.end_date),
+                render: renderEndDate,
             },
             {
                 title: i18n.t('pages.fiscal_years.members'),
-                dataIndex: 'membership_count',
                 key: 'membership_count',
                 align: 'right',
                 sorter: (a, b) => ((a.membership_count||0) - (b.membership_count||0)),
@@ -145,7 +158,6 @@ const FiscalYearsList = (props) => {
             },
             {
                 title: i18n.t('pages.fiscal_years.membership_amount'),
-                dataIndex: 'membership_amount',
                 key: 'membership_amount',
                 align: 'right',
                 sorter: (a, b) => ((a.membership_amount||0) - (b.membership_amount||0)),
