@@ -15,6 +15,7 @@
 		"home": "Home",
 		"add": "Add",
 		"save": "Save",
+		"search": "Search",
 		"actions": "Actions",
 		"action_save": {
 			"error": "Error when saving",

@@ -1,6 +1,6 @@
 import React from 'react'
 import {Link} from "react-router-dom";
-import {Space, Popconfirm, Table} from 'antd';
+import {Space, Popconfirm, Table, Select} from 'antd';
 import {EditOutlined, DeleteOutlined} from '@ant-design/icons';
 
 import dayjs from 'dayjs';
@@ -15,6 +15,8 @@ import PageContentLayout from '../../layout/PageContentLayout.js';
 import TCALayout from '../../components/layout/TCALayout.js';
 import ButtonAdd from '../../components/buttons/ButtonAdd.js';
 
+import CotisationsSearchForm from './CotisationsSearchForm.js';
+
 const CotisationsList = (props) => {
 
 	// Get application context
@@ -24,21 +26,44 @@ const CotisationsList = (props) => {
 
 	// Define data state
 	const [items, setItems] = React.useState([]);
+	const [fiscalYears, setFiscalYears] = React.useState([]);
+	const [filter, setFilter] = React.useState({
+		fiscalYearId: null,
+		cotisationType: null,
+	});
 
 	// Data loading and initialization
 	function loadData()
 	{
-		return loadCotisationsList();
+		return loadCotisationsList()
+			.then(_result => loadFiscalYears());
 	}
 
 	function loadCotisationsList()
 	{
-		let url = serviceInstance.createServiceUrl("/cotisations/list");
+		let params = "";
+		if (filter.fiscalYearId) {
+			params += "&fiscal_year_id=" + filter.fiscalYearId;
+		}
+		if (filter.cotisationType) {
+			params += "&type=" + filter.cotisationType;
+		}
+
+		let url = serviceInstance.createServiceUrl("/cotisations/list?" + params);
 
 		return fetchJSON(url)
 			.then((response) => {
 				const items = response.result.cotisations;
 				setItems(items);
+			});
+	}
+
+	function loadFiscalYears()
+	{
+		const url = serviceInstance.createServiceUrl("/fiscal_years/list?order=desc");
+		return fetchJSON(url)
+			.then((response) => {
+				setFiscalYears(response.result.fiscal_years || []);
 			});
 	}
 
@@ -193,6 +218,26 @@ const CotisationsList = (props) => {
 		];
 	}
 
+	function onFormSearchFinished(values) {
+		setFilter({
+			fiscalYearId: values.fiscal_year_id,
+			cotisationType: values.cotisation_type,
+			usersGroup: values.usersgroup,
+		});
+	}
+
+    // Handle dataObject update
+    React.useEffect(() => {
+        loadCotisationsList();
+    }, [filter]);
+
+	const form = (
+		<CotisationsSearchForm
+			fiscalYears={fiscalYears}
+			onFinish={onFormSearchFinished}
+		/>
+	);
+
 	const tableContent = (
 		<Table
 			dataSource={items}
@@ -204,6 +249,7 @@ const CotisationsList = (props) => {
 			size="small"
 		/>
 	);
+
 	const tableActions = getTableHeaderExtra(serviceInstance);
 
 	return (
@@ -211,6 +257,7 @@ const CotisationsList = (props) => {
 			<TCALayout
 				title={i18n.t("pages.cotisations.list")}
 				content={tableContent}
+				form={form}
 				actions={tableActions}
 			/>
 		</PageContentLayout>

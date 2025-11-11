@@ -6,6 +6,13 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 // List cotisations
 $app->get('/api/cotisations/list', function (Request $request, Response $response)
 {
+    // Supports optional filters via GET params:
+    // - type: integer (1=Adhésion, 2=Cours, 3=Don, 4=Avoir)
+    // - fiscal_year_id (or fiscalyear_id): integer
+    $params = $request->getQueryParams();
+    $type = $params['type'] ?? null;
+    $fyId = $params['fiscal_year_id'] ?? ($params['fiscalyear_id'] ?? null);
+
     $db = $this->get('db');
 
     $sql = 'SELECT c.*, 
@@ -20,9 +27,26 @@ $app->get('/api/cotisations/list', function (Request $request, Response $respons
             WHERE mc.cotisation_id = c.id
         ) AS collected_amount
         FROM cotisation c
-        ORDER BY c.start_date DESC, c.end_date DESC, c.label ASC';
+        WHERE 1=1';
 
-    $stmt = $db->query($sql);
+    $binds = [];
+    if ($type !== null && $type !== '') {
+        $sql .= ' AND c.type = ?';
+        $binds[] = (int)$type;
+    }
+    if ($fyId !== null && $fyId !== '') {
+        $sql .= ' AND c.fiscal_year_id = ?';
+        $binds[] = (int)$fyId;
+    }
+
+    $sql .= ' ORDER BY c.start_date DESC, c.end_date DESC, c.label ASC';
+
+    if (count($binds) > 0) {
+        $stmt = $db->prepare($sql);
+        $stmt->execute($binds);
+    } else {
+        $stmt = $db->query($sql);
+    }
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Normalize types

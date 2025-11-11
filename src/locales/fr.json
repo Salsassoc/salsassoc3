@@ -15,6 +15,7 @@
 		"home": "Acceuil",
 		"add": "Ajouter",
 		"save": "Sauvegarder",
+		"search": "Rechercher",
 		"actions": "Actions",
 		"action_save": {
 			"error": "Erreur lors de la sauvegarde",
