@@ -15,6 +15,8 @@ import PageContentLayout from '../../layout/PageContentLayout.js';
 import TCALayout from '../../components/layout/TCALayout.js';
 import ButtonAdd from '../../components/buttons/ButtonAdd.js';
 
+import AccountingOperationsSearchForm from './AccountingOperationsSearchForm.js';
+
 const AccountingOperationsList = (props) => {
 
 	// Get application context
@@ -24,16 +26,50 @@ const AccountingOperationsList = (props) => {
 
 	// Define data state
 	const [items, setItems] = React.useState([]);
+	const [fiscalYears, setFiscalYears] = React.useState([]);
+	const [accounts, setAccounts] = React.useState([]);
+	const [categories, setCategories] = React.useState([]);
+	const [filter, setFilter] = React.useState({
+		fiscalYearId: null,
+		year: null,
+		accountingAccountId: null,
+		categoryId: null,
+		amountMin: null,
+		amountMax: null,
+	});
 
 	// Data loading and initialization
 	function loadData()
 	{
-		return loadOperationsList();
+		return loadOperationsList()
+			.then(_result => loadFiscalYears())
+			.then(_result => loadAccounts())
+			.then(_result => loadCategories());
 	}
 
 	function loadOperationsList()
 	{
-		let url = serviceInstance.createServiceUrl("/accounting/operations/list");
+		let params = "";
+		if (filter.fiscalYearId) {
+			params += "&fiscal_year_id=" + filter.fiscalYearId;
+		}
+		if (filter.year) {
+			params += "&year=" + filter.year;
+		}
+		if (filter.accountingAccountId) {
+			params += "&accounting_account_id=" + filter.accountingAccountId;
+		}
+		if (filter.categoryId) {
+			params += "&accounting_operations_category=" + filter.categoryId;
+		}
+		if (filter.amountMin !== null && filter.amountMin !== undefined && filter.amountMin !== '') {
+			params += "&amount_min=" + filter.amountMin;
+		}
+		if (filter.amountMax !== null && filter.amountMax !== undefined && filter.amountMax !== '') {
+			params += "&amount_max=" + filter.amountMax;
+		}
+
+		let url = serviceInstance.createServiceUrl("/accounting/operations/list?" + params);
 
 		return fetchJSON(url)
 			.then((response) => {
@@ -41,6 +77,30 @@ const AccountingOperationsList = (props) => {
 				// Ensure newest first already from API; compute accumulation from bottom to top
 				const itemsWithAcc = computeAccumulation(rawItems);
 				setItems(itemsWithAcc);
+			});
+	}
+
+	function loadFiscalYears(){
+		const url = serviceInstance.createServiceUrl("/fiscal_years/list?order=desc");
+		return fetchJSON(url)
+			.then((response) => {
+				setFiscalYears(response.result.fiscal_years || []);
+			});
+	}
+
+	function loadAccounts(){
+		const url = serviceInstance.createServiceUrl("/accounting/accounts/list");
+		return fetchJSON(url)
+			.then((response) => {
+				setAccounts(response.result.accounting_accounts || []);
+			});
+	}
+
+	function loadCategories(){
+		const url = serviceInstance.createServiceUrl("/accounting/operations/categories/list");
+		return fetchJSON(url)
+			.then((response) => {
+				setCategories(response.result.accounting_operations_categories || []);
 			});
 	}
 
@@ -250,6 +310,31 @@ const AccountingOperationsList = (props) => {
 		];
 	}
 
+	function onFormSearchFinished(values){
+		setFilter({
+			fiscalYearId: values.fiscal_year_id,
+			year: values.year,
+			accountingAccountId: values.accounting_account_id,
+			categoryId: values.accounting_operations_category,
+			amountMin: values.amount_min,
+			amountMax: values.amount_max,
+		});
+	}
+
+	// Reload list when filter changes
+	React.useEffect(() => {
+		loadOperationsList();
+	}, [filter]);
+
+	const form = (
+		<AccountingOperationsSearchForm
+			fiscalYears={fiscalYears}
+			accounts={accounts}
+			categories={categories}
+			onFinish={onFormSearchFinished}
+		/>
+	);
+
 	const tableContent = (
 		<Table
 			dataSource={items}
@@ -268,6 +353,7 @@ const AccountingOperationsList = (props) => {
 			<TCALayout
 				title={i18n.t("pages.accounting_operations.list")}
 				content={tableContent}
+				form={form}
 				actions={tableActions}
 			/>
 		</PageContentLayout>

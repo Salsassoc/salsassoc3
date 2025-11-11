@@ -7,10 +7,14 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 $app->get('/api/accounting/operations/list', function (Request $request, Response $response)
 {
     $params = $request->getQueryParams();
+    // Accept legacy and canonical param names
     $fiscalYearId = $params['fiscalyear_id'] ?? ($params['fiscal_year_id'] ?? null);
-    $accountId = $params['account_id'] ?? null;
-    $categoryId = $params['category'] ?? null;
+    $accountId = $params['account_id'] ?? ($params['accounting_account_id'] ?? null);
+    $categoryId = $params['category'] ?? ($params['accounting_operations_category'] ?? null);
     $checked = $params['checked'] ?? null; // expect 'true'/'false'
+    $year = $params['year'] ?? null; // civil year on date_value
+    $amountMin = $params['amount_min'] ?? null;
+    $amountMax = $params['amount_max'] ?? null;
 
     $db = $this->get('db');
 
@@ -26,22 +30,34 @@ $app->get('/api/accounting/operations/list', function (Request $request, Respons
         WHERE 1=1';
     $binds = [];
 
-    if ($fiscalYearId !== null) {
+    if ($fiscalYearId !== null && $fiscalYearId !== '') {
         $sql .= ' AND ao.fiscalyear_id = ?';
         $binds[] = (int)$fiscalYearId;
     }
-    if ($accountId !== null) {
+    if ($accountId !== null && $accountId !== '') {
         $sql .= ' AND ao.account_id = ?';
         $binds[] = (int)$accountId;
     }
-    if ($categoryId !== null) {
+    if ($categoryId !== null && $categoryId !== '') {
         $sql .= ' AND ao.category = ?';
         $binds[] = (int)$categoryId;
     }
-    if ($checked !== null) {
+    if ($checked !== null && $checked !== '') {
         $sql .= ' AND ao.checked = ?';
         // DB uses BOOLEAN; store as 'true'/'false' like other services
         $binds[] = ($checked === 'true' || $checked === '1') ? 'true' : 'false';
+    }
+    if ($year !== null && $year !== '') {
+        $sql .= ' AND YEAR(ao.date_value) = ?';
+        $binds[] = (int)$year;
+    }
+    if ($amountMin !== null && $amountMin !== '') {
+        $sql .= ' AND (CASE WHEN ao.amount_credit IS NOT NULL THEN ao.amount_credit ELSE ao.amount_debit END) >= ?';
+        $binds[] = (float)$amountMin;
+    }
+    if ($amountMax !== null && $amountMax !== '') {
+        $sql .= ' AND (CASE WHEN ao.amount_credit IS NOT NULL THEN ao.amount_credit ELSE ao.amount_debit END) <= ?';
+        $binds[] = (float)$amountMax;
     }
 
     // newest first
@@ -65,12 +81,12 @@ $app->get('/api/accounting/operations/list', function (Request $request, Respons
         if (isset($row['checked'])) { $row['checked'] = (bool)($row['checked'] == 'true' || $row['checked'] == 1); }
         // expose op_number alias for op_method_number
         if (isset($row['op_method_number'])) { $row['op_number'] = $row['op_method_number']; }
-        // Compute one signed amount: credit - debit
+        // Compute one signed amount (kept consistent with UI): prefer credit else debit
         $credit = isset($row['amount_credit']) && $row['amount_credit'] !== null ? (float)$row['amount_credit'] : 0.0;
         $debit = isset($row['amount_debit']) && $row['amount_debit'] !== null ? (float)$row['amount_debit'] : 0.0;
-        if($credit){
+        if ($credit) {
             $row['amount'] = $credit;
-        }else{
+        } else {
             $row['amount'] = $debit;
         }
     }
