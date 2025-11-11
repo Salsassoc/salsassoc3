@@ -2,9 +2,11 @@
 	"menu": {
 		"dashboard": "Dashboard",
 		"settings": "Settings",
-		"settings_fiscal_years": "Fiscal years",
-		"settings_cotisations": "Cotisations",
-		"settings_accounting_operation_categories": "Operation categories"
+		"fiscal_years": "Fiscal years",
+		"cotisations": "Cotisations",
+		"accounting": "Accounting",
+		"accounting_operation_categories": "Operation categories",
+		"accounting_accounts": "Accounts"
 	},
 	"common": {
 		"home": "Home",
@@ -70,6 +72,14 @@
 			"edit_title": "Edit cotisation",
 			"section_general": "General",
 			"saved": "The cotisation have been saved successfully"
+		},
+		"accounting_accounts": {
+			"title": "Accounting accounts",
+			"remove": "Remove account '{{label}}' ?",
+			"list": "List of accounts",
+			"add_title": "Add account",
+			"edit_title": "Edit account",
+			"section_general": "General"
 		}
 	},
 	"models": {
@@ -100,6 +110,13 @@
 			"type_course": "Course",
 			"type_donation": "Donation",
 			"type_credit": "Credit"
+		},
+		"accounting_account": {
+			"label": "Label",
+			"type": "Type",
+			"type_other": "Other",
+			"type_cash": "Cash",
+			"type_bank": "Bank account"
 		}
 	}
 }

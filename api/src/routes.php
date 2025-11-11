@@ -37,3 +37,4 @@ require __DIR__ . '/services/fiscal_years.php';
 require __DIR__ . '/services/users.php';
 require __DIR__ . '/services/accounting_operation_categories.php';
 require __DIR__ . '/services/cotisations.php';
+require __DIR__ . '/services/accounting_accounts.php';

@@ -81,7 +81,7 @@ const OperationCategoriesList = (props) => {
 	// Rendering data
 	function getTableHeaderExtra(serviceInstance)
 	{
-		return <ButtonAdd title={i18n.t("common.add")} url={serviceInstance.createAdminUrl("/settings/accounting_operations/categories/add")} />;
+		return <ButtonAdd title={i18n.t("common.add")} url={serviceInstance.createAdminUrl("/accounting/operations/categories/add")} />;
 	}
 
 	function renderIsInternalMove(_text, record)
@@ -122,7 +122,7 @@ const OperationCategoriesList = (props) => {
 				width: 100,
 				render: (_text, record) => (
 					<Space size="middle">
-						<Link to={serviceInstance.createAdminUrl("/settings/accounting_operations/categories/edit/"+record.id)}><EditOutlined /></Link>
+						<Link to={serviceInstance.createAdminUrl("/accounting/operations/categories/edit/"+record.id)}><EditOutlined /></Link>
 						<Popconfirm 
 							title={i18n.t("pages.accounting_operation_categories.remove", {label: record.label})}
 							onConfirm={() => onConfirmRemove(record)} 

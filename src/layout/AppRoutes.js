@@ -13,6 +13,8 @@ import OperationCategoriesList from '../pages/operationcategories/OperationCateg
 import OperationCategoriesEdit from '../pages/operationcategories/OperationCategoriesEdit.js';
 import CotisationsList from '../pages/cotisations/CotisationsList.js';
 import CotisationsEdit from '../pages/cotisations/CotisationsEdit.js';
+import AccountingAccountsList from '../pages/accountingaccounts/AccountingAccountsList.js';
+import AccountingAccountsEdit from '../pages/accountingaccounts/AccountingAccountsEdit.js';
 
 export const AppRouteWrapper = ({ component, ...rest }) => {
     const router = {
@@ -60,17 +62,31 @@ const AppRoutes = () => {
             path: "/cotisations/edit/:id",
             element: <AppRouteWrapper component={CotisationsEdit} />,
         },
+        // Accounting operations categories
         {
-            path: "/settings/accounting_operations/categories/list",
+            path: "/accounting/operations/categories/list",
             element: <AppRouteWrapper component={OperationCategoriesList} />,
         },
         {
-            path: "/settings/accounting_operations/categories/add",
+            path: "/accounting/operations/categories/add",
             element: <AppRouteWrapper component={OperationCategoriesEdit} />,
         },
         {
-            path: "/settings/accounting_operations/categories/edit/:id",
+            path: "/accounting/operations/categories/edit/:id",
             element: <AppRouteWrapper component={OperationCategoriesEdit} />,
+        },
+        // Accounting accounts
+        {
+            path: "/accounting/accounts/list",
+            element: <AppRouteWrapper component={AccountingAccountsList} />,
+        },
+        {
+            path: "/accounting/accounts/add",
+            element: <AppRouteWrapper component={AccountingAccountsEdit} />,
+        },
+        {
+            path: "/accounting/accounts/edit/:id",
+            element: <AppRouteWrapper component={AccountingAccountsEdit} />,
         },
     ];
 

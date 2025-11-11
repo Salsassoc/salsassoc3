@@ -4,7 +4,8 @@ import {
   DashboardOutlined,
   SettingOutlined,
   CalendarOutlined,
-  ProductOutlined
+  ProductOutlined,
+  BankOutlined
 } from '@ant-design/icons';
 
 import {AppContext} from "../layout/AppContext.js";
@@ -35,9 +36,28 @@ export function getAppMenu()
         icon: <DashboardOutlined />,
     });
 
+    // Accounting
+    subRoutes = [];
+    subRoutes.push({
+        name: i18n.t('menu.accounting_accounts'),
+        path: getAdminUrl("/accounting/accounts/list"),
+        exact: true,
+    });
+    subRoutes.push({
+        name: i18n.t('menu.accounting_operation_categories'),
+        path: getAdminUrl("/accounting/operations/categories/list"),
+        exact: true,
+    });
+    appMenu.route.routes.push({
+        name: i18n.t('menu.accounting'),
+        path: getAdminUrl("/accounting"),
+        icon: <BankOutlined />,
+        routes: subRoutes,
+    });
+
     // Fiscal years
     appMenu.route.routes.push({
-        name: i18n.t('menu.settings_fiscal_years'),
+        name: i18n.t('menu.fiscal_years'),
         path: getAdminUrl("/fiscal_years/list"),
         icon: <CalendarOutlined />,
         exact: true,
@@ -45,26 +65,22 @@ export function getAppMenu()
 
     // Cotisations
     appMenu.route.routes.push({
-        name: i18n.t('menu.settings_cotisations'),
+        name: i18n.t('menu.cotisations'),
         path: getAdminUrl("/cotisations/list"),
         icon: <ProductOutlined />,
         exact: true,
     });
 
     // Settings
+    /*
     subRoutes = [];
-    subRoutes.push({
-        name: i18n.t('menu.settings_accounting_operation_categories'),
-        path: getAdminUrl("/settings/accounting_operations/categories/list"),
-        exact: true,
-    });
-
     appMenu.route.routes.push({
         name: i18n.t('menu.settings'),
         path: getAdminUrl("/settings"),
         icon: <SettingOutlined />,
         routes: subRoutes,
     });
+    */
 
     return appMenu;
 };

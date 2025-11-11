@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Form, Input, Button, Switch, Select} from 'antd';
+import {Form, Input, Button, Select} from 'antd';
 
 import i18n from '../../utils/i18n.js';
 
@@ -14,7 +14,7 @@ import FormEdit from '../../components/forms/FormEdit.js';
 import FormEditSection from '../../components/forms/FormEditSection.js';
 import FormEditItemSubmit from '../../components/forms/FormEditItemSubmit.js';
 
-const OperationCategoriesEdit = (props) => {
+const AccountingAccountsEdit = (props) => {
 
 	// Get application context
 	const appContext = React.useContext(AppContext);
@@ -41,19 +41,16 @@ const OperationCategoriesEdit = (props) => {
 	{
 		return {
 			label: "",
-			account_number: "",
-			account_name: "",
-			account_type: 0,
-			is_internal_move: false,
+			type: 0,
 		}
 	}
 
 	function loadData()
 	{
-		return loadCategory();
+		return loadAccount();
 	}
 
-	function loadCategory()
+	function loadAccount()
 	{
 		// Check if mode add
 		if(isModeAdd()){
@@ -61,12 +58,12 @@ const OperationCategoriesEdit = (props) => {
 		}
 
 		// Compute request url
-		let url = serviceInstance.createServiceUrl("/accounting_operations/categories/get?id="+dataId);
+		let url = serviceInstance.createServiceUrl("/accounting/accounts/get?id="+dataId);
 
 		// Load data
 		return fetchJSON(url)
 			.then((response) => {
-				const newDataObject = response.result.accounting_operations_category;
+				const newDataObject = response.result.accounting_account;
 				setDataObject(newDataObject);
 				formInstance.setFieldsValue(newDataObject);
 			});
@@ -79,9 +76,9 @@ const OperationCategoriesEdit = (props) => {
 
 		let path;
 		if(isModeAdd()){
-			path = "/accounting_operations/categories/save";
+			path = "/accounting/accounts/save";
 		}else{
-			path = "/accounting_operations/categories/save?id="+dataId;
+			path = "/accounting/accounts/save?id="+dataId;
 		}
 
 		let url = serviceInstance.createServiceUrl(path);
@@ -95,7 +92,7 @@ const OperationCategoriesEdit = (props) => {
 			.then((_result) => {
 				pageLoader.endSaving();
 				if(isModeAdd()){
-					const url = serviceInstance.createAdminUrl("/accounting/operations/categories/list");
+					const url = serviceInstance.createAdminUrl("/accounting/accounts/list");
 					props.router.navigate(url);
 				}else{
 					return loadData();
@@ -112,16 +109,16 @@ const OperationCategoriesEdit = (props) => {
 		// Set page title
 		let pageTitle;
 		if(isModeAdd()){
-			pageTitle = i18n.t("pages.accounting_operation_categories.add_title");
+			pageTitle = i18n.t("pages.accounting_accounts.add_title");
 		}else{
-			pageTitle = i18n.t("pages.accounting_operation_categories.edit_title");
+			pageTitle = i18n.t("pages.accounting_accounts.edit_title");
 		}
 
 		// Set page breadcrumb
 		const pageBreadcrumb = [
 			{
-				href: serviceInstance.createAdminUrl('/accounting/operations/categories/list'),
-				breadcrumbName: i18n.t("pages.accounting_operation_categories.title"),
+				href: serviceInstance.createAdminUrl('/accounting/accounts/list'),
+				breadcrumbName: i18n.t("pages.accounting_accounts.title"),
 			}
 		];
 
@@ -141,43 +138,30 @@ const OperationCategoriesEdit = (props) => {
 	return (
 		<PageContentLayout layoutData={getLayoutData()} loadData={loadData}>
 			<FormEdit
-				name="operation_category-edit-form"
+				name="accounting_account-edit-form"
 				onFinish={onFinish}
 				form={formInstance}
 			>
 				<PageContentAlertError pageLoader={pageLoader} />
 
-				<Form.Item name={['id']} hidden={true} rules={[{ required: !isModeAdd() }]}>
+				<Form.Item name={['id']} hidden={true} rules={[{ required: !isModeAdd() }]}> 
 					<Input />
 				</Form.Item>
 
-				<FormEditSection title={i18n.t("pages.accounting_operation_categories.section_general")}>
+				<FormEditSection title={i18n.t("pages.accounting_accounts.section_general")}>
 
-					<Form.Item name={['label']} label={i18n.t("models.accounting_operation_category.label")} rules={[{ required: true }]}>
+					<Form.Item name={['label']} label={i18n.t("models.accounting_account.label")} rules={[{ required: true }]}> 
 						<Input />
 					</Form.Item>
 
-					<Form.Item name={['account_number']} label={i18n.t("models.accounting_operation_category.account_number")} rules={[{ required: false }]}>
-						<Input />
-					</Form.Item>
-
-					<Form.Item name={['account_name']} label={i18n.t("models.accounting_operation_category.account_name")} rules={[{ required: false }]}>
-						<Input />
-					</Form.Item>
-
-					{/* account_type not requested in list columns but present in data model; keep optional select */}
-					<Form.Item name={['account_type']} label={i18n.t("models.accounting_operation_category.account_type")}>
+					<Form.Item name={['type']} label={i18n.t("models.accounting_account.type")}>
 						<Select
 							options={[
-								{ value: 0, label: i18n.t('models.accounting_operation_category.account_type_unknown') },
-								{ value: 6, label: i18n.t('models.accounting_operation_category.account_type_charge') },
-								{ value: 7, label: i18n.t('models.accounting_operation_category.account_type_income') },
+								{ value: 0, label: i18n.t('models.accounting_account.type_other') },
+								{ value: 1, label: i18n.t('models.accounting_account.type_cash') },
+								{ value: 2, label: i18n.t('models.accounting_account.type_bank') },
 							]}
 						/>
-					</Form.Item>
-
-					<Form.Item label={i18n.t("models.accounting_operation_category.is_internal_move")} name={["is_internal_move"]} valuePropName='checked'>
-						<Switch />
 					</Form.Item>
 				</FormEditSection>
 
@@ -191,4 +175,4 @@ const OperationCategoriesEdit = (props) => {
 	)
 };
 
-export default OperationCategoriesEdit;
+export default AccountingAccountsEdit;

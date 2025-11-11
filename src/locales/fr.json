@@ -2,9 +2,11 @@
 	"menu": {
 		"dashboard": "Tableau de bord",
 		"settings": "Paramètres",
-		"settings_fiscal_years": "Années fiscales",
-		"settings_cotisations": "Cotisations",
-		"settings_accounting_operation_categories": "Catégories d'opération"
+		"fiscal_years": "Années fiscales",
+		"cotisations": "Cotisations",
+		"accounting": "Comptabilité",
+		"accounting_operation_categories": "Catégories d'opération",
+		"accounting_accounts": "Comptes"
 	},
 	"common": {
 		"home": "Acceuil",
@@ -70,6 +72,14 @@
 			"edit_title": "Modifier une cotisation",
 			"section_general": "Général",
 			"saved": "La cotisation a bien été sauvegardée"
+		},
+		"accounting_accounts": {
+			"title": "Comptes comptables",
+			"remove": "Supprimer le compte '{{label}}' ?",
+			"list": "Liste des comptes",
+			"add_title": "Ajouter un compte",
+			"edit_title": "Modifier un compte",
+			"section_general": "Général"
 		}
 	},
 	"models": {
@@ -100,6 +110,13 @@
 			"type_course": "Cours",
 			"type_donation": "Don",
 			"type_credit": "Avoir"
+		},
+		"accounting_account": {
+			"label": "Libellé",
+			"type": "Type",
+			"type_other": "Autre",
+			"type_cash": "Caisse",
+			"type_bank": "Compte bancaire"
 		}
 	}
 }
