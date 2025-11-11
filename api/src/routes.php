@@ -40,3 +40,4 @@ require __DIR__ . '/services/cotisations.php';
 require __DIR__ . '/services/accounting_accounts.php';
 require __DIR__ . '/services/accounting_operations.php';
 require __DIR__ . '/services/members.php';
+require __DIR__ . '/services/memberships.php';

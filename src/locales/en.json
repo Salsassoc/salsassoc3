@@ -5,6 +5,7 @@
 		"fiscal_years": "Fiscal years",
 		"cotisations": "Cotisations",
 		"members": "Members",
+		"memberships": "Memberships",
 		"accounting": "Accounting",
 		"accounting_operation_categories": "Operation categories",
 		"accounting_accounts": "Accounts",
@@ -107,6 +108,21 @@
 			"edit_title": "Edit member",
 			"section_general": "General",
 			"saved": "The member has been saved successfully"
+		},
+		"memberships": {
+			"title": "Memberships",
+			"remove": "Remove membership of '{{label}}' ?",
+			"list": "List of memberships"
+		},
+		"membership": {
+			"add_title": "Add membership",
+			"edit_title": "Edit membership",
+			"section_general": "General",
+			"saved": "The membership has been saved successfully",
+			"cotisations_section": "Cotisations",
+			"no_cotisation_for_year": "No cotisation for this fiscal year",
+			"search_member": "Search member",
+			"search_member_placeholder": "Lastname Firstname..."
 		}
 	},
 	"models": {
@@ -171,6 +187,21 @@
 			"op_method_transfer_out": "Transfer sent",
 			"op_method_direct_debit": "Direct debit",
 			"op_method_interest": "Interests"
+		},
+		"membership": {
+			"date": "Date",
+			"type": "Type",
+			"type_unknown": "Unknown",
+			"type_standard": "Standard",
+			"type_young": "Youth advantages",
+			"type_board": "Board of directors",
+			"type_teacher": "Teacher",
+			"payment": "Payment",
+			"payment_method_unknown": "-- Unknown --",
+			"payment_method_none": "None",
+			"payment_method_check": "Check",
+			"payment_method_cash": "Cash",
+			"payment_method_card": "Credit card"
 		}
 	}
 }

@@ -19,6 +19,8 @@ import AccountingOperationsList from '../pages/accountingoperations/AccountingOp
 import AccountingOperationsEdit from '../pages/accountingoperations/AccountingOperationsEdit.js';
 import MembersList from '../pages/members/MembersList.js';
 import MembersEdit from '../pages/members/MembersEdit.js';
+import MembershipsList from '../pages/memberships/MembershipsList.js';
+import MembershipsEdit from '../pages/memberships/MembershipsEdit.js';
 
 export const AppRouteWrapper = ({ component, ...rest }) => {
     const router = {
@@ -117,6 +119,19 @@ const AppRoutes = () => {
         {
             path: "/members/edit/:id",
             element: <AppRouteWrapper component={MembersEdit} />,
+        },
+        // Memberships
+        {
+            path: "/memberships/list",
+            element: <AppRouteWrapper component={MembershipsList} />,
+        },
+        {
+            path: "/memberships/add",
+            element: <AppRouteWrapper component={MembershipsEdit} />,
+        },
+        {
+            path: "/memberships/edit/:id",
+            element: <AppRouteWrapper component={MembershipsEdit} />,
         },
     ];
 

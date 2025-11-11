@@ -39,10 +39,18 @@ export function getAppMenu()
 
     // Members
     appMenu.route.routes.push({
-        name: i18n.t('menu.members'),
-        path: getAdminUrl("/members/list"),
-        icon: <UserOutlined />,
-        exact: true,
+      name: i18n.t('menu.members'),
+      path: getAdminUrl("/members/list"),
+      icon: <UserOutlined />,
+      exact: true,
+    });
+
+    // Memberships
+    appMenu.route.routes.push({
+      name: i18n.t('menu.memberships'),
+      path: getAdminUrl("/memberships/list"),
+      icon: <UserOutlined />,
+      exact: true,
     });
 
     // Accounting

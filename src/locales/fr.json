@@ -5,6 +5,7 @@
 		"fiscal_years": "Années fiscales",
 		"cotisations": "Cotisations",
 		"members": "Membres",
+		"memberships": "Adhésions",
 		"accounting": "Comptabilité",
 		"accounting_operation_categories": "Catégories d'opération",
 		"accounting_accounts": "Comptes",
@@ -107,6 +108,21 @@
 			"edit_title": "Modifier un membre",
 			"section_general": "Général",
 			"saved": "Le membre a bien été sauvegardé"
+		},
+		"memberships": {
+			"title": "Adhésions",
+			"remove": "Supprimer l'adhésion de '{{label}}' ?",
+			"list": "Liste des adhésions"
+		},
+		"membership": {
+			"add_title": "Ajouter une adhésion",
+			"edit_title": "Modifier une adhésion",
+			"section_general": "Général",
+			"saved": "L'adhésion a bien été sauvegardée",
+			"cotisations_section": "Cotisations",
+			"no_cotisation_for_year": "Aucune cotisation pour cette année fiscale",
+			"search_member": "Rechercher un membre",
+			"search_member_placeholder": "Nom Prénom..."
 		}
 	},
 	"models": {
@@ -191,6 +207,21 @@
 			"address": "Adresse",
 			"zipcode": "Code postal",
 			"city": "Ville"
+		},
+		"membership": {
+			"date": "Date",
+			"type": "Type",
+			"type_unknown": "Inconnu",
+			"type_standard": "Standard",
+			"type_young": "Avantages jeunes",
+			"type_board": "Conseil d'administration",
+			"type_teacher": "Professeur",
+			"payment": "Paiement",
+			"payment_method_unknown": "-- Inconnu --",
+			"payment_method_none": "Aucun",
+			"payment_method_check": "Chèque",
+			"payment_method_cash": "Espèces",
+			"payment_method_card": "Carte bancaire"
 		}
 	}
 }
