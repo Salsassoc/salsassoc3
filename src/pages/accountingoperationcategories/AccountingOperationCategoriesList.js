@@ -31,7 +31,7 @@ const AccountingOperationCategoriesList = (props) => {
 
 	function loadCategoriesList()
 	{
-		let url = serviceInstance.createServiceUrl("/accounting_operations/categories/list");
+		let url = serviceInstance.createServiceUrl("/accounting/operations/categories/list");
 
 		return fetchJSON(url)
 			.then((response) => {
@@ -44,7 +44,7 @@ const AccountingOperationCategoriesList = (props) => {
 	{
 		pageLoader.startRemoving();
 
-		let url = serviceInstance.createServiceUrl("/accounting_operations/categories/delete?id="+record.id);
+		let url = serviceInstance.createServiceUrl("/accounting/operations/categories/delete?id="+record.id);
 
 		let opts = {
 			method: "DELETE"

@@ -38,3 +38,4 @@ require __DIR__ . '/services/users.php';
 require __DIR__ . '/services/accounting_operation_categories.php';
 require __DIR__ . '/services/cotisations.php';
 require __DIR__ . '/services/accounting_accounts.php';
+require __DIR__ . '/services/accounting_operations.php';

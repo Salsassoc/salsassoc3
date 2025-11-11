@@ -6,7 +6,8 @@
 		"cotisations": "Cotisations",
 		"accounting": "Accounting",
 		"accounting_operation_categories": "Operation categories",
-		"accounting_accounts": "Accounts"
+		"accounting_accounts": "Accounts",
+		"accounting_operations": "Operations"
 	},
 	"common": {
 		"home": "Home",
@@ -80,6 +81,17 @@
 			"add_title": "Add account",
 			"edit_title": "Edit account",
 			"section_general": "General"
+		},
+		"accounting_operations": {
+			"title": "Operations",
+			"remove": "Remove operation '{{label}}' ?",
+			"list": "List of operations"
+		},
+		"accounting_operation": {
+			"add_title": "Add operation",
+			"edit_title": "Edit operation",
+			"section_general": "General",
+			"saved": "The operation has been saved successfully"
 		}
 	},
 	"models": {
@@ -117,6 +129,33 @@
 			"type_other": "Other",
 			"type_cash": "Cash",
 			"type_bank": "Bank account"
+		},
+		"accounting_operation": {
+			"date_value": "Date",
+			"date_effective": "Effective date",
+			"label": "Label",
+			"op_number": "Number",
+			"category": "Category",
+			"category_account_number": "Category account number",
+			"op_method": "Type",
+			"amount": "Amount",
+			"accumulation": "Accumulation",
+			"fiscal_year": "Fiscal year",
+			"account": "Account",
+			"amount_debit": "Debit",
+			"amount_credit": "Credit",
+			"label_bank": "Bank label",
+			"project_id": "Project",
+			"checked": "Checked",
+			"op_method_unknown": "Unknown",
+			"op_method_checkin": "Check deposit",
+			"op_method_checkout": "Payment by check",
+			"op_method_cash_in": "Cash deposit",
+			"op_method_cash_out": "Cash withdrawal",
+			"op_method_transfer_in": "Transfer received",
+			"op_method_transfer_out": "Transfer sent",
+			"op_method_direct_debit": "Direct debit",
+			"op_method_interest": "Interests"
 		}
 	}
 }

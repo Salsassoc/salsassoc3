@@ -15,6 +15,8 @@ import AccountingOperationCategoriesList from '../pages/accountingoperationcateg
 import AccountingOperationCategoriesEdit from '../pages/accountingoperationcategories/AccountingOperationCategoriesEdit.js';
 import AccountingAccountsList from '../pages/accountingaccounts/AccountingAccountsList.js';
 import AccountingAccountsEdit from '../pages/accountingaccounts/AccountingAccountsEdit.js';
+import AccountingOperationsList from '../pages/accountingoperations/AccountingOperationsList.js';
+import AccountingOperationsEdit from '../pages/accountingoperations/AccountingOperationsEdit.js';
 
 export const AppRouteWrapper = ({ component, ...rest }) => {
     const router = {
@@ -87,6 +89,19 @@ const AppRoutes = () => {
         {
             path: "/accounting/accounts/edit/:id",
             element: <AppRouteWrapper component={AccountingAccountsEdit} />,
+        },
+        // Accounting operations
+        {
+            path: "/accounting/operations/list",
+            element: <AppRouteWrapper component={AccountingOperationsList} />,
+        },
+        {
+            path: "/accounting/operations/add",
+            element: <AppRouteWrapper component={AccountingOperationsEdit} />,
+        },
+        {
+            path: "/accounting/operations/edit/:id",
+            element: <AppRouteWrapper component={AccountingOperationsEdit} />,
         },
     ];
 

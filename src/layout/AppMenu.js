@@ -39,6 +39,11 @@ export function getAppMenu()
     // Accounting
     subRoutes = [];
     subRoutes.push({
+        name: i18n.t('menu.accounting_operations'),
+        path: getAdminUrl("/accounting/operations/list"),
+        exact: true,
+    });
+    subRoutes.push({
         name: i18n.t('menu.accounting_accounts'),
         path: getAdminUrl("/accounting/accounts/list"),
         exact: true,

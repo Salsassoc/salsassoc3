@@ -6,7 +6,8 @@
 		"cotisations": "Cotisations",
 		"accounting": "Comptabilité",
 		"accounting_operation_categories": "Catégories d'opération",
-		"accounting_accounts": "Comptes"
+		"accounting_accounts": "Comptes",
+		"accounting_operations": "Opérations"
 	},
 	"common": {
 		"home": "Acceuil",
@@ -80,6 +81,17 @@
 			"add_title": "Ajouter un compte",
 			"edit_title": "Modifier un compte",
 			"section_general": "Général"
+		},
+		"accounting_operations": {
+			"title": "Opérations",
+			"remove": "Supprimer l'opération '{{label}}' ?",
+			"list": "Liste des opérations"
+		},
+		"accounting_operation": {
+			"add_title": "Ajouter une opération",
+			"edit_title": "Modifier une opération",
+			"section_general": "Général",
+			"saved": "L'opération a bien été sauvegardée"
 		}
 	},
 	"models": {
@@ -117,6 +129,33 @@
 			"type_other": "Autre",
 			"type_cash": "Caisse",
 			"type_bank": "Compte bancaire"
+		},
+		"accounting_operation": {
+			"date_value": "Date",
+			"date_effective": "Date effective",
+			"label": "Libellé",
+			"op_number": "Numéro",
+			"category": "Catégorie",
+			"category_account_number": "Numéro du compte de la catégorie",
+			"op_method": "Type",
+			"amount": "Montant",
+			"accumulation": "Accumulation",
+			"fiscal_year": "Année fiscale",
+			"account": "Compte",
+			"amount_debit": "Débit",
+			"amount_credit": "Crédit",
+			"label_bank": "Libellé banque",
+			"project_id": "Projet",
+			"checked": "Pointée",
+			"op_method_unknown": "Inconnu",
+			"op_method_checkin": "Remise de chèque(s)",
+			"op_method_checkout": "Paiement par chèque",
+			"op_method_cash_in": "Remise d'espèces",
+			"op_method_cash_out": "Retrait d'espèce",
+			"op_method_transfer_in": "Virement reçu",
+			"op_method_transfer_out": "Virement émis",
+			"op_method_direct_debit": "Prélèvement",
+			"op_method_interest": "Intérêts"
 		}
 	}
 }

@@ -61,7 +61,7 @@ const AccountingOperationCategoriesEdit = (props) => {
 		}
 
 		// Compute request url
-		let url = serviceInstance.createServiceUrl("/accounting_operations/categories/get?id="+dataId);
+		let url = serviceInstance.createServiceUrl("/accounting/operations/categories/get?id="+dataId);
 
 		// Load data
 		return fetchJSON(url)
@@ -79,9 +79,9 @@ const AccountingOperationCategoriesEdit = (props) => {
 
 		let path;
 		if(isModeAdd()){
-			path = "/accounting_operations/categories/save";
+			path = "/accounting/operations/categories/save";
 		}else{
-			path = "/accounting_operations/categories/save?id="+dataId;
+			path = "/accounting/operations/categories/save?id="+dataId;
 		}
 
 		let url = serviceInstance.createServiceUrl(path);

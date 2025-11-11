@@ -4,7 +4,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 // List categories
-$app->get('/api/accounting_operations/categories/list', function (Request $request, Response $response)
+$app->get('/api/accounting/operations/categories/list', function (Request $request, Response $response)
 {
     $db = $this->get('db');
 
@@ -38,7 +38,7 @@ $app->get('/api/accounting_operations/categories/list', function (Request $reque
 })->add($adminMiddleware);
 
 // Get single category
-$app->get('/api/accounting_operations/categories/get', function (Request $request, Response $response) {
+$app->get('/api/accounting/operations/categories/get', function (Request $request, Response $response) {
     $params = $request->getQueryParams();
     $id = $params['id'] ?? null;
 
@@ -66,7 +66,7 @@ $app->get('/api/accounting_operations/categories/get', function (Request $reques
 })->add($adminMiddleware);
 
 // Add or update a category
-$app->post('/api/accounting_operations/categories/save', function (Request $request, Response $response)
+$app->post('/api/accounting/operations/categories/save', function (Request $request, Response $response)
 {
     $res = true;
     $error = null;
@@ -123,7 +123,7 @@ $app->post('/api/accounting_operations/categories/save', function (Request $requ
 })->add($adminMiddleware);
 
 // Delete a category (only if not used)
-$app->delete('/api/accounting_operations/categories/delete', function (Request $request, Response $response)
+$app->delete('/api/accounting/operations/categories/delete', function (Request $request, Response $response)
 {
     $params = $request->getQueryParams();
     $id = $params['id'] ?? null;
