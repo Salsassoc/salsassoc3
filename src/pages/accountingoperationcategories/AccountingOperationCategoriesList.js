@@ -13,7 +13,7 @@ import PageContentLayout from '../../layout/PageContentLayout.js';
 import TCALayout from '../../components/layout/TCALayout.js';
 import ButtonAdd from '../../components/buttons/ButtonAdd.js';
 
-const OperationCategoriesList = (props) => {
+const AccountingOperationCategoriesList = (props) => {
 
 	// Get application context
 	const appContext = React.useContext(AppContext);
@@ -160,4 +160,4 @@ const OperationCategoriesList = (props) => {
 	)
 };
 
-export default OperationCategoriesList;
+export default AccountingOperationCategoriesList;

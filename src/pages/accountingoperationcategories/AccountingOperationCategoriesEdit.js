@@ -14,7 +14,7 @@ import FormEdit from '../../components/forms/FormEdit.js';
 import FormEditSection from '../../components/forms/FormEditSection.js';
 import FormEditItemSubmit from '../../components/forms/FormEditItemSubmit.js';
 
-const OperationCategoriesEdit = (props) => {
+const AccountingOperationCategoriesEdit = (props) => {
 
 	// Get application context
 	const appContext = React.useContext(AppContext);
@@ -191,4 +191,4 @@ const OperationCategoriesEdit = (props) => {
 	)
 };
 
-export default OperationCategoriesEdit;
+export default AccountingOperationCategoriesEdit;

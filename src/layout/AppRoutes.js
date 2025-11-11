@@ -9,10 +9,10 @@ import Logout from '../pages/Logout.js';
 import Dashboard from '../pages/Dashboard.js';
 import FiscalYearsList from '../pages/fiscalyears/FiscalYearsList.js';
 import FiscalYearsEdit from '../pages/fiscalyears/FiscalYearsEdit.js';
-import OperationCategoriesList from '../pages/operationcategories/OperationCategoriesList.js';
-import OperationCategoriesEdit from '../pages/operationcategories/OperationCategoriesEdit.js';
 import CotisationsList from '../pages/cotisations/CotisationsList.js';
 import CotisationsEdit from '../pages/cotisations/CotisationsEdit.js';
+import AccountingOperationCategoriesList from '../pages/accountingoperationcategories/AccountingOperationCategoriesList.js';
+import AccountingOperationCategoriesEdit from '../pages/accountingoperationcategories/AccountingOperationCategoriesEdit.js';
 import AccountingAccountsList from '../pages/accountingaccounts/AccountingAccountsList.js';
 import AccountingAccountsEdit from '../pages/accountingaccounts/AccountingAccountsEdit.js';
 
@@ -65,15 +65,15 @@ const AppRoutes = () => {
         // Accounting operations categories
         {
             path: "/accounting/operations/categories/list",
-            element: <AppRouteWrapper component={OperationCategoriesList} />,
+            element: <AppRouteWrapper component={AccountingOperationCategoriesList} />,
         },
         {
             path: "/accounting/operations/categories/add",
-            element: <AppRouteWrapper component={OperationCategoriesEdit} />,
+            element: <AppRouteWrapper component={AccountingOperationCategoriesEdit} />,
         },
         {
             path: "/accounting/operations/categories/edit/:id",
-            element: <AppRouteWrapper component={OperationCategoriesEdit} />,
+            element: <AppRouteWrapper component={AccountingOperationCategoriesEdit} />,
         },
         // Accounting accounts
         {
