@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Form, Input, Button, Switch, DatePicker} from 'antd';
+import {Form, Input, Button, DatePicker, Select, InputNumber} from 'antd';
 
 import dayjs from 'dayjs';
 
@@ -16,7 +16,7 @@ import FormEdit from '../../components/forms/FormEdit.js';
 import FormEditSection from '../../components/forms/FormEditSection.js';
 import FormEditItemSubmit from '../../components/forms/FormEditItemSubmit.js';
 
-const FiscalYearsEdit = (props) => {
+const CotisationsEdit = (props) => {
 
     // Get application context
     const appContext = React.useContext(AppContext);
@@ -28,6 +28,7 @@ const FiscalYearsEdit = (props) => {
 
     // Define data state
     const [dataObject, setDataObject] = React.useState(getDefaultData());
+    const [fiscalYears, setFiscalYears] = React.useState([]);
 
     // Create form instance
     const [formInstance] = Form.useForm();
@@ -42,11 +43,13 @@ const FiscalYearsEdit = (props) => {
     function getDefaultData()
     {
         return {
-            fiscal_year: {
+            cotisation: {
                 label: "",
+                amount: 0,
                 start_date: null,
                 end_date: null,
-                is_current: false,
+                fiscal_year_id: null,
+                type: 1,
             }
         }
     }
@@ -69,10 +72,11 @@ const FiscalYearsEdit = (props) => {
 
     function loadData()
     {
-        return loadFiscalYear();
+	return loadCotisation()
+            .then(_result => loadFiscalYears());
     }
 
-    function loadFiscalYear()
+    function loadCotisation()
     {
         // Check if mode add
         if(isModeAdd()){
@@ -80,13 +84,23 @@ const FiscalYearsEdit = (props) => {
         }
 
         // Compute request url
-        let url = serviceInstance.createServiceUrl("/fiscal_years/get?id="+dataId);
+        let url = serviceInstance.createServiceUrl("/cotisations/get?id="+dataId);
 
         // Load data
         return fetchJSON(url, null, jsonDateTimeReviver)
             .then((response) => {
-                const newDataObject = response.result.fiscal_year;
+                const newDataObject = response.result.cotisation;
                 setDataObject(newDataObject);
+                formInstance.setFieldsValue(newDataObject);
+            });
+    }
+
+    function loadFiscalYears()
+    {
+        const url = serviceInstance.createServiceUrl("/fiscal_years/list?order=desc");
+        return fetchJSON(url)
+            .then((response) => {
+                setFiscalYears(response.result.fiscal_years || []);
             });
     }
 
@@ -105,9 +119,9 @@ const FiscalYearsEdit = (props) => {
 
         let path;
         if(isModeAdd()){
-            path = "/fiscal_years/save";
+            path = "/cotisations/save";
         }else{
-            path = "/fiscal_years/save?id="+dataId;
+            path = "/cotisations/save?id="+dataId;
         }
         let url = serviceInstance.createServiceUrl(path);
 
@@ -118,9 +132,9 @@ const FiscalYearsEdit = (props) => {
 
         fetchJSON(url, opts)
             .then((_result) => {
-                pageLoader.endSaving(i18n.t("pages.fiscal_year.saved"));
+                pageLoader.endSaving(i18n.t("pages.cotisation.saved"));
                 if(isModeAdd()){
-                    const url = serviceInstance.createAdminUrl("/fiscal_years/list");
+                    const url = serviceInstance.createAdminUrl("/cotisations/list");
                     props.router.navigate(url);
                 }else{
                     return loadData();
@@ -137,9 +151,9 @@ const FiscalYearsEdit = (props) => {
         // Set page title
         let pageTitle;
         if(!isModeAdd()){
-            pageTitle = i18n.t("pages.fiscal_year.edit_title");
+            pageTitle = i18n.t("pages.cotisation.edit_title");
         }else{
-            pageTitle = i18n.t("pages.fiscal_year.add_title");
+            pageTitle = i18n.t("pages.cotisation.add_title");
         }
 
         // Set page breadcrumb
@@ -148,8 +162,8 @@ const FiscalYearsEdit = (props) => {
                 breadcrumbName: i18n.t("menu.settings"),
             },
             {
-                href: serviceInstance.createAdminUrl('/fiscal_years/list'),
-                breadcrumbName: i18n.t("pages.fiscal_years.title"),
+                href: serviceInstance.createAdminUrl('/cotisations/list'),
+                breadcrumbName: i18n.t("pages.cotisations.title"),
             }
         ];
 
@@ -161,6 +175,9 @@ const FiscalYearsEdit = (props) => {
         return layoutData;
     }
 
+    // Build options for fiscal years
+    const fiscalYearOptions = fiscalYears.map(y => ({ value: y.id, label: y.title }));
+
     // Handle dataObject update
     React.useEffect(() => {
         formInstance.setFieldsValue(dataObject);
@@ -169,30 +186,48 @@ const FiscalYearsEdit = (props) => {
     return (
         <PageContentLayout layoutData={getLayoutData()} loadData={loadData}>
             <FormEdit
-                name="fiscal_year-edit-form"
+                name="cotisation-edit-form"
                 onFinish={onFinish}
                 form={formInstance}
             >
                 <PageContentAlertError pageLoader={pageLoader} />
+
                 <Form.Item name={['id']} hidden={true} rules={[{ required: !isModeAdd() }]}>
                     <Input />
                 </Form.Item>
 
-                <FormEditSection title={i18n.t("pages.fiscal_year.section_general")}>
-                    <Form.Item name={['title']} label={i18n.t("models.fiscal_years.title")} rules={[{ required: true }]}>
-                        <Input />
-                    </Form.Item>
-                    <Form.Item name={['start_date']} label={i18n.t("models.fiscal_years.start_date")} rules={[{ required: true }]}>
-                        <DatePicker format={i18n.t("common.date_format")} />
-                    </Form.Item>
-                    <Form.Item name={['end_date']} label={i18n.t("models.fiscal_years.end_date")} rules={[{ required: true }]}>
-                        <DatePicker format={i18n.t("common.date_format")} />
-                    </Form.Item>
-                    <Form.Item label={i18n.t("models.fiscal_years.is_current")}>
-                        <Form.Item name={['is_current']} rules={[{ type: 'boolean' }]} valuePropName="checked" noStyle>
-                            <Switch />
-                        </Form.Item>
-                    </Form.Item>
+                <FormEditSection title={i18n.t("pages.cotisation.section_general")}>
+
+		        <Form.Item name="label" label={i18n.t("models.cotisation.label")} rules={[{ required: true }]}>
+		            <Input />
+		        </Form.Item>
+
+		        <Form.Item name="type" label={i18n.t("models.cotisation.type")} rules={[{ required: true }]}>
+		            <Select
+		                options={[
+		                    { value: 1, label: i18n.t("models.cotisation.type_membership") },
+		                    { value: 2, label: i18n.t("models.cotisation.type_course") },
+		                    { value: 3, label: i18n.t("models.cotisation.type_donation") },
+		                    { value: 4, label: i18n.t("models.cotisation.type_credit") },
+		                ]}
+		            />
+		        </Form.Item>
+
+		        <Form.Item name={['amount']} label={i18n.t('models.cotisation.amount')} rules={[{ required: true }]}>
+		            <InputNumber min={0} step={0.01} />
+		        </Form.Item>
+
+		        <Form.Item name={['start_date']} label={i18n.t("models.cotisation.start_date")} rules={[{ required: true }]}>
+		            <DatePicker format={i18n.t("common.date_format")} />
+		        </Form.Item>
+
+		        <Form.Item name={['end_date']} label={i18n.t("models.cotisation.end_date")} rules={[{ required: true }]}>
+		            <DatePicker format={i18n.t("common.date_format")} />
+		        </Form.Item>
+
+		        <Form.Item name={['fiscal_year_id']} label={i18n.t("models.cotisation.fiscal_year")} rules={[{ required: true }]}>
+		            <Select options={fiscalYearOptions} />
+		        </Form.Item>
                 </FormEditSection>
 
                 <FormEditItemSubmit>
@@ -205,4 +240,4 @@ const FiscalYearsEdit = (props) => {
     )
 };
 
-export default FiscalYearsEdit;
+export default CotisationsEdit;

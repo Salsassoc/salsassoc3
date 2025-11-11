@@ -11,6 +11,8 @@ import FiscalYearsList from '../pages/fiscalyears/FiscalYearsList.js';
 import FiscalYearsEdit from '../pages/fiscalyears/FiscalYearsEdit.js';
 import OperationCategoriesList from '../pages/operationcategories/OperationCategoriesList.js';
 import OperationCategoriesEdit from '../pages/operationcategories/OperationCategoriesEdit.js';
+import CotisationsList from '../pages/cotisations/CotisationsList.js';
+import CotisationsEdit from '../pages/cotisations/CotisationsEdit.js';
 
 export const AppRouteWrapper = ({ component, ...rest }) => {
     const router = {
@@ -44,6 +46,19 @@ const AppRoutes = () => {
         {
             path: "/fiscal_years/edit/:id",
             element: <AppRouteWrapper component={FiscalYearsEdit} />,
+        },
+        // Cotisations
+        {
+            path: "/cotisations/list",
+            element: <AppRouteWrapper component={CotisationsList} />,
+        },
+        {
+            path: "/cotisations/add",
+            element: <AppRouteWrapper component={CotisationsEdit} />,
+        },
+        {
+            path: "/cotisations/edit/:id",
+            element: <AppRouteWrapper component={CotisationsEdit} />,
         },
         {
             path: "/settings/accounting_operations/categories/list",

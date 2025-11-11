@@ -55,6 +55,21 @@
 			"add_title": "Add category",
 			"edit_title": "Edit category",
 			"section_general": "General"
+		},
+		"cotisations": {
+			"title": "Cotisations",
+			"remove": "Remove cotisation '{{label}}' ?",
+			"list": "List of cotisations",
+			"base_amount": "Base price",
+			"members": "Members",
+			"members_suffix": "members",
+			"collected_amount": "Collected amount"
+		},
+		"cotisation": {
+			"add_title": "Add cotisation",
+			"edit_title": "Edit cotisation",
+			"section_general": "General",
+			"saved": "The cotisation have been saved successfully"
 		}
 	},
 	"models": {
@@ -73,6 +88,18 @@
 			"account_type_charge": "Expense (6)",
 			"account_type_income": "Income (7)",
 			"is_internal_move": "Internal move"
+		},
+		"cotisation": {
+			"label": "Label",
+			"amount": "Amount",
+			"start_date": "Start date",
+			"end_date": "End date",
+			"fiscal_year": "Fiscal year",
+			"type": "Type",
+			"type_membership": "Membership",
+			"type_course": "Course",
+			"type_donation": "Donation",
+			"type_credit": "Credit"
 		}
 	}
 }

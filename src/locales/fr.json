@@ -55,6 +55,21 @@
 			"add_title": "Ajouter une catégorie",
 			"edit_title": "Modifier une catégorie",
 			"section_general": "Général"
+		},
+		"cotisations": {
+			"title": "Cotisations",
+			"remove": "Supprimer la cotisation '{{label}}' ?",
+			"list": "Liste des cotisations",
+			"base_amount": "Tarif de base",
+			"members": "Membres",
+			"members_suffix": "membres",
+			"collected_amount": "Montant perçu"
+		},
+		"cotisation": {
+			"add_title": "Ajouter une cotisation",
+			"edit_title": "Modifier une cotisation",
+			"section_general": "Général",
+			"saved": "La cotisation a bien été sauvegardée"
 		}
 	},
 	"models": {
@@ -73,6 +88,18 @@
 			"account_type_charge": "Charges (6)",
 			"account_type_income": "Produits (7)",
 			"is_internal_move": "Mouvement interne"
+		},
+		"cotisation": {
+			"label": "Libellé",
+			"amount": "Montant",
+			"start_date": "Date de début",
+			"end_date": "Date de fin",
+			"fiscal_year": "Année fiscale",
+			"type": "Type",
+			"type_membership": "Adhésion",
+			"type_course": "Cours",
+			"type_donation": "Don",
+			"type_credit": "Avoir"
 		}
 	}
 }
