@@ -54,8 +54,8 @@ export function getAppMenu()
     // Settings
     subRoutes = [];
     subRoutes.push({
-        name: i18n.t('menu.settings_operation_categories'),
-        path: getAdminUrl("/settings/operation_categories"),
+        name: i18n.t('menu.settings_accounting_operation_categories'),
+        path: getAdminUrl("/settings/accounting_operations/categories/list"),
         exact: true,
     });
 

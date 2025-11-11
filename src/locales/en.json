@@ -4,7 +4,7 @@
 		"settings": "Settings",
 		"settings_fiscal_years": "Fiscal years",
 		"settings_cotisations": "Cotisations",
-		"settings_operation_categories": "Operation categories"
+		"settings_accounting_operation_categories": "Operation categories"
 	},
 	"common": {
 		"home": "Home",
@@ -19,7 +19,9 @@
 			"error": "Error when deleting",
 			"progress": "Deleting in progress"
 		},
-		"date_format": "MM/DD/YYYY"
+		"date_format": "MM/DD/YYYY",
+		"yes": "Yes",
+		"no": "No"
 	},
 	"pages": {
 		"login": {
@@ -45,6 +47,14 @@
 			"edit_title": "Edit fiscal year",
 			"section_general": "General",
 			"saved": "The fiscal year have been saved sucessfully"
+		},
+		"accounting_operation_categories": {
+			"title": "Operation categories",
+			"remove": "Remove category '{{label}}' ?",
+			"list": "List of operation categories",
+			"add_title": "Add category",
+			"edit_title": "Edit category",
+			"section_general": "General"
 		}
 	},
 	"models": {
@@ -53,6 +63,16 @@
 			"start_date": "Start date",
 			"end_date": "End date",
 			"is_current": "Current year"
+		},
+		"accounting_operation_category": {
+			"label": "Label",
+			"account_number": "Account number",
+			"account_name": "Account name",
+			"account_type": "Account type",
+			"account_type_unknown": "Unknown",
+			"account_type_charge": "Expense (6)",
+			"account_type_income": "Income (7)",
+			"is_internal_move": "Internal move"
 		}
 	}
 }

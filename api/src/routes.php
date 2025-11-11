@@ -35,3 +35,4 @@ $app->post('/api/authenticate', function (Request $request, Response $response) 
 
 require __DIR__ . '/services/fiscal_years.php';
 require __DIR__ . '/services/users.php';
+require __DIR__ . '/services/accounting_operation_categories.php';

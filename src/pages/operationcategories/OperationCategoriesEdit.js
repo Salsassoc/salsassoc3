@@ -1,8 +1,6 @@
 import React from 'react';
 
-import {Form, Input, Button, Switch, DatePicker} from 'antd';
-
-import dayjs from 'dayjs';
+import {Form, Input, Button, Switch, Select} from 'antd';
 
 import i18n from '../../utils/i18n.js';
 
@@ -16,7 +14,7 @@ import FormEdit from '../../components/forms/FormEdit.js';
 import FormEditSection from '../../components/forms/FormEditSection.js';
 import FormEditItemSubmit from '../../components/forms/FormEditItemSubmit.js';
 
-const FiscalYearsEdit = (props) => {
+const OperationCategoriesEdit = (props) => {
 
     // Get application context
     const appContext = React.useContext(AppContext);
@@ -42,38 +40,20 @@ const FiscalYearsEdit = (props) => {
     function getDefaultData()
     {
         return {
-            fiscal_year: {
-                label: "",
-                start_date: null,
-                end_date: null,
-                is_current: false,
-            }
+            label: "",
+            account_number: "",
+            account_name: "",
+            account_type: 0,
+            is_internal_move: false,
         }
-    }
-
-    // Utility function
-    function jsonDateTimeReviver(key, value)
-    {
-        switch(key){
-        case 'start_date':
-        case 'end_date':
-            if(value == null || value === 0){
-                return null;
-            }
-            return dayjs(value, "YYYY-MM-DD");
-        default:
-            break;
-        }
-        return value;
     }
 
     function loadData()
     {
-        // Check if mode add
-        return loadFiscalYear();
+        return loadCategory();
     }
 
-    function loadFiscalYear()
+    function loadCategory()
     {
         // Check if mode add
         if(isModeAdd()){
@@ -81,13 +61,14 @@ const FiscalYearsEdit = (props) => {
         }
 
         // Compute request url
-        let url = serviceInstance.createServiceUrl("/fiscal_years/get?id="+dataId);
+        let url = serviceInstance.createServiceUrl("/accounting_operations/categories/get?id="+dataId);
 
         // Load data
-        return fetchJSON(url, null, jsonDateTimeReviver)
+        return fetchJSON(url)
             .then((response) => {
-                const newDataObject = response.result.fiscal_year;
+                const newDataObject = response.result.accounting_operations_category;
                 setDataObject(newDataObject);
+                formInstance.setFieldsValue(newDataObject);
             });
     }
 
@@ -96,20 +77,13 @@ const FiscalYearsEdit = (props) => {
     {
         pageLoader.startSaving();
 
-        // Convert dates to the desired format
-        if (values.start_date) {
-            values.start_date = values.start_date.format('YYYY-MM-DD');
-        }
-        if (values.end_date) {
-            values.end_date = values.end_date.format('YYYY-MM-DD');
-        }
-
         let path;
         if(isModeAdd()){
-            path = "/fiscal_years/save";
+            path = "/accounting_operations/categories/save";
         }else{
-            path = "/fiscal_years/save?id="+dataId;
+            path = "/accounting_operations/categories/save?id="+dataId;
         }
+
         let url = serviceInstance.createServiceUrl(path);
 
         let opts = {
@@ -119,9 +93,9 @@ const FiscalYearsEdit = (props) => {
 
         fetchJSON(url, opts)
             .then((_result) => {
-                pageLoader.endSaving(i18n.t("pages.fiscal_year.saved"));
+                pageLoader.endSaving();
                 if(isModeAdd()){
-                    const url = serviceInstance.createAdminUrl("/fiscal_years/list");
+                    const url = serviceInstance.createAdminUrl("/settings/accounting_operations/categories/list");
                     props.router.navigate(url);
                 }else{
                     return loadData();
@@ -132,25 +106,21 @@ const FiscalYearsEdit = (props) => {
             });
     }
 
-    // Compute layout data
     function getLayoutData()
     {
         // Set page title
         let pageTitle;
-        if(!isModeAdd()){
-            pageTitle = i18n.t("pages.fiscal_year.edit_title");
+        if(isModeAdd()){
+            pageTitle = i18n.t("pages.accounting_operation_categories.add_title");
         }else{
-            pageTitle = i18n.t("pages.fiscal_year.add_title");
+            pageTitle = i18n.t("pages.accounting_operation_categories.edit_title");
         }
 
         // Set page breadcrumb
         const pageBreadcrumb = [
             {
-                breadcrumbName: i18n.t("menu.settings"),
-            },
-            {
-                href: serviceInstance.createAdminUrl('/fiscal_years/list'),
-                breadcrumbName: i18n.t("pages.fiscal_years.title"),
+                href: serviceInstance.createAdminUrl('/settings/accounting_operations/categories/list'),
+                breadcrumbName: i18n.t("pages.accounting_operation_categories.title"),
             }
         ];
 
@@ -162,38 +132,46 @@ const FiscalYearsEdit = (props) => {
         return layoutData;
     }
 
-    // Handle dataObject update
-    React.useEffect(() => {
-        formInstance.setFieldsValue(dataObject);
-    }, [dataObject]);
-
     return (
         <PageContentLayout layoutData={getLayoutData()} loadData={loadData}>
             <FormEdit
-                name="fiscal_year-edit-form"
+                name="operation_category-edit-form"
                 onFinish={onFinish}
                 form={formInstance}
             >
                 <PageContentAlertError pageLoader={pageLoader} />
-                <Form.Item name={['id']} hidden={true} rules={[{ required: !isModeAdd() }]}>
-                    <Input />
-                </Form.Item>
 
-                <FormEditSection title={i18n.t("pages.fiscal_year.section_general")}>
-                    <Form.Item name={['title']} label={i18n.t("models.fiscal_years.title")} rules={[{ required: true }]}>
+                <FormEditSection title={i18n.t("pages.accounting_operation_categories.section_general")}>
+
+                    <Form.Item name={['label']} label={i18n.t("models.accounting_operation_category.label")} rules={[{ required: true }]}>
                         <Input />
                     </Form.Item>
-                    <Form.Item name={['start_date']} label={i18n.t("models.fiscal_years.start_date")} rules={[{ required: true }]}>
-                        <DatePicker format={i18n.t("common.date_format")} />
+
+                    <Form.Item name={['account_number']} label={i18n.t("models.accounting_operation_category.account_number")}
+                                rules={[{ required: false }]}>
+                        <Input />
                     </Form.Item>
-                    <Form.Item name={['end_date']} label={i18n.t("models.fiscal_years.end_date")} rules={[{ required: true }]}>
-                        <DatePicker format={i18n.t("common.date_format")} />
+
+                    <Form.Item name={['account_name']} label={i18n.t("models.accounting_operation_category.account_name")}
+                                rules={[{ required: false }]}>
+                        <Input />
                     </Form.Item>
-                    <Form.Item label={i18n.t("models.fiscal_years.is_current")}>
-                        <Form.Item name={['is_current']} rules={[{ type: 'boolean' }]} valuePropName="checked" noStyle>
-                            <Switch />
-                        </Form.Item>
+
+                    {/* account_type not requested in list columns but present in data model; keep optional select */}
+                    <Form.Item name={['account_type']} label={i18n.t("models.accounting_operation_category.account_type")}>
+                        <Select
+                            options={[
+                                { value: 0, label: i18n.t('models.accounting_operation_category.account_type_unknown') },
+                                { value: 6, label: i18n.t('models.accounting_operation_category.account_type_charge') },
+                                { value: 7, label: i18n.t('models.accounting_operation_category.account_type_income') },
+                            ]}
+                        />
                     </Form.Item>
+
+                    <Form.Item label={i18n.t("models.accounting_operation_category.is_internal_move")} name={["is_internal_move"]} valuePropName='checked'>
+                        <Switch />
+                    </Form.Item>
+
                 </FormEditSection>
 
                 <FormEditItemSubmit>
@@ -204,7 +182,7 @@ const FiscalYearsEdit = (props) => {
                 
             </FormEdit>
         </PageContentLayout>
-    )
-};
+    );
+}
 
-export default FiscalYearsEdit;
+export default OperationCategoriesEdit;

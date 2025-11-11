@@ -37,7 +37,7 @@ const FiscalYearsList = (props) => {
 
         return fetchJSON(url)
             .then((response) => {
-                const items = response.result;
+                const items = response.result.fiscal_years;
                 setItems(items);
             });
     }
@@ -151,7 +151,7 @@ const FiscalYearsList = (props) => {
         return (<span style={{ color }}>{formatCurrency(value)}</span>);
     }
 
-    function getColums()
+    function getColumns()
     {
         return [
             {
@@ -251,7 +251,7 @@ const FiscalYearsList = (props) => {
     const tableContent = (
         <Table
             dataSource={items}
-            columns={getColums()}
+            columns={getColumns()}
             rowKey={record => "fiscalyear_" + record.id} 
             pagination={{
                 defaultPageSize: 50

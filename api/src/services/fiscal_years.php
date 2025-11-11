@@ -64,7 +64,7 @@ $app->get('/api/fiscal_years/list', function (Request $request, Response $respon
         if (isset($year['income_amount'])) { $year['income_amount'] = (float)$year['income_amount']; }
         if (isset($year['outcome_amount'])) { $year['outcome_amount'] = (float)$year['outcome_amount']; }
     }
-    $response->getBody()->write(json_encode($fiscalYears));
+    $response->getBody()->write(json_encode(["fiscal_years" => $fiscalYears]));
     return $response->withHeader('Content-Type', 'application/json');
 })->add($adminMiddleware);
 
@@ -80,7 +80,7 @@ $app->get('/api/fiscal_years/get', function (Request $request, Response $respons
     
     if ($fiscalYear) {
         $fiscalYear['is_current'] = (bool)($fiscalYear['is_current'] == "true");
-        $response->getBody()->write(json_encode($fiscalYear));
+        $response->getBody()->write(json_encode(['fiscal_year' => $fiscalYear]));
     } else {
         $response = $response->withStatus(404);
         $response->getBody()->write(json_encode(['error' => 'Fiscal year not found']));

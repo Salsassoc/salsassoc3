@@ -9,6 +9,8 @@ import Logout from '../pages/Logout.js';
 import Dashboard from '../pages/Dashboard.js';
 import FiscalYearsList from '../pages/fiscalyears/FiscalYearsList.js';
 import FiscalYearsEdit from '../pages/fiscalyears/FiscalYearsEdit.js';
+import OperationCategoriesList from '../pages/operationcategories/OperationCategoriesList.js';
+import OperationCategoriesEdit from '../pages/operationcategories/OperationCategoriesEdit.js';
 
 export const AppRouteWrapper = ({ component, ...rest }) => {
     const router = {
@@ -42,6 +44,18 @@ const AppRoutes = () => {
         {
             path: "/fiscal_years/edit/:id",
             element: <AppRouteWrapper component={FiscalYearsEdit} />,
+        },
+        {
+            path: "/settings/accounting_operations/categories/list",
+            element: <AppRouteWrapper component={OperationCategoriesList} />,
+        },
+        {
+            path: "/settings/accounting_operations/categories/add",
+            element: <AppRouteWrapper component={OperationCategoriesEdit} />,
+        },
+        {
+            path: "/settings/accounting_operations/categories/edit/:id",
+            element: <AppRouteWrapper component={OperationCategoriesEdit} />,
         },
     ];
 
