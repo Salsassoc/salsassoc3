@@ -4,6 +4,7 @@
 		"settings": "Paramètres",
 		"fiscal_years": "Années fiscales",
 		"cotisations": "Cotisations",
+		"members": "Membres",
 		"accounting": "Comptabilité",
 		"accounting_operation_categories": "Catégories d'opération",
 		"accounting_accounts": "Comptes",
@@ -92,6 +93,20 @@
 			"edit_title": "Modifier une opération",
 			"section_general": "Général",
 			"saved": "L'opération a bien été sauvegardée"
+		},
+		"members": {
+			"title": "Membres",
+			"remove": "Supprimer le membre '{{label}}' ?",
+			"list": "Liste des membres",
+			"membership_count": "Nombre d'adhésions",
+			"collected_amount": "Montant perçu",
+			"membership_suffix": "{{count}} adhésion(s)"
+		},
+		"member": {
+			"add_title": "Ajouter un membre",
+			"edit_title": "Modifier un membre",
+			"section_general": "Général",
+			"saved": "Le membre a bien été sauvegardé"
 		}
 	},
 	"models": {
@@ -156,6 +171,26 @@
 			"op_method_transfer_out": "Virement émis",
 			"op_method_direct_debit": "Prélèvement",
 			"op_method_interest": "Intérêts"
+		},
+		"member": {
+			"lastname": "Nom",
+			"firstname": "Prénom",
+			"gender": "Genre",
+			"gender_unknown": "Non défini",
+			"gender_male": "Homme",
+			"gender_female": "Femme",
+			"birthdate": "Date naissance",
+			"email": "Email",
+			"phonenumber": "Téléphone",
+			"phonenumber2": "Téléphone 2",
+			"creation_date": "Date de création",
+			"password": "Mot de passe",
+			"is_member": "Est membre",
+			"image_rights": "Droit à l'image",
+			"comments": "Commentaires",
+			"address": "Adresse",
+			"zipcode": "Code postal",
+			"city": "Ville"
 		}
 	}
 }

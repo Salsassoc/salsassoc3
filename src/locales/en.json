@@ -4,6 +4,7 @@
 		"settings": "Settings",
 		"fiscal_years": "Fiscal years",
 		"cotisations": "Cotisations",
+		"members": "Members",
 		"accounting": "Accounting",
 		"accounting_operation_categories": "Operation categories",
 		"accounting_accounts": "Accounts",
@@ -92,6 +93,20 @@
 			"edit_title": "Edit operation",
 			"section_general": "General",
 			"saved": "The operation has been saved successfully"
+		},
+		"members": {
+			"title": "Members",
+			"remove": "Remove member '{{label}}' ?",
+			"list": "List of members",
+			"membership_count": "Membership count",
+			"collected_amount": "Collected amount",
+			"membership_suffix": "{{count}} memberships"
+		},
+		"member": {
+			"add_title": "Add member",
+			"edit_title": "Edit member",
+			"section_general": "General",
+			"saved": "The member has been saved successfully"
 		}
 	},
 	"models": {

@@ -5,7 +5,8 @@ import {
   SettingOutlined,
   CalendarOutlined,
   ProductOutlined,
-  BankOutlined
+  BankOutlined,
+  UserOutlined
 } from '@ant-design/icons';
 
 import {AppContext} from "../layout/AppContext.js";
@@ -34,6 +35,14 @@ export function getAppMenu()
         name: i18n.t('menu.dashboard'),
         path: getAdminUrl("/dashboard"), 
         icon: <DashboardOutlined />,
+    });
+
+    // Members
+    appMenu.route.routes.push({
+        name: i18n.t('menu.members'),
+        path: getAdminUrl("/members/list"),
+        icon: <UserOutlined />,
+        exact: true,
     });
 
     // Accounting
