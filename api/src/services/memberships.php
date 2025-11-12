@@ -8,7 +8,11 @@ $app->get('/api/memberships/list', function (Request $request, Response $respons
 {
     $db = $this->get('db');
 
-    // Order: fiscal year desc, then lastname+firstname asc
+    // Read filters
+    $params = $request->getQueryParams();
+    $fiscalYearId = $params['fiscalyear_id'] ?? ($params['fiscal_year_id'] ?? null);
+
+    // Build query
     $sql = 'SELECT m.*, 
         p.lastname, p.firstname, p.gender, p.birthdate, p.address, p.zipcode, p.city, p.email, p.phonenumber, p.phonenumber2, p.image_rights,
         fy.title AS fiscal_year_title,
@@ -25,9 +29,19 @@ $app->get('/api/memberships/list', function (Request $request, Response $respons
         FROM membership m
         INNER JOIN person p ON p.id = m.person_id
         LEFT JOIN fiscal_year fy ON fy.id = m.fiscal_year_id
-        ORDER BY m.fiscal_year_id DESC, membership_date DESC, p.lastname ASC, p.firstname ASC';
+        WHERE 1=1';
+    $binds = [];
 
-    $stmt = $db->query($sql);
+    if ($fiscalYearId !== null && $fiscalYearId !== '') {
+        $sql .= ' AND m.fiscal_year_id = ?';
+        $binds[] = (int)$fiscalYearId;
+    }
+
+    // Order: fiscal year desc, then lastname+firstname asc
+    $sql .= ' ORDER BY m.fiscal_year_id DESC, membership_date DESC, p.lastname ASC, p.firstname ASC';
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute($binds);
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     foreach ($rows as &$row) {

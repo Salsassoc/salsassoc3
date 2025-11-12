@@ -14,6 +14,7 @@ import PageContentLayout from '../../layout/PageContentLayout.js';
 
 import TCALayout from '../../components/layout/TCALayout.js';
 import ButtonAdd from '../../components/buttons/ButtonAdd.js';
+import MembershipsSearchForm from './MembershipsSearchForm.js';
 
 const MembershipsList = (props) => {
 
@@ -24,21 +25,38 @@ const MembershipsList = (props) => {
 
 	// Define data state
 	const [items, setItems] = React.useState([]);
+	const [fiscalYears, setFiscalYears] = React.useState([]);
+	const [filter, setFilter] = React.useState({
+		fiscalYearId: null,
+	});
 
 	// Data loading and initialization
 	function loadData()
 	{
-		return loadMembershipsList();
+		return loadMembershipsList()
+			.then(_r => loadFiscalYears());
 	}
 
 	function loadMembershipsList()
 	{
-		let url = serviceInstance.createServiceUrl("/memberships/list");
+		let params = "";
+		if (filter.fiscalYearId) {
+			params += "&fiscal_year_id=" + filter.fiscalYearId;
+		}
+		let url = serviceInstance.createServiceUrl("/memberships/list?" + params);
 
 		return fetchJSON(url)
 			.then((response) => {
 				const items = response.result.memberships || [];
 				setItems(items);
+			});
+	}
+
+	function loadFiscalYears(){
+		const url = serviceInstance.createServiceUrl("/fiscal_years/list?order=desc");
+		return fetchJSON(url)
+			.then((response) => {
+				setFiscalYears(response.result.fiscal_years || []);
 			});
 	}
 
@@ -178,6 +196,24 @@ const MembershipsList = (props) => {
 		];
 	}
 
+	function onFormSearchFinished(values){
+		setFilter({
+			fiscalYearId: values.fiscal_year_id,
+		});
+	}
+
+	// Reload list when filter changes
+	React.useEffect(() => {
+		loadMembershipsList();
+	}, [filter]);
+
+	const form = (
+		<MembershipsSearchForm
+			fiscalYears={fiscalYears}
+			onFinish={onFormSearchFinished}
+		/>
+	);
+
 	const tableContent = (
 		<Table
 			dataSource={items}
@@ -196,6 +232,7 @@ const MembershipsList = (props) => {
 			<TCALayout
 				title={i18n.t("pages.memberships.list")}
 				content={tableContent}
+				form={form}
 				actions={tableActions}
 			/>
 		</PageContentLayout>
