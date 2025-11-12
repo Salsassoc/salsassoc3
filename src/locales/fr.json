@@ -57,7 +57,7 @@
 		"accounting_operation_categories": {
 			"title": "Catégories d'opération",
 			"remove": "Supprimer la catégorie '{{label}}' ?",
-			"list": "Liste des catégories d'opération",
+			"list": "Nombre de catégories: {{count}}",
 			"add_title": "Ajouter une catégorie",
 			"edit_title": "Modifier une catégorie",
 			"section_general": "Général"
@@ -65,7 +65,7 @@
 		"cotisations": {
 			"title": "Cotisations",
 			"remove": "Supprimer la cotisation '{{label}}' ?",
-			"list": "Liste des cotisations",
+			"list": "Nombre de cotisations: {{count}}",
 			"base_amount": "Tarif de base",
 			"members": "Membres",
 			"members_suffix": "membres",
@@ -80,7 +80,7 @@
 		"accounting_accounts": {
 			"title": "Comptes comptables",
 			"remove": "Supprimer le compte '{{label}}' ?",
-			"list": "Liste des comptes",
+			"list": "Nombre de comptes: {{count}}",
 			"add_title": "Ajouter un compte",
 			"edit_title": "Modifier un compte",
 			"section_general": "Général"
@@ -88,7 +88,7 @@
 		"accounting_operations": {
 			"title": "Opérations",
 			"remove": "Supprimer l'opération '{{label}}' ?",
-			"list": "Liste des opérations"
+			"list": "Nombre d'opérations: {{count}}"
 		},
 		"accounting_operation": {
 			"add_title": "Ajouter une opération",
@@ -99,7 +99,7 @@
 		"members": {
 			"title": "Membres",
 			"remove": "Supprimer le membre '{{label}}' ?",
-			"list": "Liste des membres",
+			"list": "Nombre de membres: {{count}}",
 			"membership_count": "Nombre d'adhésions",
 			"collected_amount": "Montant perçu",
 			"membership_suffix": "{{count}} adhésion(s)"
@@ -113,7 +113,7 @@
 		"memberships": {
 			"title": "Adhésions",
 			"remove": "Supprimer l'adhésion de '{{label}}' ?",
-			"list": "Liste des adhésions"
+			"list": "Nombre d'adhésions: {{count}}"
 		},
 		"membership": {
 			"add_title": "Ajouter une adhésion",

@@ -232,7 +232,7 @@ const MembersList = (props) => {
 	return (
 		<PageContentLayout layoutData={getLayoutData()} loadData={loadData}>
 			<TCALayout
-				title={i18n.t("pages.members.list")}
+				title={i18n.t("pages.members.list", { count: (items ? items.length : 0) })}
 				content={tableContent}
 				actions={tableActions}
 			/>

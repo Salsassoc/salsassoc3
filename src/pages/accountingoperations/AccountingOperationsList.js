@@ -351,7 +351,7 @@ const AccountingOperationsList = (props) => {
 	return (
 		<PageContentLayout layoutData={getLayoutData()} loadData={loadData}>
 			<TCALayout
-				title={i18n.t("pages.accounting_operations.list")}
+				title={i18n.t("pages.accounting_operations.list", { count: (items ? items.length : 0) })}
 				content={tableContent}
 				form={form}
 				actions={tableActions}

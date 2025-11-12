@@ -230,7 +230,7 @@ const MembershipsList = (props) => {
 	return (
 		<PageContentLayout layoutData={getLayoutData()} loadData={loadData}>
 			<TCALayout
-				title={i18n.t("pages.memberships.list")}
+				title={i18n.t("pages.memberships.list", { count: (items ? items.length : 0) })}
 				content={tableContent}
 				form={form}
 				actions={tableActions}

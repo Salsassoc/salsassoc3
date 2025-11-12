@@ -57,7 +57,7 @@
 		"accounting_operation_categories": {
 			"title": "Operation categories",
 			"remove": "Remove category '{{label}}' ?",
-			"list": "List of operation categories",
+			"list": "Number of categories: {{count}}",
 			"add_title": "Add category",
 			"edit_title": "Edit category",
 			"section_general": "General"
@@ -65,7 +65,7 @@
 		"cotisations": {
 			"title": "Cotisations",
 			"remove": "Remove cotisation '{{label}}' ?",
-			"list": "List of cotisations",
+			"list": "Number of cotisations: {{count}}",
 			"base_amount": "Base price",
 			"members": "Members",
 			"members_suffix": "members",
@@ -80,7 +80,7 @@
 		"accounting_accounts": {
 			"title": "Accounting accounts",
 			"remove": "Remove account '{{label}}' ?",
-			"list": "List of accounts",
+			"list": "Number of accounts: {{count}}",
 			"add_title": "Add account",
 			"edit_title": "Edit account",
 			"section_general": "General"
@@ -88,7 +88,7 @@
 		"accounting_operations": {
 			"title": "Operations",
 			"remove": "Remove operation '{{label}}' ?",
-			"list": "List of operations"
+			"list": "Number of operations: {{count}}"
 		},
 		"accounting_operation": {
 			"add_title": "Add operation",
@@ -99,7 +99,7 @@
 		"members": {
 			"title": "Members",
 			"remove": "Remove member '{{label}}' ?",
-			"list": "List of members",
+			"list": "Number of members: {{count}}",
 			"membership_count": "Membership count",
 			"collected_amount": "Collected amount",
 			"membership_suffix": "{{count}} memberships"
@@ -113,7 +113,7 @@
 		"memberships": {
 			"title": "Memberships",
 			"remove": "Remove membership of '{{label}}' ?",
-			"list": "List of memberships"
+			"list": "Number of memberships: {{count}}"
 		},
 		"membership": {
 			"add_title": "Add membership",
