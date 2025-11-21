@@ -118,9 +118,10 @@
 		"membership": {
 			"add_title": "Ajouter une adhésion",
 			"edit_title": "Modifier une adhésion",
-			"section_general": "Général",
+			"section_personal_data": "Données personnelles",
+			"section_membership": "Adhésion",
+			"section_cotisations": "Cotisations",
 			"saved": "L'adhésion a bien été sauvegardée",
-			"cotisations_section": "Cotisations",
 			"no_cotisation_for_year": "Aucune cotisation pour cette année fiscale",
 			"search_member": "Rechercher un membre",
 			"search_member_placeholder": "Nom Prénom..."

@@ -9,11 +9,13 @@ const FormEdit = React.forwardRef((props, ref) => {
     const screens = useBreakpoint();
     const lowRes = (screens.xs || !screens.lg);
 
+    const layout = props.layout;
+
     const formProps = (lowRes ? 
       {
-        layout:"vertical",
+        layout:(layout || "vertical"),
       } : {
-        layout:"horizontal",
+        layout:(layout || "horizontal"),
         labelAlign: "left",
         /*
         labelCol: {

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Form, Input, Button, DatePicker, Select, InputNumber, Switch, AutoComplete} from 'antd';
+import {Form, Input, Button, DatePicker, Select, InputNumber, Switch, AutoComplete, Row, Col, Space, Typography} from 'antd';
 
 import dayjs from 'dayjs';
 
@@ -210,9 +210,50 @@ const MembershipsEdit = (props) => {
 			});
 	}
 
+	function renderAutoCompleteLabel(m)
+	{
+		let name = `${m.lastname} ${m.firstname}`;
+		let address = null;
+		let birthdate = null;
+		if(m.city || m.zipcode || m.address)
+		{
+			address = (
+				<Typography.Text type="secondary">
+					&nbsp; {m.address} {m.zipcode} {m.city}
+				</Typography.Text>
+			)
+		}
+		if(m.birthdate)
+		{
+			birthdate = "(" + dayjs(m.birthdate, "YYYY-MM-DD").format(i18n.t('common.date_format')) + ")";
+		}
+		return (
+			<Space direction="vertical">
+				<Space>{name}{birthdate}</Space>
+				<Space>{address}</Space>
+
+			</Space>
+		);
+	}
+
+	function renderAutoCompleteValue(m)
+	{
+		let value = `${m.lastname}`;
+		return value;
+	}
+
+	function renderAutoCompleteSearch(m)
+	{
+		let value = `${m.lastname} ${m.firstname}`;
+		return value;
+	}
+
 	// Autocomplete options for members (by lastname firstname)
 	const memberOptions = (members || []).map(m => ({
-		value: `${m.lastname} ${m.firstname}`,
+		key: m.id,
+		label: renderAutoCompleteLabel(m),
+		value: renderAutoCompleteValue(m),
+		search: renderAutoCompleteSearch(m),
 		m
 	}));
 
@@ -255,8 +296,7 @@ const MembershipsEdit = (props) => {
 		const fyCotisations = (cotisations || []).filter(c => c.fiscal_year_id === fyId);
 		if(!fyId){ return null; }
 		return (
-			<div style={{border: '1px solid #f0f0f0', padding: 10, borderRadius: 4, marginTop: 10}}>
-				<h4>{i18n.t('pages.membership.cotisations_section')}</h4>
+			<div>
 				{fyCotisations.length === 0 && (<div>{i18n.t('pages.membership.no_cotisation_for_year')}</div>)}
 				{fyCotisations.map(c => {
 					const idx = cotisationLines.findIndex(l => (l.cotisation_id || l.id) === c.id);
@@ -332,87 +372,111 @@ const MembershipsEdit = (props) => {
 					<Input />
 				</Form.Item>
 
-				<FormEditSection title={i18n.t("pages.membership.section_general")}>
-
+				{isModeAdd() ?
 					<Form.Item label={i18n.t('pages.membership.search_member')}>
-						<AutoComplete style={{width:'100%'}} options={memberOptions} onSelect={onMemberSelect} placeholder={i18n.t('pages.membership.search_member_placeholder')} filterOption={(inputValue, option) => option.value.toUpperCase().includes(inputValue.toUpperCase())} />
-					</Form.Item>
-
-					<Form.Item name={['person_id']} hidden={true}><Input /></Form.Item>
-
-					<Form.Item name={['lastname']} label={i18n.t("models.member.lastname")} rules={[{ required: true }]}>
-						<Input />
-					</Form.Item>
-
-					<Form.Item name={['firstname']} label={i18n.t("models.member.firstname")} rules={[{ required: true }]}>
-						<Input />
-					</Form.Item>
-
-					<Form.Item name="gender" label={i18n.t("models.member.gender")}>
-						<Select
-							options={[
-								{ value: 0, label: i18n.t('models.member.gender_unknown') },
-								{ value: 1, label: i18n.t('models.member.gender_male') },
-								{ value: 2, label: i18n.t('models.member.gender_female') },
-							]}
+						<AutoComplete
+							style={{width:'100%'}}
+							options={memberOptions}
+							onSelect={onMemberSelect}
+							placeholder={i18n.t('pages.membership.search_member_placeholder')}
+							filterOption={(inputValue, option) => option.search.toUpperCase().includes(inputValue.toUpperCase())}
 						/>
 					</Form.Item>
+					: null
+				}
 
-					<Form.Item name={['birthdate']} label={i18n.t("models.member.birthdate")}>
-						<DatePicker format={i18n.t("common.date_format")} />
-					</Form.Item>
+				<Row gutter={[8, 8]}>
+					<Col span={12}>
 
-					<Form.Item name={['address']} label={i18n.t("models.member.address")}>
-						<Input />
-					</Form.Item>
+						<FormEditSection title={i18n.t("pages.membership.section_personal_data")}>
 
-					<Form.Item name={['zipcode']} label={i18n.t("models.member.zipcode")}>
-						<InputNumber min={0} />
-					</Form.Item>
+							<Form.Item name={['person_id']} hidden={true}><Input /></Form.Item>
 
-					<Form.Item name={['city']} label={i18n.t("models.member.city")}>
-						<Input />
-					</Form.Item>
+							<Form.Item name={['lastname']} label={i18n.t("models.member.lastname")} rules={[{ required: true }]}>
+								<Input />
+							</Form.Item>
+							
+							<Form.Item name={['firstname']} label={i18n.t("models.member.firstname")} rules={[{ required: true }]}>
+								<Input />
+							</Form.Item>
 
-					<Form.Item name={['email']} label={i18n.t("models.member.email")}>
-						<Input />
-					</Form.Item>
+							<Form.Item name="gender" label={i18n.t("models.member.gender")}>
+								<Select
+									options={[
+										{ value: 0, label: i18n.t('models.member.gender_unknown') },
+										{ value: 1, label: i18n.t('models.member.gender_male') },
+										{ value: 2, label: i18n.t('models.member.gender_female') },
+									]}
+								/>
+							</Form.Item>
 
-					<Form.Item name={['phonenumber']} label={i18n.t("models.member.phonenumber")}>
-						<Input />
-					</Form.Item>
+							<Form.Item name={['birthdate']} label={i18n.t("models.member.birthdate")}>
+								<DatePicker format={i18n.t("common.date_format")} />
+							</Form.Item>
 
-					<Form.Item name={['phonenumber2']} label={i18n.t("models.member.phonenumber2")}>
-						<Input />
-					</Form.Item>
+							<Form.Item name={['address']} label={i18n.t("models.member.address")}>
+								<Input />
+							</Form.Item>
 
-					<Form.Item name={['image_rights']} valuePropName="checked" label={i18n.t("models.member.image_rights")}>
-						<Switch />
-					</Form.Item>
+							<Form.Item name={['zipcode']} label={i18n.t("models.member.zipcode")}>
+								<InputNumber min={0} />
+							</Form.Item>
+			
+							<Form.Item name={['city']} label={i18n.t("models.member.city")}>
+								<Input />
+							</Form.Item>
 
-					<Form.Item name={['membership_date']} label={i18n.t("models.membership.date")} rules={[{ required: true }]}>
-						<DatePicker format={i18n.t("common.date_format")} />
-					</Form.Item>
+							<Form.Item name={['email']} label={i18n.t("models.member.email")}>
+								<Input />
+							</Form.Item>
 
-					<Form.Item name="membership_type" label={i18n.t("models.membership.type")}>
-						<Select
-							options={[
-								{ value: '', label: i18n.t('models.membership.type_unknown') },
-								{ value: 1, label: i18n.t('models.membership.type_standard') },
-								{ value: 2, label: i18n.t('models.membership.type_young') },
-								{ value: 3, label: i18n.t('models.membership.type_board') },
-								{ value: 4, label: i18n.t('models.membership.type_teacher') },
-							]}
-						/>
-					</Form.Item>
+							<Form.Item name={['phonenumber']} label={i18n.t("models.member.phonenumber")}>
+								<Input />
+							</Form.Item>
 
-					<Form.Item name={['fiscal_year_id']} label={i18n.t("models.cotisation.fiscal_year")} rules={[{ required: true }]}>
-						<Select options={fiscalYearOptions} onChange={onFiscalYearChange} />
-					</Form.Item>
+							<Form.Item name={['phonenumber2']} label={i18n.t("models.member.phonenumber2")}>
+								<Input />
+							</Form.Item>
 
-					{renderCotisationsEditor()}
+							<Form.Item name={['image_rights']} valuePropName="checked" label={i18n.t("models.member.image_rights")}>
+								<Switch />
+							</Form.Item>
 
-				</FormEditSection>
+
+						</FormEditSection>
+					</Col>
+					<Col span={12}>
+	
+						<FormEditSection title={i18n.t('pages.membership.section_membership')}>
+
+							<Form.Item name={['membership_date']} label={i18n.t("models.membership.date")} rules={[{ required: true }]}>
+								<DatePicker format={i18n.t("common.date_format")} />
+							</Form.Item>
+
+							<Form.Item name="membership_type" label={i18n.t("models.membership.type")}>
+								<Select
+									options={[
+										{ value: '', label: i18n.t('models.membership.type_unknown') },
+										{ value: 1, label: i18n.t('models.membership.type_standard') },
+										{ value: 2, label: i18n.t('models.membership.type_young') },
+										{ value: 3, label: i18n.t('models.membership.type_board') },
+										{ value: 4, label: i18n.t('models.membership.type_teacher') },
+									]}
+								/>
+							</Form.Item>
+
+							<Form.Item name={['fiscal_year_id']} label={i18n.t("models.cotisation.fiscal_year")} rules={[{ required: true }]}>
+								<Select options={fiscalYearOptions} onChange={onFiscalYearChange} />
+							</Form.Item>
+
+
+						</FormEditSection>
+
+						<FormEditSection title={i18n.t('pages.membership.section_cotisations')}>
+							{renderCotisationsEditor()}
+						</FormEditSection>
+					</Col>
+				</Row>
 
 				<FormEditItemSubmit>
 					<Button type="primary" htmlType="submit">
