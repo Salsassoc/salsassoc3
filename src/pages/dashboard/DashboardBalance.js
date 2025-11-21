@@ -38,6 +38,7 @@ const DashboardBalance = ({ fiscalYears = [], loading = false }) => {
     height: 300,
     animation: false,
     axis: {
+      x: false,
       y: {
         labelFormatter: (d) => d + " €",
       },

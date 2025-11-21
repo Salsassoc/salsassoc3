@@ -39,6 +39,9 @@ const DashboardMemberships = ({ fiscalYears = [], loading = false }) => {
     point: { size: 4, shape: 'circle' },
     xAxis: { title: { text: i18n.t('pages.dashboard.axis_year') || '' } },
     yAxis: { title: { text: i18n.t('pages.dashboard.axis_value') || '' } },
+    axis: {
+      x: false,
+    },
     height: 300,
     animation: false,
   };
