@@ -6,7 +6,7 @@ import NotFound from '../layout/NotFound.js';
 
 import Login from '../pages/Login.js';
 import Logout from '../pages/Logout.js';
-import Dashboard from '../pages/Dashboard.js';
+import Dashboard from '../pages/dashboard/Dashboard.js';
 import FiscalYearsList from '../pages/fiscalyears/FiscalYearsList.js';
 import FiscalYearsEdit from '../pages/fiscalyears/FiscalYearsEdit.js';
 import CotisationsList from '../pages/cotisations/CotisationsList.js';

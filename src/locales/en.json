@@ -124,6 +124,16 @@
 			"no_cotisation_for_year": "No cotisation for this fiscal year",
 			"search_member": "Search member",
 			"search_member_placeholder": "Lastname Firstname..."
+		},
+		"dashboard": {
+			"title": "Dashboard",
+			"memberships_trend": "Memberships trend by fiscal year",
+			"balance_trend": "Balance trend by fiscal year",
+			"balance": "Balance",
+			"axis_year": "Fiscal year",
+			"axis_value": "Value",
+			"loading": "Loading...",
+			"no_data": "No data"
 		}
 	},
 	"models": {

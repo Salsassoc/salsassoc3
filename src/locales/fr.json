@@ -124,6 +124,16 @@
 			"no_cotisation_for_year": "Aucune cotisation pour cette année fiscale",
 			"search_member": "Rechercher un membre",
 			"search_member_placeholder": "Nom Prénom..."
+		},
+		"dashboard": {
+			"title": "Tableau de bord",
+			"memberships_trend": "Évolution des adhésions par année fiscale",
+			"balance_trend": "Évolution de la balance par année fiscale",
+			"balance": "Balance",
+			"axis_year": "Année fiscale",
+			"axis_value": "Valeur",
+			"loading": "Chargement...",
+			"no_data": "Aucune donnée"
 		}
 	},
 	"models": {
