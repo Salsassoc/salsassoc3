@@ -1,4 +1,5 @@
 import React from 'react';
+import { Card } from 'antd';
 import { Column } from '@ant-design/charts';
 import i18n from '../../utils/i18n.js';
 
@@ -63,10 +64,9 @@ const DashboardBalance = ({ fiscalYears = [], loading = false }) => {
   };
 
   return (
-    <div style={{ marginBottom: 24 }}>
-      <h3 style={{ marginBottom: 8 }}>{i18n.t('pages.dashboard.balance_trend')}</h3>
-      <Column {...config} />
-    </div>
+      <Card title={i18n.t('pages.dashboard.balance_trend')}>
+        <Column {...config} />
+      </Card>
   );
 };
 

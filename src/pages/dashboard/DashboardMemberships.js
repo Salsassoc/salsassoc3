@@ -1,4 +1,5 @@
 import React from 'react';
+import { Card } from 'antd';
 import { Line } from '@ant-design/charts';
 import i18n from '../../utils/i18n.js';
 
@@ -47,10 +48,9 @@ const DashboardMemberships = ({ fiscalYears = [], loading = false }) => {
   };
 
   return (
-    <div style={{ marginBottom: 24 }}>
-      <h3 style={{ marginBottom: 8 }}>{i18n.t('pages.dashboard.memberships_trend')}</h3>
+    <Card title={i18n.t('pages.dashboard.memberships_trend')}>
       <Line {...config} />
-    </div>
+    </Card>
   );
 };
 

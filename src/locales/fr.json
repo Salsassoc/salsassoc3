@@ -133,7 +133,9 @@
 			"axis_year": "Année fiscale",
 			"axis_value": "Valeur",
 			"loading": "Chargement...",
-			"no_data": "Aucune donnée"
+			"no_data": "Aucune donnée",
+			"current_fiscal_year_title": "Année fiscale courante",
+			"period": "Période"
 		}
 	},
 	"models": {

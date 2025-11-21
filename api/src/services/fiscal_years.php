@@ -89,6 +89,75 @@ $app->get('/api/fiscal_years/get', function (Request $request, Response $respons
     return $response->withHeader('Content-Type', 'application/json');
 })->add($adminMiddleware);
 
+// Get current fiscal year (with aggregates like list)
+$app->get('/api/fiscal_years/current', function (Request $request, Response $response) {
+    $db = $this->get('db');
+
+    $sql = 'SELECT fiscal_year.*, 
+        (
+            SELECT COUNT(1) 
+            FROM membership
+            WHERE membership.fiscal_year_id = fiscal_year.id
+        ) AS membership_count,
+        (
+            SELECT IFNULL(SUM(membership_cotisation.amount), 0)
+            FROM membership
+            LEFT JOIN membership_cotisation ON membership_cotisation.membership_id = membership.id
+            WHERE membership.fiscal_year_id = fiscal_year.id
+        ) AS membership_amount,
+        (
+            SELECT COUNT(1)
+            FROM accounting_operation
+            WHERE accounting_operation.fiscalyear_id = fiscal_year.id
+        ) AS operation_count,
+        (
+            SELECT IFNULL(SUM(accounting_operation.amount_credit), 0)
+            FROM accounting_operation, accounting_operation_category
+            WHERE accounting_operation.fiscalyear_id = fiscal_year.id
+            AND accounting_operation_category.id = accounting_operation.category
+            AND accounting_operation_category.is_internal_move = FALSE
+        ) AS income_amount,
+        (
+            SELECT IFNULL(SUM(accounting_operation.amount_debit), 0)
+            FROM accounting_operation, accounting_operation_category
+            WHERE accounting_operation.fiscalyear_id = fiscal_year.id
+            AND accounting_operation_category.id = accounting_operation.category
+            AND accounting_operation_category.is_internal_move = FALSE
+        ) AS outcome_amount
+        FROM fiscal_year
+        WHERE fiscal_year.is_current = "true"
+        LIMIT 1';
+
+    $stmt = $db->query($sql);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($row) {
+        $row['is_current'] = (bool)($row['is_current'] == "true");
+        if (isset($row['membership_count'])) {
+            $row['membership_count'] = (int)$row['membership_count'];
+        }
+        if (isset($row['membership_amount'])) {
+            $row['membership_amount'] = (float)$row['membership_amount'];
+        }
+        if (isset($row['operation_count'])) {
+            $row['operation_count'] = (int)$row['operation_count'];
+        }
+        if (isset($row['income_amount'])) {
+            $row['income_amount'] = (float)$row['income_amount'];
+        }
+        if (isset($row['outcome_amount'])) {
+            $row['outcome_amount'] = (float)$row['outcome_amount'];
+        }
+        $response->getBody()->write(json_encode(['fiscal_year' => $row]));
+    } else {
+        // 404 if no current year defined
+        $response = $response->withStatus(404);
+        $response->getBody()->write(json_encode(['error' => 'Current fiscal year not found']));
+    }
+
+    return $response->withHeader('Content-Type', 'application/json');
+})->add($adminMiddleware);
+
 // Add or update a fiscal year
 $app->post('/api/fiscal_years/save', function (Request $request, Response $response)
 {

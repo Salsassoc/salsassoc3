@@ -133,7 +133,9 @@
 			"axis_year": "Fiscal year",
 			"axis_value": "Value",
 			"loading": "Loading...",
-			"no_data": "No data"
+			"no_data": "No data",
+			"current_fiscal_year_title": "Current fiscal year",
+			"period": "Period"
 		}
 	},
 	"models": {
