@@ -34,7 +34,7 @@ const MembershipsList = (props) => {
 	function loadData()
 	{
 		return loadMembershipsList()
-			.then(_r => loadFiscalYears());
+			.then(_result => loadFiscalYears());
 	}
 
 	function loadMembershipsList()
@@ -43,6 +43,8 @@ const MembershipsList = (props) => {
 		if (filter.fiscalYearId) {
 			params += "&fiscal_year_id=" + filter.fiscalYearId;
 		}
+		// Sort by membership_date by default
+		params += "&sort=date";
 		let url = serviceInstance.createServiceUrl("/memberships/list?" + params);
 
 		return fetchJSON(url)
@@ -204,12 +206,27 @@ const MembershipsList = (props) => {
 
 	// Reload list when filter changes
 	React.useEffect(() => {
+		if(fiscalYears){
+			fiscalYears.forEach((fiscalYear) => {
+				console.log(fiscalYear.is_current);
+				if(fiscalYear.is_current) {
+					setFilter({
+						fiscalYearId: fiscalYear.id,
+					});
+				}
+			})
+		}
+	}, [fiscalYears]);
+	
+	// Reload list when filter changes
+	React.useEffect(() => {
 		loadMembershipsList();
 	}, [filter]);
 
 	const form = (
 		<MembershipsSearchForm
 			fiscalYears={fiscalYears}
+			defaultFiscalYearId={filter.fiscalYearId}
 			onFinish={onFormSearchFinished}
 		/>
 	);

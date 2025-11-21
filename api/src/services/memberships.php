@@ -11,6 +11,7 @@ $app->get('/api/memberships/list', function (Request $request, Response $respons
     // Read filters
     $params = $request->getQueryParams();
     $fiscalYearId = $params['fiscalyear_id'] ?? ($params['fiscal_year_id'] ?? null);
+    $sort = $params['sort'] ?? null; // 'date' to sort by membership_date
 
     // Build query
     $sql = 'SELECT m.*, 
@@ -37,8 +38,14 @@ $app->get('/api/memberships/list', function (Request $request, Response $respons
         $binds[] = (int)$fiscalYearId;
     }
 
-    // Order: fiscal year desc, then lastname+firstname asc
-    $sql .= ' ORDER BY m.fiscal_year_id DESC, membership_date DESC, p.lastname ASC, p.firstname ASC';
+    // Order
+    if ($sort === 'date') {
+        // Sort strictly by membership date (desc), then lastname/firstname
+        $sql .= ' ORDER BY m.membership_date DESC, p.lastname ASC, p.firstname ASC';
+    } else {
+        // Default: fiscal year desc, then date, then lastname/firstname
+        $sql .= ' ORDER BY m.fiscal_year_id DESC, m.membership_date DESC, p.lastname ASC, p.firstname ASC';
+    }
 
     $stmt = $db->prepare($sql);
     $stmt->execute($binds);

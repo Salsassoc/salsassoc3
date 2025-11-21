@@ -10,6 +10,14 @@ const MembershipsSearchForm = (props) => {
 	const [form] = Form.useForm();
 
 	const fiscalYears = props.fiscalYears || [];
+	const defaultFiscalYearId = props.defaultFiscalYearId;
+
+	// Reflect default selection when provided/changes
+	React.useEffect(() => {
+		if (defaultFiscalYearId !== undefined && defaultFiscalYearId !== null) {
+			form.setFieldsValue({ fiscal_year_id: defaultFiscalYearId });
+		}
+	}, [defaultFiscalYearId]);
 
 	const fiscalYearOptions = [{ value: '', label: i18n.language === 'fr' ? 'Toutes' : 'All' }].concat(
 		(fiscalYears || []).map(y => ({ value: y.id, label: y.title }))
