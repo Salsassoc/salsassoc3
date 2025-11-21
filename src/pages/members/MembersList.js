@@ -14,6 +14,7 @@ import PageContentLayout from '../../layout/PageContentLayout.js';
 
 import TCALayout from '../../components/layout/TCALayout.js';
 import ButtonAdd from '../../components/buttons/ButtonAdd.js';
+import MembersSearchForm from './MembersSearchForm.js';
 
 const MembersList = (props) => {
 
@@ -22,23 +23,40 @@ const MembersList = (props) => {
 	const serviceInstance = appContext.serviceInstance;
 	const pageLoader = appContext.pageLoader;
 
-	// Define data state
+ // Define data state
 	const [items, setItems] = React.useState([]);
+	const [fiscalYears, setFiscalYears] = React.useState([]);
+	const [filter, setFilter] = React.useState({
+		fiscalYearId: null,
+	});
 
 	// Data loading and initialization
 	function loadData()
 	{
-		return loadMembersList();
+		return loadMembersList()
+			.then(_result => loadFiscalYears());
 	}
 
 	function loadMembersList()
 	{
-		let url = serviceInstance.createServiceUrl("/members/list");
+		let params = "";
+		if (filter.fiscalYearId) {
+			params += "&fiscal_year_id=" + filter.fiscalYearId;
+		}
+		let url = serviceInstance.createServiceUrl("/members/list?" + params);
 
 		return fetchJSON(url)
 			.then((response) => {
 				const items = response.result.members;
 				setItems(items);
+			});
+	}
+
+	function loadFiscalYears(){
+		const url = serviceInstance.createServiceUrl("/fiscal_years/list?order=desc");
+		return fetchJSON(url)
+			.then((response) => {
+				setFiscalYears(response.result.fiscal_years || []);
 			});
 	}
 
@@ -63,7 +81,7 @@ const MembersList = (props) => {
 	}
 
 	// Compute layout data
-	function getLayoutData()
+ 	function getLayoutData()
 	{
 		// Set page title
 		let pageTitle = i18n.t("pages.members.title");
@@ -85,6 +103,27 @@ const MembersList = (props) => {
 	{
 		return <ButtonAdd title={i18n.t("common.add")} url={serviceInstance.createAdminUrl("/members/add")} />;
 	}
+
+	function onFormSearchFinished(values){
+		setFilter({
+			fiscalYearId: values.fiscal_year_id,
+		});
+	}
+
+	// Default to current fiscal year when list is loaded
+	React.useEffect(() => {
+		if(fiscalYears && fiscalYears.length > 0){
+			const current = fiscalYears.find(y => y.is_current);
+			if(current && filter.fiscalYearId == null){
+				setFilter({ fiscalYearId: current.id });
+			}
+		}
+	}, [fiscalYears]);
+
+	// Reload when filter changes
+	React.useEffect(() => {
+		loadMembersList();
+	}, [filter]);
 
 	function renderLastname(_text, record){
 		return <span style={{textWrap:'nowrap'}}>{record.lastname}</span>;
@@ -227,6 +266,15 @@ const MembersList = (props) => {
 			size="small"
 		/>
 	);
+
+ 	const form = (
+		<MembersSearchForm
+			fiscalYears={fiscalYears}
+			defaultFiscalYearId={filter.fiscalYearId}
+			onFinish={onFormSearchFinished}
+		/>
+	);
+
 	const tableActions = getTableHeaderExtra(serviceInstance);
 
 	return (
@@ -234,6 +282,7 @@ const MembersList = (props) => {
 			<TCALayout
 				title={i18n.t("pages.members.list", { count: (items ? items.length : 0) })}
 				content={tableContent}
+				form={form}
 				actions={tableActions}
 			/>
 		</PageContentLayout>

@@ -8,6 +8,11 @@ $app->get('/api/members/list', function (Request $request, Response $response)
 {
     $db = $this->get('db');
 
+    // Read filters
+    $params = $request->getQueryParams();
+    $fiscalYearId = $params['fiscalyear_id'] ?? ($params['fiscal_year_id'] ?? null);
+
+    // Base SQL
     $sql = 'SELECT p.*,
         (
             SELECT COUNT(1)
@@ -21,9 +26,21 @@ $app->get('/api/members/list', function (Request $request, Response $response)
             WHERE m.person_id = p.id
         ) AS collected_amount
         FROM person p
-        ORDER BY p.lastname ASC, p.firstname ASC';
+        WHERE 1=1';
 
-    $stmt = $db->query($sql);
+    $binds = [];
+
+    // Filter by fiscal year: keep members having at least one membership in the given fiscal year
+    if ($fiscalYearId !== null && $fiscalYearId !== '') {
+        $sql .= ' AND EXISTS (SELECT 1 FROM membership mf WHERE mf.person_id = p.id AND mf.fiscal_year_id = ?)';
+        $binds[] = (int)$fiscalYearId;
+    }
+
+    // Order by lastname/firstname
+    $sql .= ' ORDER BY p.lastname ASC, p.firstname ASC';
+
+    $stmt = $db->prepare($sql);
+    $stmt->execute($binds);
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     foreach ($rows as &$row) {
