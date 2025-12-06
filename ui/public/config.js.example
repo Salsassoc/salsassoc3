@@ -5,7 +5,7 @@ var Config = {
   server: {
     protocole: "http",
     hostname: "localhost",
-    port: 25000,
+    port: 8080,
     username: "admin",
     password: "password"
   }
