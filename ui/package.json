@@ -4,9 +4,14 @@
   "description": "Frontend for Salsassoc using React and Ant Design",
   "type": "module",
   "main": "index.js",
+  "private": true,
   "scripts": {
+    "preinstall": "npm install --package-lock-only --ignore-scripts && npx npm-force-resolutions",
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "GENERATE_SOURCEMAP=false react-scripts build && npm run build-rename",
+    "build-rename": "npm run build-rename-js && npm run build-rename-css",
+    "build-rename-js": "renamer --find \"/\\.\\w+/\" --replace \"\" ./build/static/js/*",
+    "build-rename-css": "renamer --find \"/\\.\\w+/\" --replace \"\" ./build/static/css/*",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -31,7 +36,13 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
-    "react-scripts": "latest"
+    "copyfiles": "^2.4.1",
+    "react-scripts": "latest",
+    "renamer": "^5.0.2"
+  },
+  "engines": {
+    "npm": ">=8.6.0",
+    "node": ">=18.0.0"
   },
   "browserslist": {
     "production": [
