@@ -1,6 +1,7 @@
-node_modules
+.idea
 api/composer.lock
 api/vendor
 api/*.sqlite
-package-lock.json
-public/config.js
+ui/node_modules
+ui/package-lock.json
+ui/public/config.js
