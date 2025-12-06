@@ -8,10 +8,13 @@
   "scripts": {
     "preinstall": "npm install --package-lock-only --ignore-scripts && npx npm-force-resolutions",
     "start": "react-scripts start",
-    "build": "GENERATE_SOURCEMAP=false react-scripts build && npm run build-rename",
+    "build": "GENERATE_SOURCEMAP=false react-scripts build && npm run build-rename && npm run fix-index-html",
     "build-rename": "npm run build-rename-js && npm run build-rename-css",
     "build-rename-js": "renamer --find \"/\\.\\w+/\" --replace \"\" ./build/static/js/*",
     "build-rename-css": "renamer --find \"/\\.\\w+/\" --replace \"\" ./build/static/css/*",
+    "fix-index-html": "npm run fix-main-js-index-html && npm run fix-main-css-index-html",
+    "fix-main-js-index-html": "sed -i 's/main\\.[a-z0-9]*\\.js/main.js/g' ./build/index.html",
+    "fix-main-css-index-html": "sed -i 's/main\\.[a-z0-9]*\\.css/main.css/g' ./build/index.html",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
