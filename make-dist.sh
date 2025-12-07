@@ -65,15 +65,15 @@ if [ "${SKIP_FRONTEND:-0}" != "1" ]; then
     # Install dependencies for build
     if [ -f "$FRONTEND_DIR/package-lock.json" ]; then
       log "Installing dependencies (npm ci)..."
-      #(cd "$FRONTEND_DIR" && npm ci --force)
+      (cd "$FRONTEND_DIR" && npm ci --force)
     else
       log "Installing dependencies (npm install)..."
-      #(cd "$FRONTEND_DIR" && npm install --force)
+      (cd "$FRONTEND_DIR" && npm install --force)
     fi
 
     # Build
     log "npm run build..."
-    #(cd "$FRONTEND_DIR" && npm run build)
+    (cd "$FRONTEND_DIR" && npm run build)
 
     # Assemble minimum required
     mkdir -p "$FRONTEND_DIST_DIR"
@@ -105,6 +105,7 @@ if [ "${SKIP_API:-0}" != "1" ]; then
     log "Copying API files to dist/api..."
     mkdir -p "$DIST_DIR/api"
 
+    copy "$API_DIR/index.php" "$DIST_DIR/index.php"
     # Directories
     [ -d "$API_DIR/public" ] && copy "$API_DIR/public" "$DIST_DIR/api/"
     [ -d "$API_DIR/src" ] && copy "$API_DIR/src" "$DIST_DIR/api/"
