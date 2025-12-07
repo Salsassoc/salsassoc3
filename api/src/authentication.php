@@ -35,8 +35,8 @@ function isBasicAuthValid(Request $request, &$username): bool
     }
     [$authUsername, $authPassword] = $parts;
 
-    // Load expected credentials
-    require __DIR__ . '/password.php';
+    // Load expected credentials and config
+    require __DIR__ . '/config.php';
     // Use timing-safe comparison when available
     $userOk = function_exists('hash_equals') ? hash_equals($LOGIN_USERNAME, $authUsername) : ($LOGIN_USERNAME === $username);
     $passOk = function_exists('hash_equals') ? hash_equals($LOGIN_PASSWORD, $authPassword) : ($LOGIN_PASSWORD === $password);
