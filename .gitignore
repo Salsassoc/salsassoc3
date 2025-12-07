@@ -1,9 +1,11 @@
 .idea
 db
 dist
+dist-conf
 api/composer.lock
 api/vendor
 api/*.sqlite
+api/src/config.php
 ui/build
 ui/node_modules
 ui/package-lock.json
