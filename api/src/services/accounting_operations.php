@@ -13,6 +13,8 @@ $app->get('/api/accounting/operations/list', function (Request $request, Respons
     $categoryId = $params['category'] ?? ($params['accounting_operations_category'] ?? null);
     $checked = $params['checked'] ?? null; // expect 'true'/'false'
     $year = $params['year'] ?? null; // civil year on date_value
+    $dateStart = $params['date_start'] ?? null; // YYYY-MM-DD inclusive
+    $dateEnd = $params['date_end'] ?? null;   // YYYY-MM-DD inclusive
     $amountMin = $params['amount_min'] ?? null;
     $amountMax = $params['amount_max'] ?? null;
 
@@ -50,6 +52,19 @@ $app->get('/api/accounting/operations/list', function (Request $request, Respons
     if ($year !== null && $year !== '') {
         $sql .= ' AND YEAR(ao.date_value) = ?';
         $binds[] = (int)$year;
+    }
+    if (($dateStart !== null && $dateStart !== '') || ($dateEnd !== null && $dateEnd !== '')) {
+        if ($dateStart !== null && $dateStart !== '' && $dateEnd !== null && $dateEnd !== '') {
+            $sql .= ' AND ao.date_value BETWEEN ? AND ?';
+            $binds[] = $dateStart;
+            $binds[] = $dateEnd;
+        } elseif ($dateStart !== null && $dateStart !== '') {
+            $sql .= ' AND ao.date_value >= ?';
+            $binds[] = $dateStart;
+        } elseif ($dateEnd !== null && $dateEnd !== '') {
+            $sql .= ' AND ao.date_value <= ?';
+            $binds[] = $dateEnd;
+        }
     }
     if ($amountMin !== null && $amountMin !== '') {
         $sql .= ' AND (CASE WHEN ao.amount_credit IS NOT NULL THEN ao.amount_credit ELSE ao.amount_debit END) >= ?';

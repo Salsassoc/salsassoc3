@@ -70,6 +70,11 @@ export function getAppMenu()
         path: getAdminUrl("/accounting/operations/categories/list"),
         exact: true,
     });
+    subRoutes.push({
+        name: i18n.t('menu.accounting_financial_report'),
+        path: getAdminUrl("/accounting/reports"),
+        exact: true,
+    });
     appMenu.route.routes.push({
         name: i18n.t('menu.accounting'),
         path: getAdminUrl("/accounting"),

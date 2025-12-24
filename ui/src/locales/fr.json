@@ -9,7 +9,8 @@
 		"accounting": "Comptabilité",
 		"accounting_operation_categories": "Catégories d'opération",
 		"accounting_accounts": "Comptes",
-		"accounting_operations": "Opérations"
+		"accounting_operations": "Opérations",
+		"accounting_financial_report": "Bilan financier"
 	},
 	"common": {
 		"home": "Acceuil",
@@ -27,7 +28,8 @@
 		},
 		"date_format": "DD/MM/YYYY",
 		"yes": "Oui",
-		"no": "Non"
+		"no": "Non",
+		"no_data": "Aucune(s) donnée(s)"
 	},
 	"pages": {
 		"login": {
@@ -95,6 +97,12 @@
 			"edit_title": "Modifier une opération",
 			"section_general": "Général",
 			"saved": "L'opération a bien été sauvegardée"
+		},
+		"accounting_operations_financial_report": {
+			"title": "Bilan financier",
+			"incomes": "Recettes",
+			"outcomes": "Dépenses",
+			"report": "Rapport"
 		},
 		"members": {
 			"title": "Membres",

@@ -9,7 +9,8 @@
 		"accounting": "Accounting",
 		"accounting_operation_categories": "Operation categories",
 		"accounting_accounts": "Accounts",
-		"accounting_operations": "Operations"
+		"accounting_operations": "Operations",
+		"accounting_financial_report": "Financial report"
 	},
 	"common": {
 		"home": "Home",
@@ -27,7 +28,8 @@
 		},
 		"date_format": "MM/DD/YYYY",
 		"yes": "Yes",
-		"no": "No"
+		"no": "No",
+		"no_data": "No data"
 	},
 	"pages": {
 		"login": {
@@ -61,6 +63,12 @@
 			"add_title": "Add category",
 			"edit_title": "Edit category",
 			"section_general": "General"
+		},
+		"accounting_operations_financial_report": {
+			"title": "Financial report",
+			"incomes": "Incomes",
+			"outcomes": "Outcomes",
+			"report": "Report"
 		},
 		"cotisations": {
 			"title": "Cotisations",
