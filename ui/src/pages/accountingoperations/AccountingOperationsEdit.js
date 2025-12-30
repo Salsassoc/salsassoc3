@@ -204,9 +204,16 @@ const AccountingOperationsEdit = (props) => {
 		return layoutData;
 	}
 
+	function getCategoriesOptions()
+	{
+		let sortedCategories = categories;
+		sortedCategories.sort((a, b) => (a.account_type-b.account_type));
+		return sortedCategories.map(c => ({ value: c.id, label: c.account_number + " - " + c.label}));
+	}
+
 	// Build options
 	const fiscalYearOptions = fiscalYears.map(y => ({ value: y.id, label: y.title }));
-	const categoryOptions = categories.map(c => ({ value: c.id, label: c.label }));
+	const categoryOptions = getCategoriesOptions();
 	const accountOptions = accounts.map(a => ({ value: a.id, label: a.label }));
 
 	// Handle dataObject update
@@ -229,7 +236,7 @@ const AccountingOperationsEdit = (props) => {
 
 				<FormEditSection title={i18n.t("pages.accounting_operation.section_general")}>
 
-					<Form.Item name={['date_value']} label={i18n.t("models.accounting_operation.date_value")} rules={[{ required: true }]}>
+					<Form.Item name={['date_value']} label={i18n.t("models.accounting_operation.date_value")}>
 						<DatePicker format={i18n.t("common.date_format")} />
 					</Form.Item>
 
@@ -265,7 +272,7 @@ const AccountingOperationsEdit = (props) => {
 						<Select options={categoryOptions} />
 					</Form.Item>
 
-					<Form.Item name={['account_id']} label={i18n.t('models.accounting_operation.account')}>
+					<Form.Item name={['account_id']} label={i18n.t('models.accounting_operation.account')} rules={[{ required: true }]}>
 						<Select options={accountOptions} />
 					</Form.Item>
 
@@ -278,7 +285,7 @@ const AccountingOperationsEdit = (props) => {
 					</Form.Item>
 
 					<Form.Item name={['label_bank']} label={i18n.t('models.accounting_operation.label_bank')}>
-						<Input />
+						<Input.TextArea />
 					</Form.Item>
 
 					<Form.Item name={['project_id']} label={i18n.t('models.accounting_operation.project_id')}>

@@ -173,7 +173,7 @@ $app->post('/api/accounting/operations/save', function (Request $request, Respon
     $labelBank = $data['label_bank'] ?? '';
 
     // Validation minimal
-    if (!$label || !$dateValue || $fiscalYearId === null) {
+    if (!$label || $fiscalYearId === null) {
         $res = false;
         $error = 'Missing required fields';
     }
