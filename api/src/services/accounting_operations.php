@@ -170,7 +170,7 @@ $app->post('/api/accounting/operations/save', function (Request $request, Respon
     $checked = isset($data['checked']) ? ($data['checked'] ? 'true' : 'false') : 'false';
     $fiscalYearId = isset($data['fiscalyear_id']) ? (int)$data['fiscalyear_id'] : (isset($data['fiscal_year_id']) ? (int)$data['fiscal_year_id'] : null);
     $accountId = isset($data['account_id']) ? (int)$data['account_id'] : null;
-    $labelBank = $data['label_bank'] ?? null;
+    $labelBank = $data['label_bank'] ?? '';
 
     // Validation minimal
     if (!$label || !$dateValue || $fiscalYearId === null) {
@@ -223,7 +223,9 @@ $app->post('/api/accounting/operations/save', function (Request $request, Respon
         $response->getBody()->write(json_encode(['success' => true, 'id' => $id]));
         return $response->withHeader('Content-Type', 'application/json');
     }else{
-        return $response->withStatus(400)->withJson(['error' => $error]);
+        $response->getBody()->write(json_encode(['error' => $error]));
+        return $response->withStatus(400);
+        //return $response->withStatus(400)->withJson($error);
     }
 })->add($adminMiddleware);
 
