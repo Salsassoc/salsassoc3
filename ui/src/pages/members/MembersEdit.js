@@ -16,8 +16,6 @@ import FormEdit from '../../components/forms/FormEdit.js';
 import FormEditSection from '../../components/forms/FormEditSection.js';
 import FormEditItemSubmit from '../../components/forms/FormEditItemSubmit.js';
 
-const { TextArea } = Input;
-
 const MembersEdit = (props) => {
 
 	// Get application context
@@ -44,21 +42,23 @@ const MembersEdit = (props) => {
 	function getDefaultData()
 	{
 		return {
-			lastname: "",
-			firstname: "",
-			gender: 0,
-			birthdate: null,
-			email: "",
-			phonenumber: "",
-			creation_date: null,
-			password: "",
-			is_member: false,
-			image_rights: false,
-			comments: "",
-			address: "",
-			zipcode: "",
-			city: "",
-			phonenumber2: "",
+			member: {
+				lastname: "",
+				firstname: "",
+				gender: 0,
+				birthdate: null,
+				email: "",
+				phonenumber: "",
+				creation_date: null,
+				password: "",
+				is_member: false,
+				image_rights: false,
+				comments: "",
+				address: "",
+				zipcode: "",
+				city: "",
+				phonenumber2: "",
+			}
 		}
 	}
 
@@ -92,7 +92,10 @@ const MembersEdit = (props) => {
 	{
 		// Check if mode add
 		if(isModeAdd()){
-			return Promise.resolve(dataObject);
+			const defaultObject = getDefaultData();
+			return Promise.resolve(defaultObject).then((newDataObject) => {
+				setDataObject(newDataObject);
+			});
 		}
 
 		// Compute request url
@@ -103,7 +106,6 @@ const MembersEdit = (props) => {
 			.then((response) => {
 				const newDataObject = response.result.member;
 				setDataObject(newDataObject);
-				formInstance.setFieldsValue(newDataObject);
 			});
 	}
 
@@ -258,7 +260,7 @@ const MembersEdit = (props) => {
 					</Form.Item>
 
 					<Form.Item name={['comments']} label={i18n.t("models.member.comments")}>
-						<TextArea rows={4} />
+						<Input.TextArea rows={4} />
 					</Form.Item>
 
 				</FormEditSection>
