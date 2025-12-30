@@ -213,6 +213,26 @@
 			"op_method_direct_debit": "Direct debit",
 			"op_method_interest": "Interests"
 		},
+		"member": {
+			"lastname": "Last name",
+			"firstname": "First name",
+			"gender": "Gender",
+			"gender_unknown": "Undefined",
+			"gender_male": "Male",
+			"gender_female": "Female",
+			"birthdate": "Birthday",
+			"email": "Email",
+			"phonenumber": "Phone",
+			"phonenumber2": "Phone 2",
+			"creation_date": "Creation date",
+			"password": "Password",
+			"is_member": "Is member",
+			"image_rights": "Image rights",
+			"comments": "Comments",
+			"address": "Adress",
+			"zipcode": "Postal code",
+			"city": "City"
+		},
 		"membership": {
 			"date": "Date",
 			"type": "Type",
