@@ -159,7 +159,7 @@ const CotisationsList = (props) => {
 				<Link to={serviceInstance.createAdminUrl("/cotisations/edit/"+record.id)}><EditOutlined /></Link>
 				<Popconfirm title={i18n.t('pages.cotisations.remove', {label: record.label})}
 							onConfirm={() => onConfirmRemove(record)}>
-					<a href="#remove"><DeleteOutlined /></a>
+					<a><DeleteOutlined /></a>
 				</Popconfirm>
 			</Space>
 		);

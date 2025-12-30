@@ -128,7 +128,7 @@ const AccountingOperationCategoriesList = (props) => {
 							onConfirm={() => onConfirmRemove(record)} 
 							okText="Yes" 
 							cancelText="No">
-							<a href="#delete"><DeleteOutlined /></a>
+							<a><DeleteOutlined /></a>
 						</Popconfirm>
 					</Space>
 				),

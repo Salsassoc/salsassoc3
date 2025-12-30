@@ -78,7 +78,7 @@ const MembersResults = (props) => {
 				<Link to={serviceInstance.createAdminUrl("/members/edit/"+record.id)}><EditOutlined /></Link>
 				<Popconfirm title={i18n.t('pages.members.remove', {label: record.lastname + ' ' + record.firstname})}
 							onConfirm={() => onConfirmRemove(record)}>
-					<a href="#remove"><DeleteOutlined /></a>
+					<a><DeleteOutlined /></a>
 				</Popconfirm>
 			</Space>
 		);

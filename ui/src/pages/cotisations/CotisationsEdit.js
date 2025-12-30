@@ -80,7 +80,10 @@ const CotisationsEdit = (props) => {
 	{
 		// Check if mode add
 		if(isModeAdd()){
-			return Promise.resolve(dataObject);
+			const defaultObject = getDefaultData();
+			return Promise.resolve(defaultObject).then((newDataObject) => {
+				setDataObject(newDataObject);
+			});
 		}
 
 		// Compute request url

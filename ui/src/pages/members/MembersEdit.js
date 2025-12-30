@@ -42,23 +42,21 @@ const MembersEdit = (props) => {
 	function getDefaultData()
 	{
 		return {
-			member: {
-				lastname: "",
-				firstname: "",
-				gender: 0,
-				birthdate: null,
-				email: "",
-				phonenumber: "",
-				creation_date: null,
-				password: "",
-				is_member: false,
-				image_rights: false,
-				comments: "",
-				address: "",
-				zipcode: "",
-				city: "",
-				phonenumber2: "",
-			}
+			lastname: "",
+			firstname: "",
+			gender: 0,
+			birthdate: null,
+			email: "",
+			phonenumber: "",
+			creation_date: null,
+			password: "",
+			is_member: false,
+			image_rights: false,
+			comments: "",
+			address: "",
+			zipcode: "",
+			city: "",
+			phonenumber2: "",
 		}
 	}
 
