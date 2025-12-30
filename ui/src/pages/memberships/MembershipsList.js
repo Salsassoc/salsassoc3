@@ -114,7 +114,6 @@ const MembershipsList = (props) => {
 	React.useEffect(() => {
 		if(fiscalYears){
 			fiscalYears.forEach((fiscalYear) => {
-				console.log(fiscalYear.is_current);
 				if(fiscalYear.is_current) {
 					setFilter({
 						fiscalYearId: fiscalYear.id,
