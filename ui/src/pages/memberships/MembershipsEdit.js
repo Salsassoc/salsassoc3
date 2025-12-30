@@ -228,7 +228,7 @@ const MembershipsEdit = (props) => {
 			birthdate = "(" + dayjs(m.birthdate, "YYYY-MM-DD").format(i18n.t('common.date_format')) + ")";
 		}
 		return (
-			<Space direction="vertical">
+			<Space orientation="vertical">
 				<Space>{name}{birthdate}</Space>
 				<Space>{address}</Space>
 

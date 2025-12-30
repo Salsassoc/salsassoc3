@@ -252,7 +252,7 @@ const AccountingOperationsFinancialReport = (props) => {
 	const balanceColor = balance > 0 ? '#3f8600' : (balance < 0 ? '#cf1322' : undefined);
 
 	const tableContent = (
-		<Space direction='vertical'>
+		<Space orientation='vertical'>
 			<Card>
 				<Descriptions size="small" column={3} >
 					<Descriptions.Item label={i18n.t('pages.fiscal_years.income')}>

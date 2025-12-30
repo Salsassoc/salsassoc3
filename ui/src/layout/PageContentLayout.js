@@ -78,7 +78,7 @@ function PageContentLayout(props) {
 
     return (
         <BaseLayout layoutData={layoutData}>
-            <Space direction="vertical">
+            <Space orientation="vertical">
                 <PageContainer
                     fixedHeader
                     fixSiderbar
