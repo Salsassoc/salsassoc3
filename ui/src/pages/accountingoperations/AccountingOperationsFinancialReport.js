@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Card, Form, DatePicker, Button } from 'antd';
+import { Row, Col, Card, Descriptions, Space } from 'antd';
 
 import dayjs from 'dayjs';
 
@@ -32,27 +32,25 @@ const AccountingOperationsFinancialReport = (props) => {
 	});
 
 	// Data loading and initialization
-	function loadData()
-	{
+	function loadData() {
 		return loadOperationsList()
 			.then(_result => loadFiscalYears())
 			.then(_result => loadAccounts());
 	}
 
-	function loadOperationsList()
-	{
+	function loadOperationsList() {
 		let params = "";
 		if (filter.fiscalYearId) {
 			params += "&fiscal_year_id=" + filter.fiscalYearId;
-		}
-		if (filter.year) {
-			params += "&year=" + filter.year;
 		}
 		if (filter.dateStart) {
 			params += `&date_start=${filter.dateStart}`;
 		}
 		if (filter.dateEnd) {
 			params += `&date_end=${filter.dateEnd}`;
+		}
+		if (filter.accountingAccountId) {
+			params += `&account_id=${filter.accountingAccountId}`;
 		}
 
 		let url = serviceInstance.createServiceUrl("/accounting/operations/list?" + params);
@@ -64,24 +62,22 @@ const AccountingOperationsFinancialReport = (props) => {
 			});
 	}
 
-	function loadFiscalYears()
-	{
+	function loadFiscalYears() {
 		const url = serviceInstance.createServiceUrl('/fiscal_years/list?order=desc');
 		return fetchJSON(url).then(res => {
-			setFiscalYears(res.result.fiscal_years || [])}
+			setFiscalYears(res.result.fiscal_years || [])
+		}
 		);
 	}
 
-	function loadAccounts()
-	{
+	function loadAccounts() {
 		const url = serviceInstance.createServiceUrl('/accounting/accounts/list');
 		return fetchJSON(url).then(res => {
 			setAccounts(res.result.accounting_accounts || [])
 		});
 	}
 
-	function computeItemsByCategory(operations)
-	{
+	function computeItemsByCategory(operations) {
 		let incomes = new Map();
 		let incomes_amount = 0.0;
 		let outcomes = new Map();
@@ -94,16 +90,16 @@ const AccountingOperationsFinancialReport = (props) => {
 			const op = {
 				id: operation.id,
 				label: operation.label,
-				date: operation.date_value,
+				date: operation.date_effective,
 				amount: amount,
 			}
 
 			let group = null;
 
-			if(amount < 0){
-				if(outcomes.has(categoryId)){
+			if (amount < 0) {
+				if (outcomes.has(categoryId)) {
 					group = outcomes.get(categoryId);
-				}else{
+				} else {
 					group = {
 						id: categoryId,
 						label: operation.category_label,
@@ -112,14 +108,14 @@ const AccountingOperationsFinancialReport = (props) => {
 						operations: []
 					}
 				}
-				outcomes_amount+=amount;
-				group.total_amount+=amount;
+				outcomes_amount += amount;
+				group.total_amount += amount;
 				group.operations.push(op);
 				outcomes.set(categoryId, group);
-			}else{
-				if(incomes.has(categoryId)){
+			} else {
+				if (incomes.has(categoryId)) {
 					group = incomes.get(categoryId);
-				}else{
+				} else {
 					group = {
 						id: categoryId,
 						label: operation.category_label,
@@ -128,16 +124,16 @@ const AccountingOperationsFinancialReport = (props) => {
 						operations: []
 					}
 				}
-				incomes_amount+=amount;
-				group.total_amount+=amount;
+				incomes_amount += amount;
+				group.total_amount += amount;
 				group.operations.push(op);
 				incomes.set(categoryId, group);
 			}
 		})
 
 		return {
-			incomes: {items: incomes, total: incomes_amount},
-			outcomes: {items: outcomes, total: outcomes_amount}
+			incomes: { items: incomes, total: incomes_amount },
+			outcomes: { items: outcomes, total: outcomes_amount }
 		}
 	}
 
@@ -146,38 +142,35 @@ const AccountingOperationsFinancialReport = (props) => {
 		try {
 			const n = Number(value || 0);
 			return new Intl.NumberFormat(undefined, { style: 'currency', currency: 'EUR' }).format(n);
-		} catch(_e){
+		} catch (_e) {
 			return (Number(value || 0)).toFixed(2) + ' €';
 		}
 	}
 
-	function onFormSearchFinished(values)
-	{
+	function onFormSearchFinished(values) {
 		const f = { ...filter };
-		f.fiscalYearId = values.fiscal_year_id || '';
+		f.fiscalYearId = values.fiscal_year_id || null;
 
-		// If fiscal year chosen, ignore dates
-		if (f.fiscalYearId) {
+		if (values.year && values.year !== '') {
+			f.dateStart = values.year + '-01-01';
+			f.dateEnd = values.year + '-12-31';
+		}else{
 			f.dateStart = null;
 			f.dateEnd = null;
-		} else {
-			f.dateStart = values.date_start ? dayjs(values.date_start).format('YYYY-MM-DD') : null;
-			f.dateEnd = values.date_end ? dayjs(values.date_end).format('YYYY-MM-DD') : null;
 		}
 
-		f.accountingAccountId = values.accounting_account_id || '';
+		f.accountingAccountId = values.accounting_account_id || null;
 		setFilter(f);
 	}
 
-	function getLayoutData()
-	{
+	function getLayoutData() {
 		// Set page title
 		let pageTitle = i18n.t("pages.accounting_operations_financial_report.title");
-	
+
 		// Set page breadcrumb
 		const pageBreadcrumb = [
 		];
-	
+
 		// Compute layout data
 		const layoutData = {
 			pageTitle: pageTitle,
@@ -186,8 +179,15 @@ const AccountingOperationsFinancialReport = (props) => {
 		return layoutData;
 	}
 
-	function renderColumnContent(data)
+	function formatDate(date_value)
 	{
+		if(!date_value){
+			return "--/--/----";
+		}
+		return dayjs(date_value).format(i18n.t('common.date_format'));
+	}
+
+	function renderColumnContent(data) {
 		const values = Array.from(data);
 		return values.map(([key, category]) => {
 			return (
@@ -198,10 +198,10 @@ const AccountingOperationsFinancialReport = (props) => {
 					</div>
 					<div>
 						{category.operations.map((it, idx) => (
-						<div key={it.id || idx} style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 0' }}>
-							<span>{dayjs(it.date_value).format(i18n.t('common.date_format'))} - {it.label}</span>
-							<span>{formatCurrency((Number(it.amount)))}</span>
-						</div>
+							<div key={it.id || idx} style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 0' }}>
+								<span>{formatDate(it.date)} - {it.label}</span>
+								<span>{formatCurrency((Number(it.amount)))}</span>
+							</div>
 						))}
 					</div>
 				</div>
@@ -209,33 +209,29 @@ const AccountingOperationsFinancialReport = (props) => {
 		});
 	}
 
-	function renderColumnContentEmpty()
-	{
+	function renderColumnContentEmpty() {
 		return i18n.t('common.no_data');
 	}
 
-	function renderColumn(title, data)
-	{
+	function renderColumn(title, data) {
 		const content = (data && data.items.size > 0 ? renderColumnContent(data.items) : renderColumnContentEmpty());
-		const total = (data && formatCurrency(data.total));
-
 		return (
-			<Card title={title} variant="outlined" size="small" extra={total}>
+			<Card title={title} variant="outlined" size="small">
 				{content}
 			</Card>
 		);
 	}
-	
+
 	// Default to current fiscal year when list is loaded
 	React.useEffect(() => {
-		if(fiscalYears && fiscalYears.length > 0){
+		if (fiscalYears && fiscalYears.length > 0) {
 			const current = fiscalYears.find(y => y.is_current);
-			if(current && filter.fiscalYearId == null){
+			if (current && filter.fiscalYearId == null) {
 				setFilter({ fiscalYearId: current.id });
 			}
 		}
 	}, [fiscalYears]);
-	
+
 	// Reload list when filter changes
 	React.useEffect(() => {
 		loadOperationsList();
@@ -250,15 +246,35 @@ const AccountingOperationsFinancialReport = (props) => {
 		/>
 	);
 
+	const incomesTotal = items?.incomes?.total || 0;
+	const outcomesTotal = items?.outcomes?.total || 0;
+	const balance = (incomesTotal + outcomesTotal);
+	const balanceColor = balance > 0 ? '#3f8600' : (balance < 0 ? '#cf1322' : undefined);
+
 	const tableContent = (
-        <Row gutter={16}>
-          <Col xs={24} md={12}>
-            {renderColumn(i18n.t('pages.accounting_operations_financial_report.incomes'), items.incomes)}
-          </Col>
-          <Col xs={24} md={12}>
-            {renderColumn(i18n.t('pages.accounting_operations_financial_report.outcomes'), items.outcomes)}
-          </Col>
-        </Row>
+		<Space direction='vertical'>
+			<Card>
+				<Descriptions size="small" column={3} >
+					<Descriptions.Item label={i18n.t('pages.fiscal_years.income')}>
+						{formatCurrency(incomesTotal)}
+					</Descriptions.Item>
+					<Descriptions.Item label={i18n.t('pages.fiscal_years.outcome')}>
+						{formatCurrency(outcomesTotal)}
+					</Descriptions.Item>
+					<Descriptions.Item label={i18n.t('pages.fiscal_years.balance')}>
+						<span style={{ color: balanceColor }}>{formatCurrency(balance)}</span>
+					</Descriptions.Item>
+				</Descriptions>
+			</Card>
+			<Row gutter={16}>
+				<Col xs={24} md={12}>
+					{renderColumn(i18n.t('pages.accounting_operations_financial_report.incomes'), items.incomes)}
+				</Col>
+				<Col xs={24} md={12}>
+					{renderColumn(i18n.t('pages.accounting_operations_financial_report.outcomes'), items.outcomes)}
+				</Col>
+			</Row>
+		</Space>
 	);
 
 	return (
@@ -267,7 +283,7 @@ const AccountingOperationsFinancialReport = (props) => {
 				title={i18n.t("pages.accounting_operations_financial_report.report", { count: (items ? items.length : 0) })}
 				content={tableContent}
 				form={form}
-				//actions={tableActions}
+			//actions={tableActions}
 			/>
 		</PageContentLayout>
 	);

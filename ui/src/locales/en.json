@@ -29,7 +29,8 @@
 		"date_format": "MM/DD/YYYY",
 		"yes": "Yes",
 		"no": "No",
-		"no_data": "No data"
+		"no_data": "No data",
+		"year": "Year"
 	},
 	"pages": {
 		"login": {
@@ -152,7 +153,8 @@
 			"title": "Label",
 			"start_date": "Start date",
 			"end_date": "End date",
-			"is_current": "Current year"
+			"is_current": "Current year",
+			"all": "All"
 		},
 		"accounting_operation_category": {
 			"label": "Label",
@@ -181,7 +183,8 @@
 			"type": "Type",
 			"type_other": "Other",
 			"type_cash": "Cash",
-			"type_bank": "Bank account"
+			"type_bank": "Bank account",
+			"all": "All"
 		},
 		"accounting_operation": {
 			"date_value": "Date",

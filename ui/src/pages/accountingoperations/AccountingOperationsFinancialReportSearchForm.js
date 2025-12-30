@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { Form, InputNumber, Button } from 'antd';
+import { Form, Button } from 'antd';
 
 import AdvancedSearchForm from '../../components/forms/AdvancedSearchForm.js';
 import SelectResponsive from '../../components/inputs/SelectResponsive.js';
@@ -19,18 +19,26 @@ const AccountingOperationsFinancialReportSearchForm = (props) => {
 			form.setFieldsValue({ fiscal_year_id: defaultFiscalYearId });
 		}
 	}, [defaultFiscalYearId]);
+	/*
+	React.useEffect(() => {
+		if (defaultFiscalYearId !== undefined && defaultFiscalYearId !== null) {
+			form.setFieldsValue({ fiscal_year_id: defaultFiscalYearId });
+		}
+	}, []);*/
 
 	const currentYear = new Date().getFullYear();
 	const years = [];
-	for(let y = currentYear; y >= 1999; --y){ years.push(y); }
+	for(let y = currentYear; y >= 1999; --y){
+		years.push(y);
+	}
 
-	const fiscalYearOptions = [{ value: '', label: i18n.language === 'fr' ? 'Toutes' : 'All' }].concat(
+	const fiscalYearOptions = [{ value: '', label: i18n.t("models.fiscal_years.all")}].concat(
 		(fiscalYears || []).map(y => ({ value: y.id, label: y.title }))
 	);
-	const yearOptions = [{ value: '', label: i18n.language === 'fr' ? 'Toutes' : 'All' }].concat(
+	const yearOptions = [{ value: '', label: i18n.t("models.fiscal_years.all")}].concat(
 		years.map(y => ({ value: y, label: ''+y }))
 	);
-	const accountOptions = [{ value: '', label: i18n.language === 'fr' ? 'Tous' : 'All' }].concat(
+	const accountOptions = [{ value: '', label: i18n.t("models.accounting_account.all")}].concat(
 		(accounts || []).map(a => ({ value: a.id, label: a.label }))
 	);
 
@@ -48,7 +56,7 @@ const AccountingOperationsFinancialReportSearchForm = (props) => {
 				</Form.Item>
 				<Form.Item
 					name={`year`}
-					label={i18n.language === 'fr' ? 'Année civile' : 'Calendar year'}
+					label={i18n.t("common.year")}
 				>
 					<SelectResponsive 
 						style={{width: "160px"}}
@@ -64,18 +72,6 @@ const AccountingOperationsFinancialReportSearchForm = (props) => {
 						options={accountOptions}
 					/>
 				</Form.Item>
-				<Form.Item
-					name={`amount_min`}
-					label={i18n.language === 'fr' ? 'Montant min' : 'Min amount'}
-				>
-					<InputNumber style={{ width: 120 }} min={0} step={0.01} stringMode />
-				</Form.Item>
-				<Form.Item
-					name={`amount_max`}
-					label={i18n.language === 'fr' ? 'Montant max' : 'Max amount'}
-				>
-					<InputNumber style={{ width: 120 }} min={0} step={0.01} stringMode />
-				</Form.Item>
 				<Form.Item>
 					<Button type="primary" htmlType="submit">
 						{i18n.t("common.search")}
@@ -89,6 +85,11 @@ const AccountingOperationsFinancialReportSearchForm = (props) => {
     <AdvancedSearchForm
       form={form}
       onFinish={props.onFinish}
+	  initialValues={{
+		fiscal_year_id: '',
+		year: '',
+		accounting_account_id: ''
+	  }}
     >
         {getFields()}
     </AdvancedSearchForm>

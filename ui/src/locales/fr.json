@@ -29,7 +29,8 @@
 		"date_format": "DD/MM/YYYY",
 		"yes": "Oui",
 		"no": "Non",
-		"no_data": "Aucune(s) donnée(s)"
+		"no_data": "Aucune(s) donnée(s)",
+		"year": "Année"
 	},
 	"pages": {
 		"login": {
@@ -152,7 +153,8 @@
 			"title": "Libellé",
 			"start_date": "Date de début",
 			"end_date": "Date de fin",
-			"is_current": "Année courante"
+			"is_current": "Année courante",
+			"all": "Toutes"
 		},
 		"accounting_operation_category": {
 			"label": "Libellé",
@@ -181,7 +183,8 @@
 			"type": "Type",
 			"type_other": "Autre",
 			"type_cash": "Caisse",
-			"type_bank": "Compte bancaire"
+			"type_bank": "Compte bancaire",
+			"all": "Tous"
 		},
 		"accounting_operation": {
 			"date_value": "Date",
