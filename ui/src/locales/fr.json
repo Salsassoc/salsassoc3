@@ -30,7 +30,13 @@
 		"yes": "Oui",
 		"no": "Non",
 		"no_data": "Aucune(s) donnée(s)",
-		"year": "Année"
+		"calendar_year": "Année civile",
+		"amount": {
+			"min": "Montant min",
+			"max": "Montant max"
+		},
+		"sort": "Trier par",
+		"none": "Aucun"
 	},
 	"pages": {
 		"login": {
@@ -164,7 +170,8 @@
 			"account_type_unknown": "Inconnu",
 			"account_type_charge": "Charges (6)",
 			"account_type_income": "Produits (7)",
-			"is_internal_move": "Mouvement interne"
+			"is_internal_move": "Mouvement interne",
+			"all": "Toutes"
 		},
 		"cotisation": {
 			"label": "Libellé",

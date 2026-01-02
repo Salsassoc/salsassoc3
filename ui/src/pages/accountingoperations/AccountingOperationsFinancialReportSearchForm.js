@@ -56,7 +56,7 @@ const AccountingOperationsFinancialReportSearchForm = (props) => {
 				</Form.Item>
 				<Form.Item
 					name={`year`}
-					label={i18n.t("common.year")}
+					label={i18n.t("common.calendar_year")}
 				>
 					<SelectResponsive 
 						style={{width: "160px"}}

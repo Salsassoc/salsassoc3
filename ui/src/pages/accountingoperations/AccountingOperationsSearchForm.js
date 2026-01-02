@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { Form, InputNumber, Button } from 'antd';
+import { Form, InputNumber, Button, Radio } from 'antd';
 
 import AdvancedSearchForm from '../../components/forms/AdvancedSearchForm.js';
 import SelectResponsive from '../../components/inputs/SelectResponsive.js';
@@ -17,18 +17,23 @@ const AccountingOperationsSearchForm = (props) => {
 	const years = [];
 	for(let y = currentYear; y >= 1999; --y){ years.push(y); }
 
-	const fiscalYearOptions = [{ value: '', label: i18n.language === 'fr' ? 'Toutes' : 'All' }].concat(
+	const fiscalYearOptions = [{ value: '', label: i18n.t("models.fiscal_years.all")}].concat(
 		(fiscalYears || []).map(y => ({ value: y.id, label: y.title }))
 	);
-	const yearOptions = [{ value: '', label: i18n.language === 'fr' ? 'Toutes' : 'All' }].concat(
+	const yearOptions = [{ value: '', label: i18n.t("models.fiscal_years.all")}].concat(
 		years.map(y => ({ value: y, label: ''+y }))
 	);
-	const accountOptions = [{ value: '', label: i18n.language === 'fr' ? 'Tous' : 'All' }].concat(
+	const accountOptions = [{ value: '', label: i18n.t("models.accounting_account.all")}].concat(
 		(accounts || []).map(a => ({ value: a.id, label: a.label }))
 	);
-	const categoryOptions = [{ value: '', label: i18n.language === 'fr' ? 'Toutes' : 'All' }].concat(
+	const categoryOptions = [{ value: '', label: i18n.t("models.accounting_operation_category.all")}].concat(
 		(categories || []).map(c => ({ value: c.id, label: c.label }))
 	);
+	const sortByOptions = [
+		{ value: '', label: i18n.t("common.none")},
+		{ value: 'date_value', label: i18n.t("models.accounting_operation.date_value")},
+		{ value: 'date_effective', label: i18n.t("models.accounting_operation.date_effective")},
+	]
 
 	const getFields = () => {
 		return (
@@ -44,7 +49,7 @@ const AccountingOperationsSearchForm = (props) => {
 				</Form.Item>
 				<Form.Item
 					name={`year`}
-					label={i18n.language === 'fr' ? 'Année civile' : 'Calendar year'}
+					label={i18n.t("common.calendar_year")}
 				>
 					<SelectResponsive 
 						style={{width: "160px"}}
@@ -71,15 +76,23 @@ const AccountingOperationsSearchForm = (props) => {
 				</Form.Item>
 				<Form.Item
 					name={`amount_min`}
-					label={i18n.language === 'fr' ? 'Montant min' : 'Min amount'}
+					label={i18n.t("common.amount.min")}
 				>
 					<InputNumber style={{ width: 120 }} min={0} step={0.01} stringMode />
 				</Form.Item>
 				<Form.Item
 					name={`amount_max`}
-					label={i18n.language === 'fr' ? 'Montant max' : 'Max amount'}
+					label={i18n.t("common.amount.max")}
 				>
 					<InputNumber style={{ width: 120 }} min={0} step={0.01} stringMode />
+				</Form.Item>
+				<Form.Item
+					name={`sort_by`}
+					label={i18n.t("common.sort")}
+				>
+					<Radio.Group 
+						options={sortByOptions}
+					/>
 				</Form.Item>
 				<Form.Item>
 					<Button type="primary" htmlType="submit">
@@ -94,6 +107,13 @@ const AccountingOperationsSearchForm = (props) => {
     <AdvancedSearchForm
       form={form}
       onFinish={props.onFinish}
+	  initialValues={{
+		fiscal_year_id: '',
+		year: '',
+		accounting_account_id: '',
+		accounting_operations_category: '',
+		sort_by: ''
+	  }}
     >
         {getFields()}
     </AdvancedSearchForm>

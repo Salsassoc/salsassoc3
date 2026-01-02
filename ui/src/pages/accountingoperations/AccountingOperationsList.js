@@ -36,6 +36,7 @@ const AccountingOperationsList = (props) => {
 		categoryId: null,
 		amountMin: null,
 		amountMax: null,
+		sortBy: null,
 	});
 
 	// Data loading and initialization
@@ -67,6 +68,9 @@ const AccountingOperationsList = (props) => {
 		}
 		if (filter.amountMax !== null && filter.amountMax !== undefined && filter.amountMax !== '') {
 			params += "&amount_max=" + filter.amountMax;
+		}
+		if (filter.sortBy !== null) {
+			params += "&sort_by=" + filter.sortBy;
 		}
 
 		let url = serviceInstance.createServiceUrl("/accounting/operations/list?" + params);
@@ -179,11 +183,11 @@ const AccountingOperationsList = (props) => {
 	}
 
 	function renderCategory(_text, record){
-		return <span>{record.category_label || ''}</span>;
-	}
-
-	function renderCategoryAccountNumber(_text, record){
-		return <span>{record.category_account_number || ''}</span>;
+		let text = record.category_label;
+		if(record.category_account_number && record.category_account_number>0){
+			text += " (" + record.category_account_number + ")"
+		}
+		return <span>{text}</span>;
 	}
 
 	function renderOpMethod(_text, record){
@@ -273,12 +277,6 @@ const AccountingOperationsList = (props) => {
 				render: renderCategory
 			},
 			{
-				title: i18n.t('models.accounting_operation.category_account_number'),
-				dataIndex: 'category_account_number',
-				key: 'category_account_number',
-				render: renderCategoryAccountNumber
-			},
-			{
 				title: i18n.t('models.accounting_operation.op_method'),
 				dataIndex: 'op_method',
 				key: 'op_method',
@@ -318,6 +316,7 @@ const AccountingOperationsList = (props) => {
 			categoryId: values.accounting_operations_category,
 			amountMin: values.amount_min,
 			amountMax: values.amount_max,
+			sortBy: values.sort_by
 		});
 	}
 

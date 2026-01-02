@@ -30,7 +30,13 @@
 		"yes": "Yes",
 		"no": "No",
 		"no_data": "No data",
-		"year": "Year"
+		"calendar_year": "Calendar year",
+		"amount": {
+			"min": "Min amount",
+			"max": "Max amount"
+		},
+		"sort": "Sort by",
+		"none": "None"
 	},
 	"pages": {
 		"login": {
@@ -164,7 +170,8 @@
 			"account_type_unknown": "Unknown",
 			"account_type_charge": "Expense (6)",
 			"account_type_income": "Income (7)",
-			"is_internal_move": "Internal move"
+			"is_internal_move": "Internal move",
+			"all": "All"
 		},
 		"cotisation": {
 			"label": "Label",

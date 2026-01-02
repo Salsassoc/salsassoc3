@@ -17,6 +17,7 @@ $app->get('/api/accounting/operations/list', function (Request $request, Respons
     $dateEnd = $params['date_end'] ?? null;   // YYYY-MM-DD inclusive
     $amountMin = $params['amount_min'] ?? null;
     $amountMax = $params['amount_max'] ?? null;
+    $sortBy = $params['sort_by'] ?? null;
 
     $db = $this->get('db');
 
@@ -75,9 +76,14 @@ $app->get('/api/accounting/operations/list', function (Request $request, Respons
         $binds[] = (float)$amountMax;
     }
 
-    // newest first
-    //$sql .= ' ORDER BY ao.date_value DESC, ao.id DESC';
-    $sql .= ' ORDER BY ao.id DESC';
+    // Sort condition first
+    if($sortBy == "date_value"){
+        $sql .= ' ORDER BY ao.date_value DESC, ao.id DESC';
+    }else if($sortBy == "date_effective"){
+        $sql .= ' ORDER BY ao.date_effective DESC, ao.id DESC';
+    }else{
+        $sql .= ' ORDER BY ao.id DESC';
+    }
 
     $stmt = $db->prepare($sql);
     $stmt->execute($binds);
