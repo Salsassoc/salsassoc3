@@ -67,13 +67,17 @@ $app->get('/api/accounting/operations/list', function (Request $request, Respons
             $binds[] = $dateEnd;
         }
     }
+
     if ($amountMin !== null && $amountMin !== '') {
-        $sql .= ' AND (CASE WHEN ao.amount_credit IS NOT NULL THEN ao.amount_credit ELSE ao.amount_debit END) >= ?';
+        $sql .= ' AND ((ao.amount_credit IS NOT NULL AND ao.amount_credit >= ?) OR (ao.amount_debit IS NOT NULL AND ao.amount_debit <= ?))';
         $binds[] = (float)$amountMin;
+        $binds[] = (float)-$amountMin;
     }
+
     if ($amountMax !== null && $amountMax !== '') {
-        $sql .= ' AND (CASE WHEN ao.amount_credit IS NOT NULL THEN ao.amount_credit ELSE ao.amount_debit END) <= ?';
+        $sql .= ' AND ((ao.amount_credit IS NOT NULL AND ao.amount_credit <= ?) OR (ao.amount_debit IS NOT NULL AND ao.amount_debit >= ?))';
         $binds[] = (float)$amountMax;
+        $binds[] = (float)-$amountMax;
     }
 
     // Sort condition first

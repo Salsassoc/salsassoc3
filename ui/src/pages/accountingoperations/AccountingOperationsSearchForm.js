@@ -78,13 +78,13 @@ const AccountingOperationsSearchForm = (props) => {
 					name={`amount_min`}
 					label={i18n.t("common.amount.min")}
 				>
-					<InputNumber style={{ width: 120 }} min={0} step={0.01} stringMode />
+					<InputNumber style={{ width: 120 }} step={0.01} stringMode />
 				</Form.Item>
 				<Form.Item
 					name={`amount_max`}
 					label={i18n.t("common.amount.max")}
 				>
-					<InputNumber style={{ width: 120 }} min={0} step={0.01} stringMode />
+					<InputNumber style={{ width: 120 }} step={0.01} stringMode />
 				</Form.Item>
 				<Form.Item
 					name={`sort_by`}
