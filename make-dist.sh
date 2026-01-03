@@ -65,7 +65,7 @@ if [ "${SKIP_FRONTEND:-0}" != "1" ]; then
     # Install dependencies for build
     if [ -f "$FRONTEND_DIR/package-lock.json" ]; then
       log "Installing dependencies (npm ci)..."
-      (cd "$FRONTEND_DIR" && npm ci --force)
+      (cd "$FRONTEND_DIR" && npm install --force)
     else
       log "Installing dependencies (npm install)..."
       (cd "$FRONTEND_DIR" && npm install --force)
