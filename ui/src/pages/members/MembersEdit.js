@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Form, Input, Button, DatePicker, Select, Switch} from 'antd';
+import {Form, Input, Button, DatePicker, Select, Switch, Card} from 'antd';
 
 import dayjs from 'dayjs';
 
@@ -15,6 +15,7 @@ import PageContentAlertError from '../../layout/PageContentAlertError.js';
 import FormEdit from '../../components/forms/FormEdit.js';
 import FormEditSection from '../../components/forms/FormEditSection.js';
 import FormEditItemSubmit from '../../components/forms/FormEditItemSubmit.js';
+import MembersMemberships from './MembersMemberships.js';
 
 const MembersEdit = (props) => {
 
@@ -28,6 +29,7 @@ const MembersEdit = (props) => {
 
 	// Define data state
 	const [dataObject, setDataObject] = React.useState(getDefaultData());
+	const [memberships, setMemberships] = React.useState([]);
 
 	// Create form instance
 	const [formInstance] = Form.useForm();
@@ -83,7 +85,8 @@ const MembersEdit = (props) => {
 
 	function loadData()
 	{
-		return loadMember();
+		return loadMember()
+			.then(() => loadMemberships());
 	}
 
 	function loadMember()
@@ -104,6 +107,19 @@ const MembersEdit = (props) => {
 			.then((response) => {
 				const newDataObject = response.result.member;
 				setDataObject(newDataObject);
+			});
+	}
+
+	function loadMemberships(){
+		if(isModeAdd()){
+			setMemberships([]);
+			return Promise.resolve();
+		}
+		const url = serviceInstance.createServiceUrl("/memberships/list?member_id="+dataId);
+		return fetchJSON(url)
+			.then((response) => {
+				const items = response.result.memberships || [];
+				setMemberships(items);
 			});
 	}
 
@@ -173,6 +189,22 @@ const MembersEdit = (props) => {
 			pageBreadcrumb: pageBreadcrumb
 		}
 		return layoutData;
+	}
+
+	function renderMemberships()
+	{
+		if(isModeAdd()){
+			return null;
+		}
+
+		const count = memberships.length;
+
+		return (
+			<Card title={i18n.t('pages.memberships.title') + " (" + count + ")"}>
+				<MembersMemberships items={memberships} />
+			</Card>
+		);					
+
 	}
 
 	// Handle dataObject update
@@ -269,6 +301,8 @@ const MembersEdit = (props) => {
 					</Button>
 				</FormEditItemSubmit>
 			</FormEdit>
+
+			{renderMemberships()}
 		</PageContentLayout>
 	)
 };

@@ -36,7 +36,8 @@
 			"max": "Montant max"
 		},
 		"sort": "Trier par",
-		"none": "Aucun"
+		"none": "Aucun",
+		"details": "Détails"
 	},
 	"pages": {
 		"login": {
@@ -249,7 +250,7 @@
 			"type_board": "Conseil d'administration",
 			"type_teacher": "Professeur",
 			"payment": "Paiement",
-			"payment_method_unknown": "-- Inconnu --",
+			"payment_method_unknown": "Inconnu",
 			"payment_method_none": "Aucun",
 			"payment_method_check": "Chèque",
 			"payment_method_cash": "Espèces",

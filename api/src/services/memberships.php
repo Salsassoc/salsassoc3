@@ -11,11 +11,11 @@ $app->get('/api/memberships/list', function (Request $request, Response $respons
     // Read filters
     $params = $request->getQueryParams();
     $fiscalYearId = $params['fiscalyear_id'] ?? ($params['fiscal_year_id'] ?? null);
+    $memberId = $params['member_id'] ?? null; // Filter by member (person) id
     $sort = $params['sort'] ?? null; // 'date' to sort by membership_date
 
     // Build query
-    $sql = 'SELECT m.*, 
-        p.lastname, p.firstname, p.gender, p.birthdate, p.address, p.zipcode, p.city, p.email, p.phonenumber, p.phonenumber2, p.image_rights,
+    $sql = 'SELECT m.*,
         fy.title AS fiscal_year_title,
         (
             SELECT IFNULL(SUM(mc.amount), 0)
@@ -26,7 +26,17 @@ $app->get('/api/memberships/list', function (Request $request, Response $respons
             SELECT GROUP_CONCAT(DISTINCT mc.payment_method)
             FROM membership_cotisation mc
             WHERE mc.membership_id = m.id AND mc.payment_method IS NOT NULL
-        ) AS payment_methods_concat
+        ) AS payment_methods_concat,
+        (
+            SELECT pm.payment_method FROM (
+                SELECT mc.payment_method, COUNT(*) AS cnt
+                FROM membership_cotisation mc
+                WHERE mc.membership_id = m.id AND mc.payment_method IS NOT NULL
+                GROUP BY mc.payment_method
+                ORDER BY cnt DESC, mc.payment_method DESC
+                LIMIT 1
+            ) pm
+        ) AS primary_payment_method
         FROM membership m
         INNER JOIN person p ON p.id = m.person_id
         LEFT JOIN fiscal_year fy ON fy.id = m.fiscal_year_id
@@ -36,6 +46,11 @@ $app->get('/api/memberships/list', function (Request $request, Response $respons
     if ($fiscalYearId !== null && $fiscalYearId !== '') {
         $sql .= ' AND m.fiscal_year_id = ?';
         $binds[] = (int)$fiscalYearId;
+    }
+
+    if ($memberId !== null && $memberId !== '') {
+        $sql .= ' AND m.person_id = ?';
+        $binds[] = (int)$memberId;
     }
 
     // Order
@@ -61,6 +76,12 @@ $app->get('/api/memberships/list', function (Request $request, Response $respons
         if (isset($row['membership_type'])) { $row['membership_type'] = (int)$row['membership_type']; }
         if (isset($row['fiscal_year_id'])) { $row['fiscal_year_id'] = (int)$row['fiscal_year_id']; }
         if (isset($row['collected_amount'])) { $row['collected_amount'] = (float)$row['collected_amount']; }
+        if (array_key_exists('primary_payment_method', $row)) {
+            // Could be null
+            $row['primary_payment_method'] = ($row['primary_payment_method'] === null || $row['primary_payment_method'] === '')
+                ? null
+                : (int)$row['primary_payment_method'];
+        }
         // Build payment methods array and label
         $methods = [];
         if (!empty($row['payment_methods_concat'])) {
@@ -90,20 +111,40 @@ $app->get('/api/memberships/get', function (Request $request, Response $response
     }
 
     $db = $this->get('db');
-
-    $stmt = $db->prepare('SELECT m.*, p.lastname, p.firstname, p.gender, p.birthdate, p.address, p.zipcode, p.city, p.email, p.phonenumber, p.phonenumber2, p.image_rights
-        FROM membership m INNER JOIN person p ON p.id = m.person_id WHERE m.id = ?');
+    $stmt = $db->prepare('SELECT * FROM membership WHERE id = ?');
     $stmt->execute([$id]);
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($row) {
-        if (isset($row['id'])) { $row['id'] = (int)$row['id']; }
-        if (isset($row['person_id'])) { $row['person_id'] = (int)$row['person_id']; }
-        if (isset($row['gender'])) { $row['gender'] = (int)$row['gender']; }
-        if (isset($row['zipcode']) && $row['zipcode'] !== null && $row['zipcode'] !== '') { $row['zipcode'] = (int)$row['zipcode']; }
-        if (isset($row['image_rights'])) { $row['image_rights'] = (bool)($row['image_rights'] == 'true' || $row['image_rights'] == 1); }
-        if (isset($row['membership_type'])) { $row['membership_type'] = (int)$row['membership_type']; }
-        if (isset($row['fiscal_year_id'])) { $row['fiscal_year_id'] = (int)$row['fiscal_year_id']; }
+        if (isset($row['id'])) {
+            $row['id'] = (int)$row['id'];
+        }
+        if (isset($row['person_id'])) {
+            $row['person_id'] = (int)$row['person_id'];
+        }
+        if (isset($row['gender'])) {
+            $row['gender'] = (int)$row['gender'];
+        }
+        if (isset($row['zipcode']) && $row['zipcode'] !== null && $row['zipcode'] !== '') {
+            $row['zipcode'] = (int)$row['zipcode'];
+        }
+        if (isset($row['image_rights'])) {
+            $row['image_rights'] = (bool)($row['image_rights'] == 'true' || $row['image_rights'] == 1);
+        }
+        if (isset($row['membership_type'])) {
+            $row['membership_type'] = (int)$row['membership_type'];
+        }
+        if (isset($row['fiscal_year_id'])) {
+            $row['fiscal_year_id'] = (int)$row['fiscal_year_id'];
+        }
+
+        // Load person
+        $stmt2 = $db->prepare('SELECT * FROM person WHERE id = ?');
+        $stmt2->execute([$row['person_id']]);
+        $row2 = $stmt2->fetch(PDO::FETCH_ASSOC);
+        if($row2){
+            $row['person'] = $row2;
+        }
 
         // Load cotisations lines
         $stmt2 = $db->prepare('SELECT mc.cotisation_id, c.label, mc.date, mc.amount, mc.payment_method

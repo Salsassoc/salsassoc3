@@ -286,7 +286,7 @@ const MembershipsEdit = (props) => {
 
 	function getCotisationPaymentOptions(){
 		return [
-			{ value: '', label: i18n.t('models.membership.payment_method_unknown') },
+			{ value: '', label: "--" + i18n.t('models.membership.payment_method_unknown') + "--"},
 			{ value: 0, label: i18n.t('models.membership.payment_method_none') },
 			{ value: 1, label: i18n.t('models.membership.payment_method_check') },
 			{ value: 2, label: i18n.t('models.membership.payment_method_cash') },

@@ -36,7 +36,8 @@
 			"max": "Max amount"
 		},
 		"sort": "Sort by",
-		"none": "None"
+		"none": "None",
+		"details": "Details"
 	},
 	"pages": {
 		"login": {
@@ -249,7 +250,7 @@
 			"type_board": "Board of directors",
 			"type_teacher": "Teacher",
 			"payment": "Payment",
-			"payment_method_unknown": "-- Unknown --",
+			"payment_method_unknown": "Unknown",
 			"payment_method_none": "None",
 			"payment_method_check": "Check",
 			"payment_method_cash": "Cash",
