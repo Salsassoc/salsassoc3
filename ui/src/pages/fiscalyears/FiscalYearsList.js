@@ -1,7 +1,7 @@
 import React from 'react'
 import {Link} from "react-router-dom";
 import {Space, Popconfirm, Table, Checkbox} from 'antd';
-import {EditOutlined, DeleteOutlined} from '@ant-design/icons';
+import {EditOutlined, DeleteOutlined, StarOutlined} from '@ant-design/icons';
 
 import dayjs from 'dayjs';
 
@@ -87,7 +87,8 @@ const FiscalYearsList = (props) => {
 	}
 
 	function renderTitle(_text, record){
-		return <span style={{textWrap:'nowrap'}}>{record.title}</span>;
+		let currentView = (record.is_current ? <StarOutlined /> : "");
+		return <Space>{record.title}{currentView}</Space>;
 	}
 
 	function renderIsCurrent(_text, record)
