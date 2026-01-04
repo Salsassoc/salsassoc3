@@ -140,7 +140,8 @@
 			"saved": "The membership has been saved successfully",
 			"no_cotisation_for_year": "No cotisation for this fiscal year",
 			"search_member": "Search member",
-			"search_member_placeholder": "Lastname Firstname..."
+			"search_member_placeholder": "Lastname Firstname...",
+            "view_member": "View member"
 		},
 		"dashboard": {
 			"title": "Dashboard",

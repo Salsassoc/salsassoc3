@@ -140,7 +140,8 @@
 			"saved": "L'adhésion a bien été sauvegardée",
 			"no_cotisation_for_year": "Aucune cotisation pour cette année fiscale",
 			"search_member": "Rechercher un membre",
-			"search_member_placeholder": "Nom Prénom..."
+			"search_member_placeholder": "Nom Prénom...",
+            "view_member": "Voir le membre"
 		},
 		"dashboard": {
 			"title": "Tableau de bord",

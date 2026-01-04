@@ -354,6 +354,26 @@ const MembershipsEdit = (props) => {
 		return layoutData;
 	}
 
+	function goToMember(){
+		const person_id = (dataObject && dataObject.person_id);
+		if(!person_id){
+			return;
+		}
+		const url = serviceInstance.createAdminUrl("/members/edit/"+person_id);
+		props.router.navigate(url);
+	}
+
+	function renderViewMemberButton(){
+		if(isModeAdd()){
+			return null;
+		}
+		return (
+			<Button onClick={goToMember}>
+				{i18n.t("pages.membership.view_member")}
+			</Button>
+		)
+	}
+
 	// Build options
 	const fiscalYearOptions = fiscalYears.map(y => ({ value: y.id, label: y.title }));
 
@@ -482,9 +502,12 @@ const MembershipsEdit = (props) => {
 				</Row>
 
 				<FormEditItemSubmit>
-					<Button type="primary" htmlType="submit">
-						{isModeAdd() ? i18n.t("common.add") : i18n.t("common.save")}
-					</Button>
+					<Space>
+						{renderViewMemberButton()}
+						<Button type="primary" htmlType="submit">
+							{isModeAdd() ? i18n.t("common.add") : i18n.t("common.save")}
+						</Button>
+					</Space>
 				</FormEditItemSubmit>
 			</FormEdit>
 		</PageContentLayout>
