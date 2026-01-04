@@ -16,16 +16,14 @@ $app->get('/api/accounting/accounts/list', function (Request $request, Response 
         ) AS operation_count,
         (
             SELECT IFNULL(SUM(ao.amount_credit), 0)
-            FROM accounting_operation ao, accounting_operation_category c
+            FROM accounting_operation ao
             WHERE ao.account_id = a.id
-            AND c.id = ao.category
             AND ao.date_effective IS NOT NULL
         ) AS income_amount,
         (
             SELECT IFNULL(SUM(ao.amount_debit), 0)
-            FROM accounting_operation ao, accounting_operation_category c
+            FROM accounting_operation ao
             WHERE ao.account_id = a.id
-            AND c.id = ao.category
             AND ao.date_effective IS NOT NULL
         ) AS outcome_amount
         FROM accounting_account a
