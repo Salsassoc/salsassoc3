@@ -118,7 +118,11 @@ const FiscalYearsList = (props) => {
 
 	function renderMembers(_text, record){
 		const count = record.membership_count || 0;
-		return <span style={{textWrap:'nowrap'}}>{count} {i18n.t('pages.fiscal_years.members_suffix')}</span>;
+		const label = `${count} ${i18n.t('pages.fiscal_years.members_suffix')}`;
+		const href = serviceInstance.createAdminUrl(`/members/list?fiscal_year_id=${record.id}`);
+		return (
+			<Link to={href} style={{textWrap:'nowrap'}}>{label}</Link>
+		);
 	}
 
 	function renderAmount(_text, record){
@@ -128,7 +132,11 @@ const FiscalYearsList = (props) => {
 
 	function renderOperations(_text, record){
 		const count = record.operation_count || 0;
-		return <span style={{textWrap:'nowrap'}}>{count} {i18n.t('pages.fiscal_years.operations_suffix')}</span>;
+		const label = `${count} ${i18n.t('pages.fiscal_years.operations_suffix')}`;
+		const href = serviceInstance.createAdminUrl(`/accounting/operations/list?fiscal_year_id=${record.id}`);
+		return (
+			<Link to={href} style={{textWrap:'nowrap'}}>{label}</Link>
+		);
 	}
 
 	function renderIncome(_text, record){

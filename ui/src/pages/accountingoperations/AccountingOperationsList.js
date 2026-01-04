@@ -24,6 +24,9 @@ const AccountingOperationsList = (props) => {
 	const serviceInstance = appContext.serviceInstance;
 	const pageLoader = appContext.pageLoader;
 
+	const params = new URLSearchParams(window.location.search || '');
+	const paramFiscalYearId = (params.has('fiscal_year_id') ? parseInt(params.get('fiscal_year_id')) : null);
+
 	// Define data state
 	const [items, setItems] = React.useState([]);
 	const [fiscalYears, setFiscalYears] = React.useState([]);
@@ -319,6 +322,15 @@ const AccountingOperationsList = (props) => {
 			sortBy: values.sort_by
 		});
 	}
+	
+	// Default to current fiscal year when list is loaded
+	React.useEffect(() => {
+		if(fiscalYears && fiscalYears.length > 0){
+			if(paramFiscalYearId){
+				setFilter({ fiscalYearId: paramFiscalYearId });
+			}
+		}
+	}, [fiscalYears]);
 
 	// Reload list when filter changes
 	React.useEffect(() => {
@@ -328,6 +340,7 @@ const AccountingOperationsList = (props) => {
 	const form = (
 		<AccountingOperationsSearchForm
 			fiscalYears={fiscalYears}
+			defaultFiscalYearId={filter.fiscalYearId}
 			accounts={accounts}
 			categories={categories}
 			onFinish={onFormSearchFinished}

@@ -19,6 +19,9 @@ const MembersList = (props) => {
 	const serviceInstance = appContext.serviceInstance;
 	const pageLoader = appContext.pageLoader;
 
+	const params = new URLSearchParams(window.location.search || '');
+	const paramFiscalYearId = (params.has('fiscal_year_id') ? parseInt(params.get('fiscal_year_id')) : null);
+
  	// Define data state
 	const [items, setItems] = React.useState([]);
 	const [fiscalYears, setFiscalYears] = React.useState([]);
@@ -111,9 +114,13 @@ const MembersList = (props) => {
 	// Default to current fiscal year when list is loaded
 	React.useEffect(() => {
 		if(fiscalYears && fiscalYears.length > 0){
-			const current = fiscalYears.find(y => y.is_current);
-			if(current && filter.fiscalYearId == null){
-				setFilter({ fiscalYearId: current.id });
+			if(paramFiscalYearId){
+				setFilter({ fiscalYearId: paramFiscalYearId });
+			}else{
+				const current = fiscalYears.find(y => y.is_current);
+				if(current && filter.fiscalYearId == null){
+					setFilter({ fiscalYearId: current.id });
+				}
 			}
 		}
 	}, [fiscalYears]);
