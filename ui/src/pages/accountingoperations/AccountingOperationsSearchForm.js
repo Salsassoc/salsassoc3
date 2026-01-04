@@ -11,6 +11,7 @@ const AccountingOperationsSearchForm = (props) => {
 
 	const fiscalYears = props.fiscalYears || [];
 	const defaultFiscalYearId = props.defaultFiscalYearId;
+	const defaultAccountId = props.defaultAccountId;
 	const accounts = props.accounts || [];
 	const categories = props.categories || [];
 
@@ -20,6 +21,13 @@ const AccountingOperationsSearchForm = (props) => {
 			form.setFieldsValue({ fiscal_year_id: defaultFiscalYearId });
 		}
 	}, [defaultFiscalYearId]);
+
+	// Reflect default account selection when provided/changes
+	React.useEffect(() => {
+		if (defaultAccountId !== undefined && defaultAccountId !== null) {
+		    form.setFieldsValue({ accounting_account_id: defaultAccountId });
+		}
+	}, [defaultAccountId]);
 
 	const currentYear = new Date().getFullYear();
 	const years = [];
@@ -118,7 +126,7 @@ const AccountingOperationsSearchForm = (props) => {
 	initialValues={{
 		fiscal_year_id: defaultFiscalYearId ?? '',
 		year: '',
-		accounting_account_id: '',
+		accounting_account_id: defaultAccountId ?? '',
 		accounting_operations_category: '',
 		sort_by: ''
 	}}

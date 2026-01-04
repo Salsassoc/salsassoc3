@@ -26,6 +26,7 @@ const AccountingOperationsList = (props) => {
 
 	const params = new URLSearchParams(window.location.search || '');
 	const paramFiscalYearId = (params.has('fiscal_year_id') ? parseInt(params.get('fiscal_year_id')) : null);
+	const paramAccountId = (params.has('account_id') ? parseInt(params.get('account_id')) : null);
 
 	// Define data state
 	const [items, setItems] = React.useState([]);
@@ -332,6 +333,14 @@ const AccountingOperationsList = (props) => {
 		}
 	}, [fiscalYears]);
 
+	React.useEffect(() => {
+		if(accounts && accounts.length > 0){
+			if(paramAccountId){
+				setFilter({ accountingAccountId: paramAccountId });
+			}
+		}
+	}, [accounts]);
+
 	// Reload list when filter changes
 	React.useEffect(() => {
 		loadOperationsList();
@@ -341,6 +350,7 @@ const AccountingOperationsList = (props) => {
 		<AccountingOperationsSearchForm
 			fiscalYears={fiscalYears}
 			defaultFiscalYearId={filter.fiscalYearId}
+			defaultAccountId={filter.accountingAccountId}
 			accounts={accounts}
 			categories={categories}
 			onFinish={onFormSearchFinished}

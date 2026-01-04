@@ -114,8 +114,11 @@ const AccountingAccountsList = (props) => {
 	}
 
 	function renderOperationsCount(_text, record){
+		const count = record.operation_count || 0;
+		const label = `${count} ${i18n.t('pages.fiscal_years.operations_suffix')}`;
+		const href = serviceInstance.createAdminUrl(`/accounting/operations/list?account_id=${record.id}`);
 		return (
-			<span>{record.operation_count} {i18n.t('pages.fiscal_years.operations_suffix')}</span>
+			<Link to={href} style={{textWrap:'nowrap'}}>{label}</Link>
 		);
 	}
 
