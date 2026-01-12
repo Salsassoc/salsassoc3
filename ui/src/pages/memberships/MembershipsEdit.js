@@ -234,14 +234,13 @@ const MembershipsEdit = (props) => {
 			<Space orientation="vertical">
 				<Space>{name}{birthdate}</Space>
 				<Space>{address}</Space>
-
 			</Space>
 		);
 	}
 
 	function renderAutoCompleteValue(m)
 	{
-		let value = `${m.lastname}`;
+		let value = `${m.id}`;
 		return value;
 	}
 
@@ -397,12 +396,14 @@ const MembershipsEdit = (props) => {
 
 				{isModeAdd() ?
 					<Form.Item label={i18n.t('pages.membership.search_member')}>
-						<AutoComplete
-							style={{width:'100%'}}
+						<Select
+							style={{width: '100%'}}
 							options={memberOptions}
 							onSelect={onMemberSelect}
 							placeholder={i18n.t('pages.membership.search_member_placeholder')}
-							filterOption={(inputValue, option) => option.search.toUpperCase().includes(inputValue.toUpperCase())}
+							showSearch={{
+								filterOption: (inputValue, option) => option.search.toUpperCase().includes(inputValue.toUpperCase())
+							}}
 						/>
 					</Form.Item>
 					: null
@@ -418,7 +419,7 @@ const MembershipsEdit = (props) => {
 							<Form.Item name={['lastname']} label={i18n.t("models.member.lastname")} rules={[{ required: true }]}>
 								<Input />
 							</Form.Item>
-							
+
 							<Form.Item name={['firstname']} label={i18n.t("models.member.firstname")} rules={[{ required: true }]}>
 								<Input />
 							</Form.Item>
@@ -444,7 +445,7 @@ const MembershipsEdit = (props) => {
 							<Form.Item name={['zipcode']} label={i18n.t("models.member.zipcode")}>
 								<InputNumber min={0} />
 							</Form.Item>
-			
+
 							<Form.Item name={['city']} label={i18n.t("models.member.city")}>
 								<Input />
 							</Form.Item>
@@ -465,11 +466,10 @@ const MembershipsEdit = (props) => {
 								<Switch />
 							</Form.Item>
 
-
 						</FormEditSection>
 					</Col>
 					<Col span={12}>
-	
+
 						<FormEditSection title={i18n.t('pages.membership.section_membership')}>
 
 							<Form.Item name={['membership_date']} label={i18n.t("models.membership.date")} rules={[{ required: true }]}>
