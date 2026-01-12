@@ -250,6 +250,7 @@
 			"type_young": "Avantages jeunes",
 			"type_board": "Conseil d'administration",
 			"type_teacher": "Professeur",
+            "comments": "Commentaires",
 			"payment": "Paiement",
 			"payment_method_unknown": "Inconnu",
 			"payment_method_none": "Aucun",

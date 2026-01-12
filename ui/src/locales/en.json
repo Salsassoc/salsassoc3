@@ -250,6 +250,7 @@
 			"type_young": "Youth advantages",
 			"type_board": "Board of directors",
 			"type_teacher": "Teacher",
+            "comments": "Comments",
 			"payment": "Payment",
 			"payment_method_unknown": "Unknown",
 			"payment_method_none": "None",

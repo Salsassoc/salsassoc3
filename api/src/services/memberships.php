@@ -213,33 +213,33 @@ $app->post('/api/memberships/save', function (Request $request, Response $respon
             // Upsert or create person
             if ($personId) {
                 $stmt = $db->prepare('UPDATE person 
-                    SET lastname = ?, firstname = ?, gender = ?, birthdate = ?, email = ?, phonenumber = ?, image_rights = ?, comments = ?, address = ?, zipcode = ?, city = ?, phonenumber2 = ?
+                    SET lastname = ?, firstname = ?, gender = ?, birthdate = ?, email = ?, phonenumber = ?, image_rights = ?, address = ?, zipcode = ?, city = ?, phonenumber2 = ?
                     WHERE id = ?');
-                $stmt->execute([$lastname, $firstname, $gender, $birthdate, $email, $phonenumber, $imageRights, $comments, $address, $zipcode, $city, $phonenumber2, $personId]);
+                $stmt->execute([$lastname, $firstname, $gender, $birthdate, $email, $phonenumber, $imageRights, $address, $zipcode, $city, $phonenumber2, $personId]);
             } else {
                 // creation_date set to now, is_member true by default for a membership
                 $creationDate = date('Y-m-d H:i:s');
                 $isMember = 'true';
-                $stmt = $db->prepare('INSERT INTO person (lastname, firstname, gender, birthdate, email, phonenumber, creation_date, password, is_member, image_rights, comments, address, zipcode, city, phonenumber2)
+                $stmt = $db->prepare('INSERT INTO person (lastname, firstname, gender, birthdate, email, phonenumber, creation_date, password, is_member, image_rights, address, zipcode, city, phonenumber2)
                     VALUES (?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?, ?, ?)');
-                $stmt->execute([$lastname, $firstname, $gender, $birthdate, $email, $phonenumber, $creationDate, $isMember, $imageRights, $comments, $address, $zipcode, $city, $phonenumber2]);
+                $stmt->execute([$lastname, $firstname, $gender, $birthdate, $email, $phonenumber, $creationDate, $isMember, $imageRights, $address, $zipcode, $city, $phonenumber2]);
                 $personId = (int)$db->lastInsertId();
             }
 
             // Upsert membership
             if ($id) {
                 $stmt = $db->prepare('UPDATE membership 
-                    SET person_id = ?, lastname = ?, firstname = ?, gender = ?, birthdate = ?, address = ?, zipcode = ?, city = ?, email = ?, phonenumber = ?, image_rights = ?, membership_date = ?, membership_type = ?, fiscal_year_id = ?
+                    SET person_id = ?, lastname = ?, firstname = ?, gender = ?, birthdate = ?, address = ?, zipcode = ?, city = ?, email = ?, phonenumber = ?, image_rights = ?, membership_date = ?, membership_type = ?, comments = ?, fiscal_year_id = ?
                     WHERE id = ?');
-                $stmt->execute([$personId, $lastname, $firstname, $gender, $birthdate, $address, $zipcode, $city, $email, $phonenumber, $imageRights, $membershipDate, $membershipType, $fiscalYearId, $id]);
+                $stmt->execute([$personId, $lastname, $firstname, $gender, $birthdate, $address, $zipcode, $city, $email, $phonenumber, $imageRights, $membershipDate, $membershipType, $comments, $fiscalYearId, $id]);
                 $membershipId = (int)$id;
                 // Replace cotisations set
                 $stmt = $db->prepare('DELETE FROM membership_cotisation WHERE membership_id = ?');
                 $stmt->execute([$membershipId]);
             } else {
-                $stmt = $db->prepare('INSERT INTO membership (person_id, lastname, firstname, gender, birthdate, address, zipcode, city, email, phonenumber, image_rights, membership_date, membership_type, fiscal_year_id)
+                $stmt = $db->prepare('INSERT INTO membership (person_id, lastname, firstname, gender, birthdate, address, zipcode, city, email, phonenumber, image_rights, membership_date, membership_type, comments, fiscal_year_id)
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-                $stmt->execute([$personId, $lastname, $firstname, $gender, $birthdate, $address, $zipcode, $city, $email, $phonenumber, $imageRights, $membershipDate, $membershipType, $fiscalYearId]);
+                $stmt->execute([$personId, $lastname, $firstname, $gender, $birthdate, $address, $zipcode, $city, $email, $phonenumber, $imageRights, $membershipDate, $membershipType, $comments, $fiscalYearId]);
                 $membershipId = (int)$db->lastInsertId();
             }
 

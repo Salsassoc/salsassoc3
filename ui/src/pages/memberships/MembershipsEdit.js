@@ -533,6 +533,10 @@ const MembershipsEdit = (props) => {
 								<Select options={fiscalYearOptions} onChange={onFiscalYearChange}/>
 							</Form.Item>
 
+							<Form.Item name={['comments']} label={i18n.t("models.membership.comments")}>
+								<Input.TextArea />
+							</Form.Item>
+
 
 						</FormEditSection>
 
