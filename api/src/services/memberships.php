@@ -221,7 +221,7 @@ $app->post('/api/memberships/save', function (Request $request, Response $respon
                 $creationDate = date('Y-m-d H:i:s');
                 $isMember = 'true';
                 $stmt = $db->prepare('INSERT INTO person (lastname, firstname, gender, birthdate, email, phonenumber, creation_date, password, is_member, image_rights, address, zipcode, city, phonenumber2)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?, ?, ?)');
+                    VALUES (?, ?, ?, ?, ?, ?, ?, NULL, ?, ?, ?, ?, ?, ?)');
                 $stmt->execute([$lastname, $firstname, $gender, $birthdate, $email, $phonenumber, $creationDate, $isMember, $imageRights, $address, $zipcode, $city, $phonenumber2]);
                 $personId = (int)$db->lastInsertId();
             }
