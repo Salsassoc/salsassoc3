@@ -255,7 +255,9 @@
 			"payment_method_none": "Aucun",
 			"payment_method_check": "Chèque",
 			"payment_method_cash": "Espèces",
-			"payment_method_card": "Carte bancaire"
+			"payment_method_card": "Carte bancaire",
+            "payment_method_banktransfert": "Virement",
+            "payment_method_helloasso": "HelloAsso"
 		}
 	}
 }

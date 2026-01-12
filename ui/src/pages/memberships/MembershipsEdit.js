@@ -1,6 +1,19 @@
 import React from 'react';
 
-import {Form, Input, Button, DatePicker, Select, InputNumber, Switch, AutoComplete, Row, Col, Space, Typography} from 'antd';
+import {
+	Form,
+	Input,
+	Button,
+	DatePicker,
+	Select,
+	InputNumber,
+	Switch,
+	AutoComplete,
+	Row,
+	Col,
+	Space,
+	Typography
+} from 'antd';
 
 import dayjs from 'dayjs';
 
@@ -37,14 +50,12 @@ const MembershipsEdit = (props) => {
 	const [form] = Form.useForm();
 
 	// Utility function
-	function isModeAdd()
-	{
+	function isModeAdd() {
 		return (dataId === undefined);
 	}
 
 	// Data loading and initialization
-	function getDefaultData()
-	{
+	function getDefaultData() {
 		return {
 			person_id: null,
 			lastname: "",
@@ -67,33 +78,30 @@ const MembershipsEdit = (props) => {
 	}
 
 	// Utility function
-	function jsonDateTimeReviver(key, value)
-	{
-		switch(key){
-		case 'birthdate':
-		case 'membership_date':
-			if(value == null || value === 0){
-				return null;
-			}
-			return dayjs(value, "YYYY-MM-DD");
-		default:
-			break;
+	function jsonDateTimeReviver(key, value) {
+		switch (key) {
+			case 'birthdate':
+			case 'membership_date':
+				if (value == null || value === 0) {
+					return null;
+				}
+				return dayjs(value, "YYYY-MM-DD");
+			default:
+				break;
 		}
 		return value;
 	}
 
-	function loadData()
-	{
+	function loadData() {
 		return loadMembership()
 			.then(_ => loadFiscalYears())
 			.then(_ => loadMembers())
 			.then(_ => loadCotisations());
 	}
 
-	function loadMembership()
-	{
+	function loadMembership() {
 		// Check if mode add
-		if(isModeAdd()){
+		if (isModeAdd()) {
 			const defaultObject = getDefaultData();
 			return Promise.resolve(defaultObject).then((newDataObject) => {
 				setDataObject(newDataObject);
@@ -101,7 +109,7 @@ const MembershipsEdit = (props) => {
 		}
 
 		// Compute request url
-		let url = serviceInstance.createServiceUrl("/memberships/get?id="+dataId);
+		let url = serviceInstance.createServiceUrl("/memberships/get?id=" + dataId);
 
 		// Load data
 		return fetchJSON(url, null, jsonDateTimeReviver)
@@ -113,25 +121,23 @@ const MembershipsEdit = (props) => {
 			});
 	}
 
-	function loadFiscalYears()
-	{
+	function loadFiscalYears() {
 		const url = serviceInstance.createServiceUrl("/fiscal_years/list?order=desc");
 		return fetchJSON(url)
 			.then((response) => {
 				setFiscalYears(response.result.fiscal_years || []);
 				// If add and no fiscal year selected, pick current if any
-				if(isModeAdd()){
+				if (isModeAdd()) {
 					const years = response.result.fiscal_years || [];
 					const current = years.find(y => y.is_current);
-					if(current){
-						form.setFieldsValue({ fiscal_year_id: current.id });
+					if (current) {
+						form.setFieldsValue({fiscal_year_id: current.id});
 					}
 				}
 			});
 	}
 
-	function loadMembers()
-	{
+	function loadMembers() {
 		const url = serviceInstance.createServiceUrl("/members/list");
 		return fetchJSON(url)
 			.then((response) => {
@@ -139,31 +145,36 @@ const MembershipsEdit = (props) => {
 			});
 	}
 
-	function loadCotisations()
-	{
+	function loadCotisations() {
 		const url = serviceInstance.createServiceUrl("/cotisations/list");
 		return fetchJSON(url)
 			.then((response) => {
 				setCotisations(response.result.cotisations || []);
 				// If add: prefill cotisation lines for current FY
-				if(isModeAdd()){
+				if (isModeAdd()) {
 					const fyId = form.getFieldValue('fiscal_year_id');
-					if(fyId){
+					if (fyId) {
 						prefillCotisationsForFiscalYear(fyId);
 					}
 				}
 			});
 	}
 
-	function prefillCotisationsForFiscalYear(fyId){
+	function prefillCotisationsForFiscalYear(fyId) {
 		const list = (cotisations || []).filter(c => c.fiscal_year_id === fyId)
-			.map(c => ({ cotisation_id: c.id, label: c.label, date: dayjs().format('YYYY-MM-DD'), amount: c.amount, payment_method: 0, checked: true }));
+			.map(c => ({
+				cotisation_id: c.id,
+				label: c.label,
+				date: dayjs().format('YYYY-MM-DD'),
+				amount: c.amount,
+				payment_method: 0,
+				checked: true
+			}));
 		setCotisationLines(list);
 	}
 
 	// Form management
-	function onFinish(values)
-	{
+	function onFinish(values) {
 		pageLoader.startSaving();
 
 		// Convert dates to the desired format
@@ -184,10 +195,10 @@ const MembershipsEdit = (props) => {
 		}));
 
 		let path;
-		if(isModeAdd()){
+		if (isModeAdd()) {
 			path = "/memberships/save";
-		}else{
-			path = "/memberships/save?id="+dataId;
+		} else {
+			path = "/memberships/save?id=" + dataId;
 		}
 		let url = serviceInstance.createServiceUrl(path);
 
@@ -199,10 +210,10 @@ const MembershipsEdit = (props) => {
 		fetchJSON(url, opts)
 			.then((_result) => {
 				pageLoader.endSaving(i18n.t("pages.membership.saved"));
-				if(isModeAdd()){
+				if (isModeAdd()) {
 					const url = serviceInstance.createAdminUrl("/memberships/list");
 					props.router.navigate(url);
-				}else{
+				} else {
 					return loadData();
 				}
 			})
@@ -211,21 +222,18 @@ const MembershipsEdit = (props) => {
 			});
 	}
 
-	function renderAutoCompleteLabel(m)
-	{
+	function renderAutoCompleteLabel(m) {
 		let name = `${m.lastname} ${m.firstname}`;
 		let address = null;
 		let birthdate = null;
-		if(m.city || m.zipcode || m.address)
-		{
+		if (m.city || m.zipcode || m.address) {
 			address = (
 				<Typography.Text type="secondary">
 					&nbsp; {m.address} {m.zipcode} {m.city}
 				</Typography.Text>
 			)
 		}
-		if(m.birthdate)
-		{
+		if (m.birthdate) {
 			birthdate = "(" + dayjs(m.birthdate, "YYYY-MM-DD").format(i18n.t('common.date_format')) + ")";
 		}
 		return (
@@ -236,14 +244,12 @@ const MembershipsEdit = (props) => {
 		);
 	}
 
-	function renderAutoCompleteValue(m)
-	{
+	function renderAutoCompleteValue(m) {
 		let value = `${m.id}`;
 		return value;
 	}
 
-	function renderAutoCompleteSearch(m)
-	{
+	function renderAutoCompleteSearch(m) {
 		let value = `${m.lastname} ${m.firstname}`;
 		return value;
 	}
@@ -257,7 +263,7 @@ const MembershipsEdit = (props) => {
 		m
 	}));
 
-	function onMemberSelect(value, option){
+	function onMemberSelect(value, option) {
 		const m = option.m;
 		// Set person fields and person_id
 		const patch = {
@@ -277,60 +283,78 @@ const MembershipsEdit = (props) => {
 		form.setFieldsValue(patch);
 	}
 
-	function onFiscalYearChange(fyId){
+	function onFiscalYearChange(fyId) {
 		prefillCotisationsForFiscalYear(fyId);
 	}
 
-	function getCotisationPaymentOptions(){
+	function getCotisationPaymentOptions() {
 		return [
-			{ label: "--" + i18n.t('models.membership.payment_method_unknown') + "--"},
-			{ value: 0, label: i18n.t('models.membership.payment_method_none') },
-			{ value: 1, label: i18n.t('models.membership.payment_method_check') },
-			{ value: 2, label: i18n.t('models.membership.payment_method_cash') },
-			{ value: 3, label: i18n.t('models.membership.payment_method_card') },
+			{label: "--" + i18n.t('models.membership.payment_method_unknown') + "--"},
+			{value: 0, label: i18n.t('models.membership.payment_method_none')},
+			{value: 1, label: i18n.t('models.membership.payment_method_check')},
+			{value: 2, label: i18n.t('models.membership.payment_method_cash')},
+			{value: 3, label: i18n.t('models.membership.payment_method_card')},
+			{value: 4, label: i18n.t('models.membership.payment_method_banktransfert')},
+			{value: 5, label: i18n.t('models.membership.payment_method_helloasso')},
 		];
 	}
 
-	function renderCotisationsEditor()
-	{
+	function renderCotisationsEditor() {
 		const fyId = form.getFieldValue('fiscal_year_id');
 		const fyCotisations = (cotisations || []).filter(c => c.fiscal_year_id === fyId);
-		if(!fyId){ return null; }
+		if (!fyId) {
+			return null;
+		}
 		return (
 			<div>
 				{fyCotisations.length === 0 && (<div>{i18n.t('pages.membership.no_cotisation_for_year')}</div>)}
 				{fyCotisations.map(c => {
 					const idx = cotisationLines.findIndex(l => (l.cotisation_id || l.id) === c.id);
-					const current = idx >= 0 ? cotisationLines[idx] : { cotisation_id: c.id, amount: c.amount, date: dayjs(), payment_method: 0, checked: false };
-					function updateLine(patch){
+					const current = idx >= 0 ? cotisationLines[idx] : {
+						cotisation_id: c.id,
+						amount: c.amount,
+						date: dayjs(),
+						payment_method: 0,
+						checked: false
+					};
+
+					function updateLine(patch) {
 						const list = [...cotisationLines];
-						if(idx >= 0){
-							list[idx] = { ...current, ...patch };
-						}else{
-							list.push({ ...current, ...patch });
+						if (idx >= 0) {
+							list[idx] = {...current, ...patch};
+						} else {
+							list.push({...current, ...patch});
 						}
 						setCotisationLines(list);
 					}
+
 					return (
-						<div key={c.id} style={{display:'grid', gridTemplateColumns:'20px 1fr 140px 160px 160px', gap: 8, alignItems:'center', marginBottom: 6}}>
-							<input type="checkbox" checked={!!current.checked} onChange={e => updateLine({ checked: e.target.checked })} />
+						<div key={c.id} style={{
+							display: 'grid',
+							gridTemplateColumns: '20px 1fr 140px 160px 160px',
+							gap: 8,
+							alignItems: 'center',
+							marginBottom: 6
+						}}>
+							<input type="checkbox" checked={!!current.checked}
+							       onChange={e => updateLine({checked: e.target.checked})}/>
 							<span>{c.label}</span>
 							<InputNumber
 								min={0}
 								step={0.01}
 								value={current.amount}
-								onChange={(v) => updateLine({ amount: v })}
+								onChange={(v) => updateLine({amount: v})}
 							/>
 							<DatePicker
 								format={i18n.t('common.date_format')}
 								value={current.date ? (current.date.format ? current.date : dayjs(current.date, 'YYYY-MM-DD')) : null}
-								onChange={(d) => updateLine({ date: d })}
+								onChange={(d) => updateLine({date: d})}
 							/>
 							<Select
-								style={{width:'100%'}}
+								style={{width: '100%'}}
 								value={(current.payment_method === null || current.payment_method === undefined) ? undefined : current.payment_method}
 								options={getCotisationPaymentOptions()}
-								onChange={(v) => updateLine({ payment_method: v })}
+								onChange={(v) => updateLine({payment_method: v})}
 							/>
 						</div>
 					);
@@ -340,13 +364,12 @@ const MembershipsEdit = (props) => {
 	}
 
 	// Compute layout data
-	function getLayoutData()
-	{
+	function getLayoutData() {
 		// Set page title
 		let pageTitle;
-		if(!isModeAdd()){
+		if (!isModeAdd()) {
 			pageTitle = i18n.t("pages.membership.edit_title");
-		}else{
+		} else {
 			pageTitle = i18n.t("pages.membership.add_title");
 		}
 
@@ -366,17 +389,17 @@ const MembershipsEdit = (props) => {
 		return layoutData;
 	}
 
-	function goToMember(){
+	function goToMember() {
 		const person_id = (dataObject && dataObject.person_id);
-		if(!person_id){
+		if (!person_id) {
 			return;
 		}
-		const url = serviceInstance.createAdminUrl("/members/edit/"+person_id);
+		const url = serviceInstance.createAdminUrl("/members/edit/" + person_id);
 		props.router.navigate(url);
 	}
 
-	function renderViewMemberButton(){
-		if(isModeAdd()){
+	function renderViewMemberButton() {
+		if (isModeAdd()) {
 			return null;
 		}
 		return (
@@ -387,7 +410,7 @@ const MembershipsEdit = (props) => {
 	}
 
 	// Build options
-	const fiscalYearOptions = fiscalYears.map(y => ({ value: y.id, label: y.title }));
+	const fiscalYearOptions = fiscalYears.map(y => ({value: y.id, label: y.title}));
 
 	// Handle dataObject update
 	React.useEffect(() => {
@@ -401,10 +424,10 @@ const MembershipsEdit = (props) => {
 				onFinish={onFinish}
 				form={form}
 			>
-				<PageContentAlertError pageLoader={pageLoader} />
+				<PageContentAlertError pageLoader={pageLoader}/>
 
-				<Form.Item name={['id']} hidden={true} rules={[{ required: !isModeAdd() }]}>
-					<Input />
+				<Form.Item name={['id']} hidden={true} rules={[{required: !isModeAdd()}]}>
+					<Input/>
 				</Form.Item>
 
 				{isModeAdd() ?
@@ -427,56 +450,59 @@ const MembershipsEdit = (props) => {
 
 						<FormEditSection title={i18n.t("pages.membership.section_personal_data")}>
 
-							<Form.Item name={['person_id']} hidden={true}><Input /></Form.Item>
+							<Form.Item name={['person_id']} hidden={true}><Input/></Form.Item>
 
-							<Form.Item name={['lastname']} label={i18n.t("models.member.lastname")} rules={[{ required: true }]}>
-								<Input />
+							<Form.Item name={['lastname']} label={i18n.t("models.member.lastname")}
+							           rules={[{required: true}]}>
+								<Input/>
 							</Form.Item>
 
-							<Form.Item name={['firstname']} label={i18n.t("models.member.firstname")} rules={[{ required: true }]}>
-								<Input />
+							<Form.Item name={['firstname']} label={i18n.t("models.member.firstname")}
+							           rules={[{required: true}]}>
+								<Input/>
 							</Form.Item>
 
 							<Form.Item name="gender" label={i18n.t("models.member.gender")}>
 								<Select
 									options={[
-										{ value: 0, label: i18n.t('models.member.gender_unknown') },
-										{ value: 1, label: i18n.t('models.member.gender_male') },
-										{ value: 2, label: i18n.t('models.member.gender_female') },
+										{value: 0, label: i18n.t('models.member.gender_unknown')},
+										{value: 1, label: i18n.t('models.member.gender_male')},
+										{value: 2, label: i18n.t('models.member.gender_female')},
 									]}
 								/>
 							</Form.Item>
 
 							<Form.Item name={['birthdate']} label={i18n.t("models.member.birthdate")}>
-								<DatePicker format={i18n.t("common.date_format")} />
+								<DatePicker format={i18n.t("common.date_format")}/>
 							</Form.Item>
 
 							<Form.Item name={['address']} label={i18n.t("models.member.address")}>
-								<Input />
+								<Input/>
 							</Form.Item>
 
 							<Form.Item name={['zipcode']} label={i18n.t("models.member.zipcode")}>
-								<InputNumber min={0} />
+								<InputNumber min={0}/>
 							</Form.Item>
 
 							<Form.Item name={['city']} label={i18n.t("models.member.city")}>
-								<Input />
+								<Input/>
 							</Form.Item>
 
 							<Form.Item name={['email']} label={i18n.t("models.member.email")}>
-								<Input />
+								<Input/>
 							</Form.Item>
 
 							<Form.Item name={['phonenumber']} label={i18n.t("models.member.phonenumber")}>
-								<Input />
+								<Input/>
 							</Form.Item>
 
 							<Form.Item name={['phonenumber2']} label={i18n.t("models.member.phonenumber2")}>
-								<Input />
+								<Input/>
 							</Form.Item>
 
-							<Form.Item name={['image_rights']} valuePropName="checked" label={i18n.t("models.member.image_rights")}>
-								<Switch />
+							<Form.Item name={['image_rights']} valuePropName="checked"
+							           label={i18n.t("models.member.image_rights")}>
+								<Switch/>
 							</Form.Item>
 
 						</FormEditSection>
@@ -485,24 +511,26 @@ const MembershipsEdit = (props) => {
 
 						<FormEditSection title={i18n.t('pages.membership.section_membership')}>
 
-							<Form.Item name={['membership_date']} label={i18n.t("models.membership.date")} rules={[{ required: true }]}>
-								<DatePicker format={i18n.t("common.date_format")} />
+							<Form.Item name={['membership_date']} label={i18n.t("models.membership.date")}
+							           rules={[{required: true}]}>
+								<DatePicker format={i18n.t("common.date_format")}/>
 							</Form.Item>
 
 							<Form.Item name="membership_type" label={i18n.t("models.membership.type")}>
 								<Select
 									options={[
-										{ label: i18n.t('models.membership.type_unknown') },
-										{ value: 1, label: i18n.t('models.membership.type_standard') },
-										{ value: 2, label: i18n.t('models.membership.type_young') },
-										{ value: 3, label: i18n.t('models.membership.type_board') },
-										{ value: 4, label: i18n.t('models.membership.type_teacher') },
+										{label: i18n.t('models.membership.type_unknown')},
+										{value: 1, label: i18n.t('models.membership.type_standard')},
+										{value: 2, label: i18n.t('models.membership.type_young')},
+										{value: 3, label: i18n.t('models.membership.type_board')},
+										{value: 4, label: i18n.t('models.membership.type_teacher')},
 									]}
 								/>
 							</Form.Item>
 
-							<Form.Item name={['fiscal_year_id']} label={i18n.t("models.cotisation.fiscal_year")} rules={[{ required: true }]}>
-								<Select options={fiscalYearOptions} onChange={onFiscalYearChange} />
+							<Form.Item name={['fiscal_year_id']} label={i18n.t("models.cotisation.fiscal_year")}
+							           rules={[{required: true}]}>
+								<Select options={fiscalYearOptions} onChange={onFiscalYearChange}/>
 							</Form.Item>
 
 

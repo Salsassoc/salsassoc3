@@ -73,6 +73,8 @@ const MembershipsResults = (props) => {
 			1: i18n.t('models.membership.payment_method_check'),
 			2: i18n.t('models.membership.payment_method_cash'),
 			3: i18n.t('models.membership.payment_method_card'),
+			4: i18n.t('models.membership.payment_method_banktransfert'),
+			5: i18n.t('models.membership.payment_method_helloasso'),
 		};
 		const list = (record.payment_methods || []).map(v => map[v] || v);
 		if(list.length === 0){ return null; }

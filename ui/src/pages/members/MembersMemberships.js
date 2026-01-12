@@ -81,6 +81,8 @@ const MembersMemberships = ({items = []}) => {
 			1: i18n.t('models.membership.payment_method_check'),
 			2: i18n.t('models.membership.payment_method_cash'),
 			3: i18n.t('models.membership.payment_method_card'),
+			4: i18n.t('models.membership.payment_method_banktransfert'),
+			5: i18n.t('models.membership.payment_method_helloasso'),
 		};
 		const key = (record.primary_payment_method === undefined) ? null : record.primary_payment_method;
 		const label = map[key] || key;

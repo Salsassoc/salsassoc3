@@ -255,7 +255,9 @@
 			"payment_method_none": "None",
 			"payment_method_check": "Check",
 			"payment_method_cash": "Cash",
-			"payment_method_card": "Credit card"
+			"payment_method_card": "Credit card",
+			"payment_method_banktransfert": "Bank transfert",
+			"payment_method_helloasso": "HelloAsso"
 		}
 	}
 }
