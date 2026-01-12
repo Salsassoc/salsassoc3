@@ -238,7 +238,7 @@ $app->post('/api/memberships/save', function (Request $request, Response $respon
                 $stmt->execute([$membershipId]);
             } else {
                 $stmt = $db->prepare('INSERT INTO membership (person_id, lastname, firstname, gender, birthdate, address, zipcode, city, email, phonenumber, image_rights, membership_date, membership_type, comments, fiscal_year_id)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
                 $stmt->execute([$personId, $lastname, $firstname, $gender, $birthdate, $address, $zipcode, $city, $email, $phonenumber, $imageRights, $membershipDate, $membershipType, $comments, $fiscalYearId]);
                 $membershipId = (int)$db->lastInsertId();
             }
