@@ -41,6 +41,12 @@ const MembersMemberships = ({items = []}) => {
 		return <span>{record.image_rights ? i18n.t('common.yes') : i18n.t('common.no')}</span>;
 	}
 
+	function renderFiscalYear(_text, record) {
+		const title = record.fiscal_year_title || '';
+		const id = record.fiscal_year_id || '';
+		return <span>{title || id}</span>;
+	}
+
 	function renderDate(_text, record) {
 		if (!record.membership_date) {
 			return null;
@@ -97,7 +103,18 @@ const MembersMemberships = ({items = []}) => {
 
 	function getColumns() {
 		return [
-			{title: i18n.t('models.member.lastname'), dataIndex: 'lastname', key: 'lastname', render: renderLastname},
+			{
+				title: i18n.t('models.cotisation.fiscal_year'),
+				dataIndex: 'fiscal_year_title',
+				key: 'fiscal_year',
+				render: renderFiscalYear
+			},
+			{
+				title: i18n.t('models.member.lastname'),
+				dataIndex: 'lastname',
+				key: 'lastname',
+				render: renderLastname
+			},
 			{
 				title: i18n.t('models.member.firstname'),
 				dataIndex: 'firstname',
