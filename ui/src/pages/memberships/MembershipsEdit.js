@@ -34,7 +34,7 @@ const MembershipsEdit = (props) => {
 	const [cotisationLines, setCotisationLines] = React.useState([]);
 
 	// Create form instance
-	const [formInstance] = Form.useForm();
+	const [form] = Form.useForm();
 
 	// Utility function
 	function isModeAdd()
@@ -46,25 +46,23 @@ const MembershipsEdit = (props) => {
 	function getDefaultData()
 	{
 		return {
-			membership: {
-				person_id: null,
-				lastname: "",
-				firstname: "",
-				gender: 0,
-				birthdate: null,
-				address: "",
-				zipcode: null,
-				city: "",
-				email: "",
-				phonenumber: "",
-				phonenumber2: "",
-				image_rights: false,
-				membership_date: dayjs(),
-				membership_type: 1,
-				fiscal_year_id: null,
-				comments: "",
-				cotisations: []
-			}
+			person_id: null,
+			lastname: "",
+			firstname: "",
+			gender: 0,
+			birthdate: null,
+			address: "",
+			zipcode: null,
+			city: "",
+			email: "",
+			phonenumber: "",
+			phonenumber2: "",
+			image_rights: false,
+			membership_date: dayjs(),
+			membership_type: 1,
+			fiscal_year_id: null,
+			comments: "",
+			cotisations: []
 		}
 	}
 
@@ -110,7 +108,7 @@ const MembershipsEdit = (props) => {
 			.then((response) => {
 				const newDataObject = response.result.membership;
 				setDataObject(newDataObject);
-				formInstance.setFieldsValue(newDataObject);
+				form.setFieldsValue(newDataObject);
 				setCotisationLines((newDataObject.cotisations || []).map(l => ({...l, checked: true})));
 			});
 	}
@@ -126,7 +124,7 @@ const MembershipsEdit = (props) => {
 					const years = response.result.fiscal_years || [];
 					const current = years.find(y => y.is_current);
 					if(current){
-						formInstance.setFieldsValue({ fiscal_year_id: current.id });
+						form.setFieldsValue({ fiscal_year_id: current.id });
 					}
 				}
 			});
@@ -149,7 +147,7 @@ const MembershipsEdit = (props) => {
 				setCotisations(response.result.cotisations || []);
 				// If add: prefill cotisation lines for current FY
 				if(isModeAdd()){
-					const fyId = formInstance.getFieldValue('fiscal_year_id');
+					const fyId = form.getFieldValue('fiscal_year_id');
 					if(fyId){
 						prefillCotisationsForFiscalYear(fyId);
 					}
@@ -276,7 +274,7 @@ const MembershipsEdit = (props) => {
 			phonenumber2: m.phonenumber2 || '',
 			image_rights: !!m.image_rights,
 		};
-		formInstance.setFieldsValue(patch);
+		form.setFieldsValue(patch);
 	}
 
 	function onFiscalYearChange(fyId){
@@ -285,7 +283,7 @@ const MembershipsEdit = (props) => {
 
 	function getCotisationPaymentOptions(){
 		return [
-			{ value: '', label: "--" + i18n.t('models.membership.payment_method_unknown') + "--"},
+			{ label: "--" + i18n.t('models.membership.payment_method_unknown') + "--"},
 			{ value: 0, label: i18n.t('models.membership.payment_method_none') },
 			{ value: 1, label: i18n.t('models.membership.payment_method_check') },
 			{ value: 2, label: i18n.t('models.membership.payment_method_cash') },
@@ -293,8 +291,9 @@ const MembershipsEdit = (props) => {
 		];
 	}
 
-	function renderCotisationsEditor(){
-		const fyId = formInstance.getFieldValue('fiscal_year_id');
+	function renderCotisationsEditor()
+	{
+		const fyId = form.getFieldValue('fiscal_year_id');
 		const fyCotisations = (cotisations || []).filter(c => c.fiscal_year_id === fyId);
 		if(!fyId){ return null; }
 		return (
@@ -316,9 +315,23 @@ const MembershipsEdit = (props) => {
 						<div key={c.id} style={{display:'grid', gridTemplateColumns:'20px 1fr 140px 160px 160px', gap: 8, alignItems:'center', marginBottom: 6}}>
 							<input type="checkbox" checked={!!current.checked} onChange={e => updateLine({ checked: e.target.checked })} />
 							<span>{c.label}</span>
-							<InputNumber min={0} step={0.01} value={current.amount} onChange={(v) => updateLine({ amount: v })} />
-							<DatePicker format={i18n.t('common.date_format')} value={current.date ? (current.date.format ? current.date : dayjs(current.date, 'YYYY-MM-DD')) : null} onChange={(d) => updateLine({ date: d })} />
-							<Select style={{width:'100%'}} value={(current.payment_method === null || current.payment_method === undefined) ? '' : current.payment_method} options={getCotisationPaymentOptions()} onChange={(v) => updateLine({ payment_method: v })} />
+							<InputNumber
+								min={0}
+								step={0.01}
+								value={current.amount}
+								onChange={(v) => updateLine({ amount: v })}
+							/>
+							<DatePicker
+								format={i18n.t('common.date_format')}
+								value={current.date ? (current.date.format ? current.date : dayjs(current.date, 'YYYY-MM-DD')) : null}
+								onChange={(d) => updateLine({ date: d })}
+							/>
+							<Select
+								style={{width:'100%'}}
+								value={(current.payment_method === null || current.payment_method === undefined) ? undefined : current.payment_method}
+								options={getCotisationPaymentOptions()}
+								onChange={(v) => updateLine({ payment_method: v })}
+							/>
 						</div>
 					);
 				})}
@@ -378,7 +391,7 @@ const MembershipsEdit = (props) => {
 
 	// Handle dataObject update
 	React.useEffect(() => {
-		formInstance.setFieldsValue(dataObject);
+		form.setFieldsValue(dataObject);
 	}, [dataObject]);
 
 	return (
@@ -386,7 +399,7 @@ const MembershipsEdit = (props) => {
 			<FormEdit
 				name="membership-edit-form"
 				onFinish={onFinish}
-				form={formInstance}
+				form={form}
 			>
 				<PageContentAlertError pageLoader={pageLoader} />
 
@@ -479,7 +492,7 @@ const MembershipsEdit = (props) => {
 							<Form.Item name="membership_type" label={i18n.t("models.membership.type")}>
 								<Select
 									options={[
-										{ value: '', label: i18n.t('models.membership.type_unknown') },
+										{ label: i18n.t('models.membership.type_unknown') },
 										{ value: 1, label: i18n.t('models.membership.type_standard') },
 										{ value: 2, label: i18n.t('models.membership.type_young') },
 										{ value: 3, label: i18n.t('models.membership.type_board') },
