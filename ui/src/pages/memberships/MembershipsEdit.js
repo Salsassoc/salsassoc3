@@ -380,6 +380,11 @@ const MembershipsEdit = (props) => {
 								return dataObject.membership_date;
 							}
 						}
+						if(current.date){
+							if(!current.date.format) {
+								return dayjs(current.date, 'YYYY-MM-DD');
+							}
+						}
 						return current.date;
 					}
 
