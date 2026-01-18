@@ -68,7 +68,7 @@ const MembershipsEdit = (props) => {
 			email: "",
 			phonenumber: "",
 			phonenumber2: "",
-			image_rights: false,
+			image_rights: true,
 			membership_date: dayjs(),
 			membership_type: 1,
 			fiscal_year_id: null,
