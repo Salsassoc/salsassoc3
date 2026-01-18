@@ -137,6 +137,10 @@ $app->post('/api/members/save', function (Request $request, Response $response)
                     SET lastname = ?, firstname = ?, gender = ?, birthdate = ?, email = ?, phonenumber = ?, creation_date = COALESCE(?, creation_date), password = ?, is_member = ?, image_rights = ?, comments = ?, address = ?, zipcode = ?, city = ?, phonenumber2 = ?
                     WHERE id = ?');
                 $stmt->execute([$lastname, $firstname, $gender, $birthdate, $email, $phonenumber, $creationDate, $password, $isMember, $imageRights, $comments, $address, $zipcode, $city, $phonenumber2, $id]);
+
+                // Keep memberships gender in sync with the member's gender
+                $stmt = $db->prepare('UPDATE membership SET gender = ? WHERE person_id = ?');
+                $stmt->execute([$gender, $id]);
             } else {
                 // Default creation_date to current timestamp if not provided
                 if (!$creationDate) {
