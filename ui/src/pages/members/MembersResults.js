@@ -2,7 +2,7 @@ import React from 'react';
 import {Link} from "react-router-dom";
 
 import {Space, Popconfirm, Table} from 'antd';
-import {EditOutlined, DeleteOutlined} from '@ant-design/icons';
+import {EditOutlined, DeleteOutlined, QuestionCircleOutlined, ManOutlined, WomanOutlined} from '@ant-design/icons';
 
 import dayjs from 'dayjs';
 
@@ -17,7 +17,34 @@ const MembersResults = (props) => {
 
 	// Get application context
 	const appContext = React.useContext(AppContext);
-	const serviceInstance = appContext.serviceInstance;
+ const serviceInstance = appContext.serviceInstance;
+
+ function getColor(type) {
+     if (type === 'female'){
+         return '#eb2f96'; // pink
+     }
+     if (type === 'male'){
+         return '#1890ff'; // blue
+     }
+     return '#8c8c8c'; // grey
+ }
+
+ function renderGender(_text, record){
+     const g = (record.gender == null ? 0 : record.gender);
+     let type = 'unknown';
+     if (g === 2){ type = 'female'; }
+     else if (g === 1){ type = 'male'; }
+
+     const color = getColor(type);
+     const style = { color };
+     if (type === 'female'){
+         return <WomanOutlined style={style} title={i18n.t('models.member.gender_female')} />;
+     }
+     if (type === 'male'){
+         return <ManOutlined style={style} title={i18n.t('models.member.gender_male')} />;
+     }
+     return <QuestionCircleOutlined style={style} title={i18n.t('models.member.gender_unknown')} />;
+ }
 
 	function renderLastname(_text, record){
 		return <span style={{textWrap:'nowrap'}}>{record.lastname}</span>;
@@ -86,25 +113,34 @@ const MembersResults = (props) => {
 
 	function getColumns()
 	{
-		return [
-			{
-				title: i18n.t('models.member.lastname'),
-				dataIndex: 'lastname',
-				key: 'lastname',
-				render: renderLastname
-			},
-			{
-				title: i18n.t('models.member.firstname'),
-				dataIndex: 'firstname',
-				key: 'firstname',
-				render: renderFirstname
-			},
-			{
-				title: i18n.t('models.member.birthdate'),
-				dataIndex: 'birthdate',
-				key: 'birthdate',
-				render: renderBirthdate
-			},
+  return [
+            {
+                title: i18n.t('models.member.lastname'),
+                dataIndex: 'lastname',
+                key: 'lastname',
+                render: renderLastname
+            },
+            {
+                title: i18n.t('models.member.firstname'),
+                dataIndex: 'firstname',
+                key: 'firstname',
+                render: renderFirstname
+            },
+            {
+                title: i18n.t('models.member.gender'),
+                dataIndex: 'gender',
+                key: 'gender',
+                align: 'center',
+                width: 60,
+                render: renderGender,
+                sorter: (a, b) => (Number(a.gender || 0) - Number(b.gender || 0))
+            },
+            {
+                title: i18n.t('models.member.birthdate'),
+                dataIndex: 'birthdate',
+                key: 'birthdate',
+                render: renderBirthdate
+            },
 			{
 				title: i18n.t('models.member.city'),
 				key: 'city',
