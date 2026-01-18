@@ -98,18 +98,83 @@ const MembershipsResults = (props) => {
 	function getColumns()
 	{
 		return [
-			{ title: i18n.t('models.member.lastname'), dataIndex: 'lastname', key: 'lastname', render: renderLastname },
-			{ title: i18n.t('models.member.firstname'), dataIndex: 'firstname', key: 'firstname', render: renderFirstname },
-			{ title: i18n.t('models.member.birthdate'), dataIndex: 'birthdate', key: 'birthdate', render: renderBirthdate },
-			{ title: i18n.t('models.member.city'), key: 'city', render: renderCity },
-			{ title: i18n.t('models.member.email'), dataIndex: 'email', key: 'email' },
-			{ title: i18n.t('models.member.phonenumber'), dataIndex: 'phonenumber', key: 'phonenumber' },
-			{ title: i18n.t('models.member.image_rights'), key: 'image_rights', render: renderImageRights },
-			{ title: i18n.t('models.membership.date'), dataIndex: 'membership_date', key: 'membership_date', render: renderDate },
-			{ title: i18n.t('models.membership.type'), dataIndex: 'membership_type', key: 'membership_type', render: renderType },
-			{ title: i18n.t('pages.members.collected_amount'), key: 'collected_amount', align: 'right', render: renderCollectedAmount },
-			{ title: i18n.t('models.membership.payment'), key: 'payment', render: renderPaymentMethods },
-			{ title: i18n.t("common.actions"), key: 'action', render: renderActions },
+			{
+				title: i18n.t('models.member.lastname'),
+				dataIndex: 'lastname',
+				key: 'lastname',
+				render: renderLastname,
+				sorter: (a, b) => a.lastname.localeCompare(b.lastname)
+			},
+			{
+				title: i18n.t('models.member.firstname'),
+				dataIndex: 'firstname',
+				key: 'firstname',
+				render: renderFirstname,
+				sorter: (a, b) => a.firstname.localeCompare(b.firstname)
+			},
+			{
+				title: i18n.t('models.member.birthdate'),
+				dataIndex: 'birthdate',
+				key: 'birthdate',
+				render: renderBirthdate,
+				sorter: (a, b) => dayjs(a.birthdate).unix() - dayjs(b.birthdate).unix()
+			},
+			{
+				title: i18n.t('models.member.city'),
+				key: 'city',
+				render: renderCity,
+				sorter: (a, b) => a.city.localeCompare(b.city)
+			},
+			{
+				title: i18n.t('models.member.email'),
+				dataIndex: 'email',
+				key: 'email',
+				sorter: (a, b) => a.email.localeCompare(b.email)
+			},
+			{
+				title: i18n.t('models.member.phonenumber'),
+				dataIndex: 'phonenumber',
+				key: 'phonenumber',
+				sorter: (a, b) => a.email.localeCompare(b.email)
+			},
+			{
+				title: i18n.t('models.member.image_rights'),
+				key: 'image_rights',
+				render: renderImageRights,
+				sorter: (a, b) => (a.image_rights === b.image_rights) ? 0 : (a.image_rights ? 1 : -1)
+			},
+			{
+				title: i18n.t('models.membership.date'),
+				dataIndex: 'membership_date',
+				key: 'membership_date',
+				render: renderDate,
+				sorter: (a, b) => dayjs(a.membership_date).unix() - dayjs(b.membership_date).unix()
+			},
+			{
+				title: i18n.t('models.membership.type'),
+				dataIndex: 'membership_type',
+				key: 'membership_type',
+				render: renderType,
+				sorter: (a, b) => (a.membership_type === b.membership_type) ? 0 : (a.membership_type > b.membership_type ? 1 : -1)
+			},
+			{
+				title: i18n.t('pages.members.collected_amount'),
+				key: 'collected_amount',
+				align: 'right',
+				render: renderCollectedAmount,
+				sorter: (a, b) => (a.collected_amount - b.collected_amount)
+			},
+			{
+				title: i18n.t('models.membership.payment'),
+				key: 'payment',
+				render: renderPaymentMethods,
+				sorter: (a, b) => (a.payment_methods === b.payment_methods) ? 0 : (a.payment_methods > b.payment_methods ? 1 : -1)
+			},
+			{
+				title: i18n.t("common.actions"),
+				key: 'action',
+				render: renderActions
+			},
 		];
 	}
 
