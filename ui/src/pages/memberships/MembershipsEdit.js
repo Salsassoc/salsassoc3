@@ -47,6 +47,7 @@ const MembershipsEdit = (props) => {
 	const [cotisationLines, setCotisationLines] = React.useState([]);
 	const [cityOptions, setCityOptions] = React.useState([]);
 	const citySearchTimer = React.useRef(null);
+	const [defaultCotisationDate, setDefaultCotisationDate] = React.useState(null);
 
 	// Create form instance
 	const [form] = Form.useForm();
@@ -210,6 +211,11 @@ const MembershipsEdit = (props) => {
 		});
 	}
 
+	// When membership date changes, copy it to cotisation lines that are NOT checked
+	function onMembershipDateChange(date) {
+		setDefaultCotisationDate(date);
+	}
+
 	// Form management
 	function onFinish(values) {
 		pageLoader.startSaving();
@@ -315,7 +321,7 @@ const MembershipsEdit = (props) => {
 			email: m.email || '',
 			phonenumber: m.phonenumber || '',
 			phonenumber2: m.phonenumber2 || '',
-			image_rights: !!m.image_rights,
+			image_rights: m.image_rights,
 		};
 		form.setFieldsValue(patch);
 	}
@@ -365,6 +371,20 @@ const MembershipsEdit = (props) => {
 						setCotisationLines(list);
 					}
 
+					function getDefaultDate(){
+						if(!current.checked || !current.date) {
+							if (defaultCotisationDate) {
+								return defaultCotisationDate;
+							}
+							if (dataObject?.membership_date) {
+								return dataObject.membership_date;
+							}
+						}
+						return current.date;
+					}
+
+					const defaultDate = getDefaultDate();
+
 					return (
 						<div key={c.id} style={{
 							display: 'grid',
@@ -373,7 +393,7 @@ const MembershipsEdit = (props) => {
 							alignItems: 'center',
 							marginBottom: 6
 						}}>
-							<input type="checkbox" checked={!!current.checked}
+							<input type="checkbox" checked={current.checked}
 							       onChange={e => updateLine({checked: e.target.checked})}/>
 							<span>{c.label}</span>
 							<InputNumber
@@ -384,7 +404,7 @@ const MembershipsEdit = (props) => {
 							/>
 							<DatePicker
 								format={i18n.t('common.date_format')}
-								value={current.date ? (current.date.format ? current.date : dayjs(current.date, 'YYYY-MM-DD')) : null}
+								value={defaultDate}
 								onChange={(d) => updateLine({date: d})}
 							/>
 							<Select
@@ -554,9 +574,8 @@ const MembershipsEdit = (props) => {
 
 						<FormEditSection title={i18n.t('pages.membership.section_membership')}>
 
-							<Form.Item name={['membership_date']} label={i18n.t("models.membership.date")}
-							           rules={[{required: true}]}>
-								<DatePicker format={i18n.t("common.date_format")}/>
+							<Form.Item name={['membership_date']} label={i18n.t("models.membership.date")} rules={[{required: true}]}>
+								<DatePicker format={i18n.t("common.date_format")} onChange={onMembershipDateChange}/>
 							</Form.Item>
 
 							<Form.Item name="membership_type" label={i18n.t("models.membership.type")}>
