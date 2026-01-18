@@ -44,8 +44,12 @@ const MembershipsList = (props) => {
 		if (filter.fiscalYearId) {
 			params += "&fiscal_year_id=" + filter.fiscalYearId;
 		}
-		// Sort by membership_date by default
-		params += "&sort=date";
+		// Sort by membership_date by if fiscal year is not set
+		if (filter.fiscalYearId == null) {
+			params += "&sort=date";
+		}else{
+			params += "&sort=name";
+		}
 		let url = serviceInstance.createServiceUrl("/memberships/list?" + params);
 
 		return fetchJSON(url)

@@ -57,6 +57,9 @@ $app->get('/api/memberships/list', function (Request $request, Response $respons
     if ($sort === 'date') {
         // Sort strictly by membership date (desc), then lastname/firstname
         $sql .= ' ORDER BY m.membership_date DESC, p.lastname ASC, p.firstname ASC';
+    } else if ($sort === 'name') {
+        // Sort lastname/firstname
+        $sql .= ' ORDER BY p.lastname ASC, p.firstname ASC';
     } else {
         // Default: fiscal year desc, then date, then lastname/firstname
         $sql .= ' ORDER BY m.fiscal_year_id DESC, m.membership_date DESC, p.lastname ASC, p.firstname ASC';
