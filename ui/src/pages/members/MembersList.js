@@ -27,6 +27,7 @@ const MembersList = (props) => {
 	const [fiscalYears, setFiscalYears] = React.useState([]);
 	const [filter, setFilter] = React.useState({
 		fiscalYearId: null,
+		gender: ''
 	});
 	const [loading, setLoading] = React.useState(true);
 
@@ -43,6 +44,9 @@ const MembersList = (props) => {
 		let params = "";
 		if (filter.fiscalYearId) {
 			params += "&fiscal_year_id=" + filter.fiscalYearId;
+		}
+		if (filter.gender !== undefined && filter.gender !== null && filter.gender !== '') {
+			params += "&gender=" + filter.gender;
 		}
 		let url = serviceInstance.createServiceUrl("/members/list?" + params);
 
@@ -108,6 +112,7 @@ const MembersList = (props) => {
 	function onFormSearchFinished(values){
 		setFilter({
 			fiscalYearId: values.fiscal_year_id,
+			gender: values.gender
 		});
 	}
 
@@ -138,6 +143,7 @@ const MembersList = (props) => {
 		<MembersSearchForm
 			fiscalYears={fiscalYears}
 			defaultFiscalYearId={filter.fiscalYearId}
+			defaultGender={filter.gender}
 			onFinish={onFormSearchFinished}
 		/>
 	);

@@ -13,6 +13,7 @@ $app->get('/api/memberships/list', function (Request $request, Response $respons
     $fiscalYearId = $params['fiscalyear_id'] ?? ($params['fiscal_year_id'] ?? null);
     $memberId = $params['member_id'] ?? null; // Filter by member (person) id
     $sort = $params['sort'] ?? null; // 'date' to sort by membership_date
+    $gender = $params['gender'] ?? null; // Filter by gender
 
     // Build query
     $sql = 'SELECT m.*,
@@ -51,6 +52,12 @@ $app->get('/api/memberships/list', function (Request $request, Response $respons
     if ($memberId !== null && $memberId !== '') {
         $sql .= ' AND m.person_id = ?';
         $binds[] = (int)$memberId;
+    }
+
+    if ($gender !== null && $gender !== '') {
+        // Filter by membership gender (0 unknown, 1 male, 2 female)
+        $sql .= ' AND m.gender = ?';
+        $binds[] = (int)$gender;
     }
 
     // Order

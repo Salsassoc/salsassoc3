@@ -7,39 +7,63 @@ import SelectResponsive from '../../components/inputs/SelectResponsive.js';
 import i18n from '../../utils/i18n.js';
 
 const MembersSearchForm = (props) => {
-	const [form] = Form.useForm();
+    const [form] = Form.useForm();
 
-	const fiscalYears = props.fiscalYears || [];
-	const defaultFiscalYearId = props.defaultFiscalYearId;
+    const fiscalYears = props.fiscalYears || [];
+    const defaultFiscalYearId = props.defaultFiscalYearId;
+    const defaultGender = props.defaultGender;
 
 	// Reflect default selection when provided/changes
-	React.useEffect(() => {
-		if (defaultFiscalYearId !== undefined && defaultFiscalYearId !== null) {
-			form.setFieldsValue({ fiscal_year_id: defaultFiscalYearId });
-		}
-	}, [defaultFiscalYearId]);
+ React.useEffect(() => {
+        if (defaultFiscalYearId !== undefined && defaultFiscalYearId !== null) {
+            form.setFieldsValue({ fiscal_year_id: defaultFiscalYearId });
+        }
+    }, [defaultFiscalYearId]);
 
-	const fiscalYearOptions = [{ value: '', label: i18n.language === 'fr' ? 'Toutes' : 'All' }].concat(
-		(fiscalYears || []).map(y => ({ value: y.id, label: y.title }))
-	);
+    // Reflect default gender when provided/changes
+    React.useEffect(() => {
+        if (defaultGender !== undefined) {
+            form.setFieldsValue({ gender: defaultGender });
+        }
+    }, [defaultGender]);
+
+ const fiscalYearOptions = [{ value: '', label: i18n.language === 'fr' ? 'Toutes' : 'All' }].concat(
+        (fiscalYears || []).map(y => ({ value: y.id, label: y.title }))
+    );
+
+    const genderOptions = [
+        { value: '', label: i18n.language === 'fr' ? 'Tous' : 'All' },
+        { value: 0, label: i18n.t('models.member.gender_unknown') },
+        { value: 1, label: i18n.t('models.member.gender_male') },
+        { value: 2, label: i18n.t('models.member.gender_female') },
+    ];
 
 	const getFields = () => {
 		return (
-			<Fragment>
-				<Form.Item
-					name={`fiscal_year_id`}
-					label={i18n.t("models.cotisation.fiscal_year")}
-				>
-					<SelectResponsive
-						options={fiscalYearOptions}
-						style={{width: "200px"}}
-					/>
-				</Form.Item>
-				<Form.Item>
-					<Button type="primary" htmlType="submit">
-						{i18n.t("common.search")}
-					</Button>
-				</Form.Item>
+   <Fragment>
+                <Form.Item
+                    name={`fiscal_year_id`}
+                    label={i18n.t("models.cotisation.fiscal_year")}
+                >
+                    <SelectResponsive
+                        options={fiscalYearOptions}
+                        style={{width: "200px"}}
+                    />
+                </Form.Item>
+                <Form.Item
+                    name={`gender`}
+                    label={i18n.t('models.member.gender')}
+                >
+                    <SelectResponsive
+                        options={genderOptions}
+                        style={{width: "200px"}}
+                    />
+                </Form.Item>
+                <Form.Item>
+                    <Button type="primary" htmlType="submit">
+                        {i18n.t("common.search")}
+                    </Button>
+                </Form.Item>
 			</Fragment>
     	);
   };

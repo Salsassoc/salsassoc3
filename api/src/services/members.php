@@ -11,6 +11,7 @@ $app->get('/api/members/list', function (Request $request, Response $response)
     // Read filters
     $params = $request->getQueryParams();
     $fiscalYearId = $params['fiscalyear_id'] ?? ($params['fiscal_year_id'] ?? null);
+    $gender = $params['gender'] ?? null;
 
     // Base SQL
     $sql = 'SELECT p.*,
@@ -34,6 +35,12 @@ $app->get('/api/members/list', function (Request $request, Response $response)
     if ($fiscalYearId !== null && $fiscalYearId !== '') {
         $sql .= ' AND EXISTS (SELECT 1 FROM membership mf WHERE mf.person_id = p.id AND mf.fiscal_year_id = ?)';
         $binds[] = (int)$fiscalYearId;
+    }
+
+    // Filter by gender (0: unknown, 1: male, 2: female)
+    if ($gender !== null && $gender !== '') {
+        $sql .= ' AND p.gender = ?';
+        $binds[] = (int)$gender;
     }
 
     // Order by lastname/firstname
