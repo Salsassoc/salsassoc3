@@ -45,6 +45,8 @@ const MembershipsEdit = (props) => {
 	const [members, setMembers] = React.useState([]);
 	const [cotisations, setCotisations] = React.useState([]);
 	const [cotisationLines, setCotisationLines] = React.useState([]);
+	const [cityOptions, setCityOptions] = React.useState([]);
+	const citySearchTimer = React.useRef(null);
 
 	// Create form instance
 	const [form] = Form.useForm();
@@ -171,6 +173,41 @@ const MembershipsEdit = (props) => {
 				checked: true
 			}));
 		setCotisationLines(list);
+	}
+
+	// Cities autocomplete
+	function fetchCities(search) {
+		let url = serviceInstance.createServiceUrl("/memberships/cities" + (search ? ("?search=" + encodeURIComponent(search)) : ""));
+		return fetchJSON(url).then(res => {
+			const arr = res.result || [];
+			const opts = (arr || []).map((c, idx) => {
+				const labelZip = (c.zipcode ? ` (${c.zipcode})` : '');
+				return {
+					key: `${c.city || ''}-${c.zipcode || ''}-${idx}`,
+					value: c.city || '',
+					label: `${c.city || ''}${labelZip}`,
+					city: c.city || '',
+					zipcode: c.zipcode || null
+				};
+			});
+			setCityOptions(opts);
+		});
+	}
+
+	function onCitySearch(value) {
+		if (citySearchTimer.current) {
+			clearTimeout(citySearchTimer.current);
+		}
+		citySearchTimer.current = setTimeout(() => {
+			fetchCities(value || '');
+		}, 250);
+	}
+
+	function onCitySelect(value, option) {
+		form.setFieldsValue({
+			city: option.city || value || '',
+			zipcode: option.zipcode || null
+		});
 	}
 
 	// Form management
@@ -485,7 +522,13 @@ const MembershipsEdit = (props) => {
 							</Form.Item>
 
 							<Form.Item name={['city']} label={i18n.t("models.member.city")}>
-								<Input/>
+								<AutoComplete
+									options={cityOptions}
+									onSearch={onCitySearch}
+									onSelect={onCitySelect}
+									allowClear
+									placeholder={i18n.t('models.member.city')}
+								/>
 							</Form.Item>
 
 							<Form.Item name={['email']} label={i18n.t("models.member.email")}>

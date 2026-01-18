@@ -318,3 +318,40 @@ $app->delete('/api/memberships/delete', function (Request $request, Response $re
 
     return $response->withHeader('Content-Type', 'application/json');
 })->add($adminMiddleware);
+
+// Get distinct cities/zipcodes from existing memberships (for autocomplete)
+$app->get('/api/memberships/cities', function (Request $request, Response $response)
+{
+    $db = $this->get('db');
+    $params = $request->getQueryParams();
+    $search = isset($params['search']) ? trim($params['search']) : '';
+
+    $binds = [];
+    $where = '';
+    if ($search !== '') {
+        // Match city or zipcode (as text)
+        $where = 'WHERE (city LIKE ? OR CAST(zipcode AS CHAR) LIKE ?)';
+        $like = '%' . $search . '%';
+        $binds[] = $like;
+        $binds[] = $like;
+    }
+
+    // Query distinct combinations, ignore null/empty city and zipcode
+    $sql = "SELECT DISTINCT city, zipcode FROM membership $where ORDER BY city ASC LIMIT 50";
+    $stmt = $db->prepare($sql);
+    $stmt->execute($binds);
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $result = [];
+    foreach ($rows as $r) {
+        $city = isset($r['city']) ? $r['city'] : null;
+        $zip = (isset($r['zipcode']) && $r['zipcode'] !== '' && $r['zipcode'] !== null) ? (int)$r['zipcode'] : null;
+        if (($city !== null && $city !== '') || $zip !== null) {
+            $result[] = ['city' => $city, 'zipcode' => $zip];
+        }
+    }
+
+    // Return a plain JSON array as requested
+    $response->getBody()->write(json_encode($result));
+    return $response->withHeader('Content-Type', 'application/json');
+})->add($adminMiddleware);
