@@ -64,16 +64,16 @@ const Dashboard = () => {
       </Row>
       <br/>
       <Row gutter={[16, 16]} style={{width: "100%"}}>
-        <Col span={12}>
+        <Col xs={24} lg={12}>
           <DashboardMemberships fiscalYears={fiscalYears} loading={loading} />
         </Col>
-        <Col span={12}>
+        <Col xs={24} lg={12}>
           <DashboardBalance fiscalYears={fiscalYears} loading={loading} />
         </Col>
       </Row>
       <br/>
       <Row gutter={[16, 16]} style={{width: "100%"}}>
-        <Col span={16}>
+        <Col xs={24} xl={16}>
           <DashboardMembershipsGender fiscalYears={fiscalYears} loading={loading} />
         </Col>
       </Row>

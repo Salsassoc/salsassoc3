@@ -45,7 +45,7 @@ const DashboardCurrentFiscalYear = ({ fiscalYear, loading = false }) => {
 
   return (
       <Card title={title} size="small">
-          <Descriptions size="small" column={3} >
+          <Descriptions size="small" column={{xs:1, lg:3}} >
             <Descriptions.Item label={i18n.t('pages.dashboard.period') || 'Période'} span={2}>
               {formatDate(fiscalYear.start_date)} → {formatDate(fiscalYear.end_date)}
             </Descriptions.Item>
