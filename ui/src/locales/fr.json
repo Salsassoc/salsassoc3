@@ -153,7 +153,9 @@
 			"loading": "Chargement...",
 			"no_data": "Aucune donnée",
 			"current_fiscal_year_title": "Année fiscale courante",
-			"period": "Période"
+			"period": "Période",
+		  	"memberships_gender": "Répartition du genre des adhérents",
+			"percent": "Pourcentage"
 		}
 	},
 	"models": {

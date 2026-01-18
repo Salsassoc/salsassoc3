@@ -18,6 +18,18 @@ $app->get('/api/fiscal_years/list', function (Request $request, Response $respon
 			FROM membership
 			WHERE membership.fiscal_year_id = fiscal_year.id
 		) AS membership_count,
+        (
+            SELECT COUNT(1)
+            FROM membership
+            WHERE membership.fiscal_year_id = fiscal_year.id
+            AND gender = 1
+        ) AS membership_gender_male,
+        (
+            SELECT COUNT(1)
+            FROM membership
+            WHERE membership.fiscal_year_id = fiscal_year.id
+            AND gender = 2
+        ) AS membership_gender_female,
 		(
 			SELECT IFNULL(SUM(membership_cotisation.amount), 0)
 			FROM membership
@@ -49,7 +61,7 @@ $app->get('/api/fiscal_years/list', function (Request $request, Response $respon
        $sql .= " ORDER BY end_date ".($order == "desc" ? "DESC" : "ASC");
     }
 
-    error_log($sql);
+    //error_log($sql);
 
     $stmt = $db->query($sql);
 
@@ -58,11 +70,43 @@ $app->get('/api/fiscal_years/list', function (Request $request, Response $respon
     foreach ($fiscalYears as &$year) {
         $year['is_current'] = (bool)($year['is_current'] == "true");
         // Cast numeric aggregates
-        if (isset($year['membership_count'])) { $year['membership_count'] = (int)$year['membership_count']; }
-        if (isset($year['membership_amount'])) { $year['membership_amount'] = (float)$year['membership_amount']; }
-        if (isset($year['operation_count'])) { $year['operation_count'] = (int)$year['operation_count']; }
-        if (isset($year['income_amount'])) { $year['income_amount'] = (float)$year['income_amount']; }
-        if (isset($year['outcome_amount'])) { $year['outcome_amount'] = (float)$year['outcome_amount']; }
+        $gender_unknown = 0;
+        if (isset($year['membership_count'])) {
+            $year['membership_count'] = (int)$year['membership_count'];
+            $gender_unknown = $year['membership_count'];
+        }
+        if (isset($year['membership_gender_male'])) {
+            $year['membership_gender_male'] = (int)$year['membership_gender_male'];
+            $gender_unknown -= $year['membership_gender_male'];
+        }
+        if (isset($year['membership_gender_female'])) {
+            $year['membership_gender_female'] = (int)$year['membership_gender_female'];
+            $gender_unknown -= $year['membership_gender_female'];
+        }
+        $year['membership_gender_unknown'] = ($gender_unknown >= 0 ? $gender_unknown : 0);
+        if (isset($year['membership_amount'])) {
+            $year['membership_amount'] = (float)$year['membership_amount'];
+        }
+        if (isset($year['operation_count'])) {
+            $year['operation_count'] = (int)$year['operation_count'];
+        }
+        if (isset($year['income_amount'])) {
+            $year['income_amount'] = (float)$year['income_amount'];
+        }
+        if (isset($year['outcome_amount'])) {
+            $year['outcome_amount'] = (float)$year['outcome_amount'];
+        }
+
+        // Build memberships_gender object in response
+        $male = isset($year['membership_gender_male']) ? (int)$year['membership_gender_male'] : 0;
+        $female = isset($year['membership_gender_female']) ? (int)$year['membership_gender_female'] : 0;
+        $unknown = isset($year['membership_gender_unknown']) ? (int)$year['membership_gender_unknown'] : 0;
+        $year['memberships_gender'] = [
+            'male' => $male,
+            'female' => $female,
+            'unknown' => $unknown,
+        ];
+        unset($year['membership_gender_male'], $year['membership_gender_female'], $year['membership_gender_unknown']);
     }
     $response->getBody()->write(json_encode(["fiscal_years" => $fiscalYears]));
     return $response->withHeader('Content-Type', 'application/json');
