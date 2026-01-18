@@ -19,6 +19,9 @@ const MembershipsList = (props) => {
 	const serviceInstance = appContext.serviceInstance;
 	const pageLoader = appContext.pageLoader;
 
+	const params = new URLSearchParams(window.location.search || '');
+	const paramFiscalYearId = (params.has('fiscal_year_id') ? parseInt(params.get('fiscal_year_id')) : null);
+
 	// Define data state
 	const [items, setItems] = React.useState([]);
 	const [fiscalYears, setFiscalYears] = React.useState([]);
@@ -112,14 +115,15 @@ const MembershipsList = (props) => {
 
 	// Reload list when filter changes
 	React.useEffect(() => {
-		if(fiscalYears){
-			fiscalYears.forEach((fiscalYear) => {
-				if(fiscalYear.is_current) {
-					setFilter({
-						fiscalYearId: fiscalYear.id,
-					});
+		if(fiscalYears && fiscalYears.length > 0){
+			if(paramFiscalYearId){
+				setFilter({ fiscalYearId: paramFiscalYearId });
+			}else{
+				const current = fiscalYears.find(y => y.is_current);
+				if(current && filter.fiscalYearId == null){
+					setFilter({ fiscalYearId: current.id });
 				}
-			})
+			}
 		}
 	}, [fiscalYears]);
 	

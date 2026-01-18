@@ -119,7 +119,7 @@ const FiscalYearsList = (props) => {
 	function renderMembers(_text, record){
 		const count = record.membership_count || 0;
 		const label = `${count} ${i18n.t('pages.fiscal_years.members_suffix')}`;
-		const href = serviceInstance.createAdminUrl(`/members/list?fiscal_year_id=${record.id}`);
+		const href = serviceInstance.createAdminUrl(`/memberships/list?fiscal_year_id=${record.id}`);
 		return (
 			<Link to={href} style={{textWrap:'nowrap'}}>{label}</Link>
 		);

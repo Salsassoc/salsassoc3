@@ -19,8 +19,6 @@ const MembershipsResults = (props) => {
 	const appContext = React.useContext(AppContext);
 	const serviceInstance = appContext.serviceInstance;
 
-
-
 	function renderLastname(_text, record){
 		return <span style={{textWrap:'nowrap'}}>{record.lastname}</span>;
 	}
