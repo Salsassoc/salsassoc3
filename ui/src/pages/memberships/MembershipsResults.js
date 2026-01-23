@@ -17,34 +17,50 @@ const MembershipsResults = (props) => {
 
 	// Get application context
 	const appContext = React.useContext(AppContext);
- const serviceInstance = appContext.serviceInstance;
+	const serviceInstance = appContext.serviceInstance;
 
- function getColor(type) {
-     if (type === 'female'){
-         return '#eb2f96'; // pink
-     }
-     if (type === 'male'){
-         return '#1890ff'; // blue
-     }
-     return '#8c8c8c'; // grey
- }
+	function getColor(type) {
+	     if (type === 'female'){
+	         return '#eb2f96'; // pink
+	     }
+	     if (type === 'male'){
+	         return '#1890ff'; // blue
+	     }
+	     return '#8c8c8c'; // grey
+	}
 
- function renderGender(_text, record){
-     const g = (record.gender == null ? 0 : record.gender);
-     let type = 'unknown';
-     if (g === 2){ type = 'female'; }
-     else if (g === 1){ type = 'male'; }
+	function renderGender(_text, record){
+		const g = (record.gender == null ? 0 : record.gender);
+		let type = 'unknown';
+		if (g === 2){
+			type = 'female';
+		}else if (g === 1){
+			type = 'male';
+		}
 
-     const color = getColor(type);
-     const style = { color };
-     if (type === 'female'){
-         return <WomanOutlined style={style} title={i18n.t('models.member.gender_female')} />;
-     }
-     if (type === 'male'){
-         return <ManOutlined style={style} title={i18n.t('models.member.gender_male')} />;
-     }
-     return <QuestionCircleOutlined style={style} title={i18n.t('models.member.gender_unknown')} />;
- }
+		const color = getColor(type);
+		const style = { color };
+		if (type === 'female'){
+            return <WomanOutlined style={style} title={i18n.t('models.member.gender_female')} />;
+		}
+		if (type === 'male'){
+            return <ManOutlined style={style} title={i18n.t('models.member.gender_male')} />;
+		}
+		return <QuestionCircleOutlined style={style} title={i18n.t('models.member.gender_unknown')} />;
+	}
+
+	function sortText(a, b) {
+		if (!a && !b) {
+			return 0;
+		}
+		if(!a){
+			return 1;
+		}
+		if(!b){
+			return -1;
+		}
+		return a.localeCompare(b);
+	}
 
 	function renderLastname(_text, record){
 		return <span style={{textWrap:'nowrap'}}>{record.lastname}</span>;
@@ -56,6 +72,21 @@ const MembershipsResults = (props) => {
 		if(!record.birthdate){ return null; }
 		return dayjs(record.birthdate, "YYYY-MM-DD").format(i18n.t('common.date_format'));
 	}
+
+	function sortBirthdate(a, b)
+	{
+		if(!a.birthdate && !b.birthdate){
+			return 0;
+		}
+		if(!a.birthdate){
+			return 1;
+		}
+		if(!b.birthdate){
+			return -1;
+		}
+		return dayjs(a.birthdate, "YYYY-MM-DD").unix() - dayjs(b.birthdate, "YYYY-MM-DD").unix();
+	}
+
 	function renderCity(_text, record){
 		const city = record.city || '';
 		const zip = record.zipcode ? ` (${record.zipcode})` : '';
@@ -124,20 +155,20 @@ const MembershipsResults = (props) => {
 
 	function getColumns()
 	{
-  return [
+        return [
             {
                 title: i18n.t('models.member.lastname'),
                 dataIndex: 'lastname',
                 key: 'lastname',
                 render: renderLastname,
-                sorter: (a, b) => a.lastname.localeCompare(b.lastname)
+                sorter: (a, b) => sortText(a.lastname, b.lastname)
             },
             {
                 title: i18n.t('models.member.firstname'),
                 dataIndex: 'firstname',
                 key: 'firstname',
                 render: renderFirstname,
-                sorter: (a, b) => a.firstname.localeCompare(b.firstname)
+                sorter: (a, b) => sortText(a.firstname, b.firstname)
             },
             {
                 title: i18n.t('models.member.gender'),
@@ -153,25 +184,25 @@ const MembershipsResults = (props) => {
                 dataIndex: 'birthdate',
                 key: 'birthdate',
                 render: renderBirthdate,
-                sorter: (a, b) => dayjs(a.birthdate).unix() - dayjs(b.birthdate).unix()
+                sorter: sortBirthdate
             },
 			{
 				title: i18n.t('models.member.city'),
 				key: 'city',
 				render: renderCity,
-				sorter: (a, b) => a.city.localeCompare(b.city)
+				sorter: (a, b) => sortText(a.city, b.city)
 			},
 			{
 				title: i18n.t('models.member.email'),
 				dataIndex: 'email',
 				key: 'email',
-				sorter: (a, b) => a.email.localeCompare(b.email)
+				sorter: (a, b) => sortText(a.email, b.email)
 			},
 			{
 				title: i18n.t('models.member.phonenumber'),
 				dataIndex: 'phonenumber',
 				key: 'phonenumber',
-				sorter: (a, b) => a.email.localeCompare(b.email)
+				sorter: (a, b) => sortText(a.phonenumber, b.phonenumber)
 			},
 			{
 				title: i18n.t('models.member.image_rights'),
