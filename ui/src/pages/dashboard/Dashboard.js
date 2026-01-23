@@ -11,6 +11,7 @@ import DashboardMemberships from './DashboardMemberships.js';
 import DashboardBalance from './DashboardBalance.js';
 import DashboardCurrentFiscalYear from './DashboardCurrentFiscalYear.js';
 import DashboardMembershipsGender from './DashboardMembershipsGender.js';
+import DashboardAverageAge from './DashboardAverageAge.js';
 
 const Dashboard = () => {
   const appContext = React.useContext(AppContext);
@@ -75,6 +76,9 @@ const Dashboard = () => {
       <Row gutter={[16, 16]} style={{width: "100%"}}>
         <Col xs={24} xl={16}>
           <DashboardMembershipsGender fiscalYears={fiscalYears} loading={loading} />
+        </Col>
+        <Col xs={24} xl={8}>
+          <DashboardAverageAge fiscalYears={fiscalYears} loading={loading} />
         </Col>
       </Row>
     </div>

@@ -12,12 +12,24 @@ $app->get('/api/fiscal_years/list', function (Request $request, Response $respon
     $db = $this->get('db');
 
     // Load fiscal_year with aggregates from membership and accounting_operation
+    $driver = $db->getAttribute(PDO::ATTR_DRIVER_NAME);
+    $isSqlite = ($driver === 'sqlite');
+
+    // Build cross-DB expression for average age at membership date
+    if ($isSqlite) {
+        // SQLite: approximate years using Julian day difference
+        $avgAgeExpr = "(\n            SELECT AVG( (julianday(m.membership_date) - julianday(COALESCE(m.birthdate, p.birthdate))) / 365.2425 )\n            FROM membership m\n            INNER JOIN person p ON p.id = m.person_id\n            WHERE m.fiscal_year_id = fiscal_year.id\n              AND COALESCE(m.birthdate, p.birthdate) IS NOT NULL\n              AND m.membership_date IS NOT NULL\n        ) AS memberships_avg_age";
+    } else {
+        // MySQL/MariaDB: TIMESTAMPDIFF in years
+        $avgAgeExpr = "(\n            SELECT AVG(\n                TIMESTAMPDIFF(\n                    YEAR,\n                    COALESCE(m.birthdate, p.birthdate),\n                    m.membership_date\n                )\n            )\n            FROM membership m\n            INNER JOIN person p ON p.id = m.person_id\n            WHERE m.fiscal_year_id = fiscal_year.id\n              AND COALESCE(m.birthdate, p.birthdate) IS NOT NULL\n              AND m.membership_date IS NOT NULL\n        ) AS memberships_avg_age";
+    }
+
     $sql = 'SELECT fiscal_year.*, 
-		(
-			SELECT COUNT(1) 
-			FROM membership
-			WHERE membership.fiscal_year_id = fiscal_year.id
-		) AS membership_count,
+        (
+            SELECT COUNT(1) 
+            FROM membership
+            WHERE membership.fiscal_year_id = fiscal_year.id
+        ) AS membership_count,
         (
             SELECT COUNT(1)
             FROM membership
@@ -30,31 +42,32 @@ $app->get('/api/fiscal_years/list', function (Request $request, Response $respon
             WHERE membership.fiscal_year_id = fiscal_year.id
             AND gender = 2
         ) AS membership_gender_female,
-		(
-			SELECT IFNULL(SUM(membership_cotisation.amount), 0)
-			FROM membership
-			LEFT JOIN membership_cotisation ON membership_cotisation.membership_id = membership.id
-			WHERE membership.fiscal_year_id = fiscal_year.id
-		) AS membership_amount,
-		(
-			SELECT COUNT(1)
-			FROM accounting_operation
-			WHERE accounting_operation.fiscalyear_id = fiscal_year.id
-		) AS operation_count,
-		(
-			SELECT IFNULL(SUM(accounting_operation.amount_credit), 0)
-			FROM accounting_operation, accounting_operation_category
-			WHERE accounting_operation.fiscalyear_id = fiscal_year.id
-			AND accounting_operation_category.id = accounting_operation.category
-			AND accounting_operation_category.is_internal_move = FALSE
-		) AS income_amount,
-		(
-			SELECT IFNULL(SUM(accounting_operation.amount_debit), 0)
-			FROM accounting_operation, accounting_operation_category
-			WHERE accounting_operation.fiscalyear_id = fiscal_year.id
-			AND accounting_operation_category.id = accounting_operation.category
-			AND accounting_operation_category.is_internal_move = FALSE
-		) AS outcome_amount
+        ' . $avgAgeExpr . ',
+        (
+            SELECT IFNULL(SUM(membership_cotisation.amount), 0)
+            FROM membership
+            LEFT JOIN membership_cotisation ON membership_cotisation.membership_id = membership.id
+            WHERE membership.fiscal_year_id = fiscal_year.id
+        ) AS membership_amount,
+        (
+            SELECT COUNT(1)
+            FROM accounting_operation
+            WHERE accounting_operation.fiscalyear_id = fiscal_year.id
+        ) AS operation_count,
+        (
+            SELECT IFNULL(SUM(accounting_operation.amount_credit), 0)
+            FROM accounting_operation, accounting_operation_category
+            WHERE accounting_operation.fiscalyear_id = fiscal_year.id
+            AND accounting_operation_category.id = accounting_operation.category
+            AND accounting_operation_category.is_internal_move = FALSE
+        ) AS income_amount,
+        (
+            SELECT IFNULL(SUM(accounting_operation.amount_debit), 0)
+            FROM accounting_operation, accounting_operation_category
+            WHERE accounting_operation.fiscalyear_id = fiscal_year.id
+            AND accounting_operation_category.id = accounting_operation.category
+            AND accounting_operation_category.is_internal_move = FALSE
+        ) AS outcome_amount
         FROM fiscal_year';
 
     if($order){
@@ -95,6 +108,12 @@ $app->get('/api/fiscal_years/list', function (Request $request, Response $respon
         }
         if (isset($year['outcome_amount'])) {
             $year['outcome_amount'] = (float)$year['outcome_amount'];
+        }
+        if (array_key_exists('memberships_avg_age', $year)) {
+            // Could be null when no eligible memberships
+            $year['memberships_avg_age'] = ($year['memberships_avg_age'] !== null && $year['memberships_avg_age'] !== '')
+                ? (float)$year['memberships_avg_age']
+                : null;
         }
 
         // Build memberships_gender object in response

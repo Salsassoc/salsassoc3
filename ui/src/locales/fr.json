@@ -156,12 +156,14 @@
 			"balance": "Balance",
 			"axis_year": "Année fiscale",
 			"axis_value": "Valeur",
+			"axis_age": "Âge moyen",
 			"loading": "Chargement...",
 			"no_data": "Aucune donnée",
 			"current_fiscal_year_title": "Année fiscale courante",
 			"period": "Période",
 		  	"memberships_gender": "Répartition du genre des adhérents",
-			"percent": "Pourcentage"
+			"percent": "Pourcentage",
+			"average_age_trend": "Âge moyen des adhérents par année fiscale"
 		}
 	},
 	"models": {

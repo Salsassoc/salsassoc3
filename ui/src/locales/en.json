@@ -156,12 +156,14 @@
 			"balance": "Balance",
 			"axis_year": "Fiscal year",
 			"axis_value": "Value",
+			"axis_age": "Average age",
 			"loading": "Loading...",
 			"no_data": "No data",
 			"current_fiscal_year_title": "Current fiscal year",
 			"period": "Period",
 		  	"memberships_gender": "Membership gender repartition",
-			"percent": "Percent"
+			"percent": "Percent",
+			"average_age_trend": "Average member age by fiscal year"
 		}
 	},
 	"models": {
