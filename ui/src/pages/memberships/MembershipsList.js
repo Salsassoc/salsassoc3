@@ -27,7 +27,8 @@ const MembershipsList = (props) => {
 	const [fiscalYears, setFiscalYears] = React.useState([]);
 	const [filter, setFilter] = React.useState({
 		fiscalYearId: null,
-		gender: ''
+		gender: '',
+		search: ''
 	});
 	const [loading, setLoading] = React.useState(true);
 
@@ -47,6 +48,9 @@ const MembershipsList = (props) => {
 		}
 		if (filter.gender !== undefined && filter.gender !== null && filter.gender !== '') {
 			params += "&gender=" + filter.gender;
+		}
+		if (filter.search !== undefined && filter.search !== null && filter.search !== '') {
+			params += "&search=" + encodeURIComponent(filter.search);
 		}
 		// Sort by membership_date by if fiscal year is not set
 		if (filter.fiscalYearId == null) {
@@ -119,6 +123,7 @@ const MembershipsList = (props) => {
 		setFilter({
 			fiscalYearId: values.fiscal_year_id,
 			gender: values.gender,
+			search: values.search,
 		});
 	}
 
@@ -148,6 +153,7 @@ const MembershipsList = (props) => {
 			fiscalYears={fiscalYears}
 			defaultFiscalYearId={filter.fiscalYearId}
 			defaultGender={filter.gender}
+			defaultSearch={filter.search}
 			onFinish={onFormSearchFinished}
 		/>
 	);

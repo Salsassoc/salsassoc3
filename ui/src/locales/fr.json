@@ -118,7 +118,8 @@
 			"list": "Nombre de membres: {{count}}",
 			"membership_count": "Nombre d'adhésions",
 			"collected_amount": "Montant perçu",
-			"membership_suffix": "{{count}} adhésion(s)"
+			"membership_suffix": "{{count}} adhésion(s)",
+			"search_name_placeholder": "Nom ou prénom..."
 		},
 		"member": {
 			"add_title": "Ajouter un membre",
@@ -129,7 +130,8 @@
 		"memberships": {
 			"title": "Adhésions",
 			"remove": "Supprimer l'adhésion de '{{label}}' ?",
-			"list": "Nombre d'adhésions: {{count}}"
+			"list": "Nombre d'adhésions: {{count}}",
+			"search_name_placeholder": "Nom ou prénom..."
 		},
 		"membership": {
 			"add_title": "Ajouter une adhésion",

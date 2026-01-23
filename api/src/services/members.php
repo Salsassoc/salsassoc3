@@ -12,6 +12,7 @@ $app->get('/api/members/list', function (Request $request, Response $response)
     $params = $request->getQueryParams();
     $fiscalYearId = $params['fiscalyear_id'] ?? ($params['fiscal_year_id'] ?? null);
     $gender = $params['gender'] ?? null;
+    $search = $params['search'] ?? null; // search by lastname/firstname
 
     // Base SQL
     $sql = 'SELECT p.*,
@@ -41,6 +42,17 @@ $app->get('/api/members/list', function (Request $request, Response $response)
     if ($gender !== null && $gender !== '') {
         $sql .= ' AND p.gender = ?';
         $binds[] = (int)$gender;
+    }
+
+    // Filter by search on lastname or firstname (case-insensitive)
+    if ($search !== null && $search !== '') {
+        // Escape % and _ in user input for LIKE
+        $like = str_replace(['%', '_'], ['\\%', '\\_'], $search);
+        $like = "%" . $like . "%";
+        $sql .= " AND (p.lastname LIKE ? ESCAPE '\\' OR p.firstname LIKE ? ESCAPE '\\' OR CONCAT(p.lastname, ' ', p.firstname) LIKE ? ESCAPE '\\')";
+        $binds[] = $like;
+        $binds[] = $like;
+        $binds[] = $like;
     }
 
     // Order by lastname/firstname

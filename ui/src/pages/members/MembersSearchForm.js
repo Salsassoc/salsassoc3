@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { Form, Button } from 'antd';
+import { Form, Button, Input } from 'antd';
 
 import AdvancedSearchForm from '../../components/forms/AdvancedSearchForm.js';
 import SelectResponsive from '../../components/inputs/SelectResponsive.js';
@@ -12,6 +12,7 @@ const MembersSearchForm = (props) => {
     const fiscalYears = props.fiscalYears || [];
     const defaultFiscalYearId = props.defaultFiscalYearId;
     const defaultGender = props.defaultGender;
+    const defaultSearch = props.defaultSearch;
 
 	// Reflect default selection when provided/changes
  React.useEffect(() => {
@@ -26,6 +27,13 @@ const MembersSearchForm = (props) => {
             form.setFieldsValue({ gender: defaultGender });
         }
     }, [defaultGender]);
+
+    // Reflect default search when provided/changes
+    React.useEffect(() => {
+        if (defaultSearch !== undefined) {
+            form.setFieldsValue({ search: defaultSearch });
+        }
+    }, [defaultSearch]);
 
  const fiscalYearOptions = [{ value: '', label: i18n.language === 'fr' ? 'Toutes' : 'All' }].concat(
         (fiscalYears || []).map(y => ({ value: y.id, label: y.title }))
@@ -57,6 +65,16 @@ const MembersSearchForm = (props) => {
                     <SelectResponsive
                         options={genderOptions}
                         style={{width: "200px"}}
+                    />
+                </Form.Item>
+                <Form.Item
+                    name={`search`}
+                    label={i18n.t('models.member.lastname')}
+                >
+                    <Input
+                        placeholder={i18n.t('pages.members.search_name_placeholder')}
+                        style={{width: "240px"}}
+                        allowClear
                     />
                 </Form.Item>
                 <Form.Item>

@@ -14,6 +14,7 @@ $app->get('/api/memberships/list', function (Request $request, Response $respons
     $memberId = $params['member_id'] ?? null; // Filter by member (person) id
     $sort = $params['sort'] ?? null; // 'date' to sort by membership_date
     $gender = $params['gender'] ?? null; // Filter by gender
+    $search = $params['search'] ?? null; // search by lastname/firstname
 
     // Build query
     $sql = 'SELECT m.*,
@@ -58,6 +59,23 @@ $app->get('/api/memberships/list', function (Request $request, Response $respons
         // Filter by membership gender (0 unknown, 1 male, 2 female)
         $sql .= ' AND m.gender = ?';
         $binds[] = (int)$gender;
+    }
+
+    if ($search !== null && $search !== '') {
+        // Escape % and _ in user input for LIKE
+        $like = str_replace(['%', '_'], ['\\%', '\\_'], $search);
+        $like = "%" . $like . "%";
+        // Match either membership snapshot name or current person name
+        $sql .= " AND (m.lastname LIKE ? ESCAPE '\\' OR m.firstname LIKE ? ESCAPE '\\' OR CONCAT(m.lastname, ' ', m.firstname) LIKE ? ESCAPE '\\'"
+              . " OR p.lastname LIKE ? ESCAPE '\\' OR p.firstname LIKE ? ESCAPE '\\' OR CONCAT(p.lastname, ' ', p.firstname) LIKE ? ESCAPE '\\')";
+        // Bind for m.*
+        $binds[] = $like;
+        $binds[] = $like;
+        $binds[] = $like;
+        // Bind for p.*
+        $binds[] = $like;
+        $binds[] = $like;
+        $binds[] = $like;
     }
 
     // Order

@@ -118,7 +118,8 @@
 			"list": "Number of members: {{count}}",
 			"membership_count": "Membership count",
 			"collected_amount": "Collected amount",
-			"membership_suffix": "{{count}} memberships"
+			"membership_suffix": "{{count}} memberships",
+			"search_name_placeholder": "Last name or first name..."
 		},
 		"member": {
 			"add_title": "Add member",
@@ -129,7 +130,8 @@
 		"memberships": {
 			"title": "Memberships",
 			"remove": "Remove membership of '{{label}}' ?",
-			"list": "Number of memberships: {{count}}"
+			"list": "Number of memberships: {{count}}",
+			"search_name_placeholder": "Last name or first name..."
 		},
 		"membership": {
 			"add_title": "Add membership",
