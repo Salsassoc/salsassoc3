@@ -222,10 +222,24 @@ $app->post('/api/memberships/save', function (Request $request, Response $respon
         try {
             // Upsert or create person
             if ($personId) {
-                $stmt = $db->prepare('UPDATE person 
-                    SET lastname = ?, firstname = ?, gender = ?, birthdate = ?, email = ?, phonenumber = ?, image_rights = ?, address = ?, zipcode = ?, city = ?, phonenumber2 = ?
-                    WHERE id = ?');
-                $stmt->execute([$lastname, $firstname, $gender, $birthdate, $email, $phonenumber, $imageRights, $address, $zipcode, $city, $phonenumber2, $personId]);
+
+                // Only update the person if this membership is the most recent one for that person
+                // i.e., its fiscal_year_id is greater or equal to any existing membership fiscal_year_id for the person
+                $canUpdatePerson = true;
+                $stmtFy = $db->prepare('SELECT fiscal_year_id AS max_fy, MAX(start_date) FROM membership, fiscal_year WHERE fiscal_year_id=fiscal_year.id AND person_id = ?');
+                $stmtFy->execute([$personId]);
+                $rowFy = $stmtFy->fetch(PDO::FETCH_ASSOC);
+                $maxFy = ($rowFy && $rowFy['max_fy'] !== null && $rowFy['max_fy'] !== '') ? (int)$rowFy['max_fy'] : null;
+                if ($maxFy !== null && (int)$fiscalYearId < $maxFy) {
+                    $canUpdatePerson = false;
+                }
+
+                if ($canUpdatePerson) {
+                    $stmt = $db->prepare('UPDATE person 
+                        SET lastname = ?, firstname = ?, gender = ?, birthdate = ?, email = ?, phonenumber = ?, image_rights = ?, address = ?, zipcode = ?, city = ?, phonenumber2 = ?
+                        WHERE id = ?');
+                    $stmt->execute([$lastname, $firstname, $gender, $birthdate, $email, $phonenumber, $imageRights, $address, $zipcode, $city, $phonenumber2, $personId]);
+                }
             } else {
                 // creation_date set to now, is_member true by default for a membership
                 $creationDate = date('Y-m-d H:i:s');
