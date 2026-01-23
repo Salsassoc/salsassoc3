@@ -12,7 +12,9 @@ import {
 	Row,
 	Col,
 	Space,
-	Typography
+	Typography,
+	Modal,
+	Alert
 } from 'antd';
 
 import dayjs from 'dayjs';
@@ -48,6 +50,8 @@ const MembershipsEdit = (props) => {
 	const [cityOptions, setCityOptions] = React.useState([]);
 	const citySearchTimer = React.useRef(null);
 	const [defaultCotisationDate, setDefaultCotisationDate] = React.useState(null);
+	const [isChangeMemberModalOpen, setIsChangeMemberModalOpen] = React.useState(false);
+	const [memberChanged, setMemberChanged] = React.useState(false);
 
 	// Create form instance
 	const [form] = Form.useForm();
@@ -257,6 +261,7 @@ const MembershipsEdit = (props) => {
 					const url = serviceInstance.createAdminUrl("/memberships/list");
 					props.router.navigate(url);
 				} else {
+					setMemberChanged(false);
 					return loadData();
 				}
 			})
@@ -266,6 +271,7 @@ const MembershipsEdit = (props) => {
 	}
 
 	function renderAutoCompleteLabel(m) {
+		let id = `(#${m.id})`;
 		let name = `${m.lastname} ${m.firstname}`;
 		let address = null;
 		let birthdate = null;
@@ -281,7 +287,7 @@ const MembershipsEdit = (props) => {
 		}
 		return (
 			<Space orientation="vertical">
-				<Space>{name}{birthdate}</Space>
+				<Space>{name}{birthdate}{id}</Space>
 				<Space>{address}</Space>
 			</Space>
 		);
@@ -311,19 +317,12 @@ const MembershipsEdit = (props) => {
 		// Set person fields and person_id
 		const patch = {
 			person_id: m.id,
-			lastname: m.lastname,
-			firstname: m.firstname,
-			gender: m.gender,
-			birthdate: m.birthdate ? dayjs(m.birthdate, 'YYYY-MM-DD') : null,
-			address: m.address || '',
-			zipcode: m.zipcode || null,
-			city: m.city || '',
-			email: m.email || '',
-			phonenumber: m.phonenumber || '',
-			phonenumber2: m.phonenumber2 || '',
-			image_rights: m.image_rights,
 		};
 		form.setFieldsValue(patch);
+		setMemberChanged(true);
+		if (isChangeMemberModalOpen) {
+			setIsChangeMemberModalOpen(false);
+		}
 	}
 
 	function onFiscalYearChange(fyId) {
@@ -471,6 +470,17 @@ const MembershipsEdit = (props) => {
 		)
 	}
 
+	function renderChangeMemberButton() {
+		if (isModeAdd()) {
+			return null;
+		}
+		return (
+			<Button onClick={() => setIsChangeMemberModalOpen(true)}>
+				{i18n.t('pages.membership.change_member')}
+			</Button>
+		);
+	}
+
 	// Build options
 	const fiscalYearOptions = fiscalYears.map(y => ({value: y.id, label: y.title}));
 
@@ -487,6 +497,23 @@ const MembershipsEdit = (props) => {
 				form={form}
 			>
 				<PageContentAlertError pageLoader={pageLoader}/>
+
+				<Modal
+					title={i18n.t('pages.membership.change_member_modal_title')}
+					open={isChangeMemberModalOpen}
+					onCancel={() => setIsChangeMemberModalOpen(false)}
+					footer={null}
+				>
+					<Select
+						style={{width: '100%'}}
+						options={memberOptions}
+						onSelect={onMemberSelect}
+						placeholder={i18n.t('pages.membership.change_member_placeholder')}
+						showSearch={{
+							filterOption: (inputValue, option) => option.search.toUpperCase().includes(inputValue.toUpperCase())
+						}}
+					/>
+				</Modal>
 
 				<Form.Item name={['id']} hidden={true} rules={[{required: !isModeAdd()}]}>
 					<Input/>
@@ -512,7 +539,17 @@ const MembershipsEdit = (props) => {
 
 						<FormEditSection title={i18n.t("pages.membership.section_personal_data")}>
 
-							<Form.Item name={['person_id']} hidden={true}><Input/></Form.Item>
+ 						<Form.Item name={['person_id']} hidden={true}><Input/></Form.Item>
+
+ 						{(!isModeAdd() && memberChanged) ? (
+ 							<div style={{marginBottom: 12}}>
+ 								<Alert
+ 									message={i18n.t('pages.membership.change_member_warning')}
+ 									type="warning"
+ 									showIcon
+ 								/>
+ 							</div>
+ 						) : null}
 
 							<Form.Item name={['lastname']} label={i18n.t("models.member.lastname")}
 							           rules={[{required: true}]}>
@@ -616,6 +653,7 @@ const MembershipsEdit = (props) => {
 				<FormEditItemSubmit>
 					<Space>
 						{renderViewMemberButton()}
+						{renderChangeMemberButton()}
 						<Button type="primary" htmlType="submit">
 							{isModeAdd() ? i18n.t("common.add") : i18n.t("common.save")}
 						</Button>

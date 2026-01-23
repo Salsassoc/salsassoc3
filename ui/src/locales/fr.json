@@ -141,7 +141,11 @@
 			"no_cotisation_for_year": "Aucune cotisation pour cette année fiscale",
 			"search_member": "Rechercher un membre",
 			"search_member_placeholder": "Nom Prénom...",
-            "view_member": "Voir le membre"
+			"view_member": "Voir le membre",
+			"change_member": "Modifier le membre associé",
+			"change_member_modal_title": "Sélectionner un membre",
+			"change_member_placeholder": "Nom Prénom...",
+			"change_member_warning": "Le membre attaché à l'adhésion va être modifié."
 		},
 		"dashboard": {
 			"title": "Tableau de bord",

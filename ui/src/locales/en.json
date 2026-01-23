@@ -141,7 +141,11 @@
 			"no_cotisation_for_year": "No cotisation for this fiscal year",
 			"search_member": "Search member",
 			"search_member_placeholder": "Lastname Firstname...",
-            "view_member": "View member"
+			"view_member": "View member",
+			"change_member": "Change associated member",
+			"change_member_modal_title": "Select a member",
+			"change_member_placeholder": "Lastname Firstname...",
+			"change_member_warning": "The member attached to the membership will be changed."
 		},
 		"dashboard": {
 			"title": "Dashboard",
