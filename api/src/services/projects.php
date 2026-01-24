@@ -12,7 +12,29 @@ $app->get('/api/projects/list', function (Request $request, Response $response)
 
 	$db = $this->get('db');
 
-	$sql = 'SELECT p.* FROM project p WHERE 1=1';
+	// Add aggregates similar to fiscal years: operations count, income and outcome amounts
+	$sql = 'SELECT p.*, 
+		(
+			SELECT COUNT(1)
+			FROM accounting_operation ao
+			WHERE ao.project_id = p.id
+		) AS operation_count,
+		(
+			SELECT IFNULL(SUM(ao.amount_credit), 0)
+			FROM accounting_operation ao, accounting_operation_category aoc
+			WHERE ao.project_id = p.id
+			AND aoc.id = ao.category
+			AND aoc.is_internal_move = FALSE
+		) AS income_amount,
+		(
+			SELECT IFNULL(SUM(ao.amount_debit), 0)
+			FROM accounting_operation ao, accounting_operation_category aoc
+			WHERE ao.project_id = p.id
+			AND aoc.id = ao.category
+			AND aoc.is_internal_move = FALSE
+		) AS outcome_amount
+		FROM project p
+		WHERE 1=1';
 	$binds = [];
 	if ($fyId !== null && $fyId !== '') {
 		$sql .= ' AND p.fiscal_year_id = ?';
@@ -36,6 +58,9 @@ $app->get('/api/projects/list', function (Request $request, Response $response)
 	foreach ($rows as &$row) {
 		if (isset($row['id'])) { $row['id'] = (int)$row['id']; }
 		if (isset($row['fiscal_year_id'])) { $row['fiscal_year_id'] = (int)$row['fiscal_year_id']; }
+		if (isset($row['operation_count'])) { $row['operation_count'] = (int)$row['operation_count']; }
+		if (isset($row['income_amount'])) { $row['income_amount'] = (float)$row['income_amount']; }
+		if (isset($row['outcome_amount'])) { $row['outcome_amount'] = (float)$row['outcome_amount']; }
 	}
 
 	$response->getBody()->write(json_encode(['projects' => $rows]));

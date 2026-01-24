@@ -156,6 +156,37 @@ const ProjectsList = (props) => {
 				render: (value) => getFiscalYearLabel(value),
 			},
 			{
+				title: i18n.t('pages.fiscal_years.operations'),
+				dataIndex: 'operation_count',
+				key: 'operation_count',
+				align: 'right',
+				render: (value) => (value != null ? value : 0),
+			},
+			{
+				title: i18n.t('pages.fiscal_years.income'),
+				dataIndex: 'income_amount',
+				key: 'income_amount',
+				align: 'right',
+				render: (value) => (value != null ? Number(value).toFixed(2) : '0.00'),
+			},
+			{
+				title: i18n.t('pages.fiscal_years.outcome'),
+				dataIndex: 'outcome_amount',
+				key: 'outcome_amount',
+				align: 'right',
+				render: (value) => (value != null ? Number(value).toFixed(2) : '0.00'),
+			},
+			{
+				title: i18n.t('pages.fiscal_years.balance'),
+				key: 'balance',
+				align: 'right',
+				render: (_text, record) => {
+					const income = Number(record.income_amount || 0);
+					const outcome = Number(record.outcome_amount || 0);
+					return (income - outcome).toFixed(2);
+				},
+			},
+			{
 				title: i18n.t('common.actions'),
 				key: 'actions',
 				align: 'center',
