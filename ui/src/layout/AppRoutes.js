@@ -7,6 +7,7 @@ import NotFound from '../layout/NotFound.js';
 import Login from '../pages/Login.js';
 import Logout from '../pages/Logout.js';
 import Dashboard from '../pages/dashboard/Dashboard.js';
+import Migration from '../pages/Migration.js';
 import FiscalYearsList from '../pages/fiscalyears/FiscalYearsList.js';
 import FiscalYearsEdit from '../pages/fiscalyears/FiscalYearsEdit.js';
 import CotisationsList from '../pages/cotisations/CotisationsList.js';
@@ -168,6 +169,8 @@ const AppRoutes = () => {
         <Route exact path='/' element={<PrivateRoute />}>
             {privateRoutes}
         </Route>
+        {/* Public migrations page (no authentication) */}
+        <Route path='/migrations' element={<AppRouteWrapper component={Migration} /> } />
         <Route path='/logout' element={<AppRouteWrapper component={Logout} /> } />
         <Route path='/login' element={<AppRouteWrapper component={Login} /> } />
         <Route path="*" element={<AppRouteWrapper component={NotFound} /> } />

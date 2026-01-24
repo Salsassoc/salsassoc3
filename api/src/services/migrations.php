@@ -156,3 +156,71 @@ $migrateHandler = function (Request $request, Response $response) {
 // Expose both GET and POST for convenience under new path
 $app->get('/api/migrations/migrate', $migrateHandler)->add($adminMiddleware);
 $app->post('/api/migrations/migrate', $migrateHandler)->add($adminMiddleware);
+
+// List available migrations with status (public, no auth)
+$app->get('/api/migrations/list', function (Request $request, Response $response) {
+    try {
+        $db = $this->get('db');
+
+        // Ensure tracking table exists
+        $db->exec('CREATE TABLE IF NOT EXISTS db_migration (
+            id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+            num INTEGER NOT NULL,
+            migration_date DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+            filename VARCHAR(100) NOT NULL
+        );');
+
+        // Load applied migrations with their date
+        $applied = [];
+        $stmt = $db->query('SELECT num, filename, migration_date FROM db_migration');
+        if ($stmt) {
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $applied[(int)$row['num']] = [
+                    'filename' => $row['filename'],
+                    'migration_date' => $row['migration_date'],
+                ];
+            }
+        }
+
+        // Scan migrations directory
+        $rootDir = dirname(__DIR__, 3);
+        $migrationsDir = $rootDir . DIRECTORY_SEPARATOR . 'migrations';
+        if (!is_dir($migrationsDir)) {
+            throw new Exception('Migrations directory not found: ' . $migrationsDir);
+        }
+
+        $files = scandir($migrationsDir) ?: [];
+        $items = [];
+        foreach ($files as $f) {
+            if ($f === '.' || $f === '..') { continue; }
+            if (substr($f, -4) !== '.sql') { continue; }
+            $dashPos = strpos($f, '-');
+            if ($dashPos === false) { continue; }
+            $numStr = substr($f, 0, $dashPos);
+            if (!preg_match('/^\d+$/', $numStr)) { continue; }
+            $num = (int)$numStr;
+
+            $isPassed = array_key_exists($num, $applied);
+            $migrationDate = $isPassed ? ($applied[$num]['migration_date'] ?? null) : null;
+
+            $items[] = [
+                'num' => $num,
+                'filename' => $f,
+                'passed' => $isPassed,
+                'migration_date' => $migrationDate,
+            ];
+        }
+
+        // Sort by num desc
+        usort($items, function ($a, $b) {
+            return $b['num'] <=> $a['num'];
+        });
+
+        $response->getBody()->write(json_encode(['migrations' => $items]));
+        return $response->withHeader('Content-Type', 'application/json');
+    } catch (Exception $e) {
+        $response = $response->withStatus(500);
+        $response->getBody()->write(json_encode(['error' => $e->getMessage()]));
+        return $response->withHeader('Content-Type', 'application/json');
+    }
+});
