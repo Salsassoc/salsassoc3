@@ -124,6 +124,7 @@ else
   warn "API step skipped (SKIP_API=1)."
 fi
 
+copy "$ROOT_DIR/migrations" "$DIST_DIR/"
 copy "$ROOT_DIR/.htaccess" "$DIST_DIR/.htaccess"
 
 log "Done. Deployment package is ready in: $DIST_DIR"

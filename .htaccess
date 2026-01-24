@@ -1,4 +1,5 @@
 RewriteEngine On
+RewriteRule ^migrations index.html [QSA,L]
 RewriteRule ^api(/.*|$) api/index.php [QSA,L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
