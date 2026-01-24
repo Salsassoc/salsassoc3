@@ -31,6 +31,7 @@ const AccountingOperationsEdit = (props) => {
 	const [fiscalYears, setFiscalYears] = React.useState([]);
 	const [categories, setCategories] = React.useState([]);
 	const [accounts, setAccounts] = React.useState([]);
+	const [projects, setProjects] = React.useState([]);
 
 	// Create form instance
 	const [formInstance] = Form.useForm();
@@ -84,7 +85,8 @@ const AccountingOperationsEdit = (props) => {
 		return loadOperation()
 			.then(_result => loadFiscalYears())
 			.then(_result => loadCategories())
-			.then(_result => loadAccounts());
+			.then(_result => loadAccounts())
+			.then(_result => initProjects());
 	}
 
 	function loadOperation()
@@ -134,6 +136,42 @@ const AccountingOperationsEdit = (props) => {
 			.then((response) => {
 				setAccounts(response.result.accounting_accounts || []);
 			});
+	}
+
+	// Load current fiscal year id
+	function loadCurrentFiscalYear()
+	{
+		const url = serviceInstance.createServiceUrl("/fiscal_years/current");
+		return fetchJSON(url)
+			.then((response) => {
+				const fy = response.result.fiscal_year;
+				return fy ? fy.id : null;
+			});
+	}
+
+	// Load projects for a given fiscal year
+	function loadProjectsForFiscalYear(fyId)
+	{
+		if(!fyId){
+			setProjects([]);
+			return Promise.resolve();
+		}
+		const url = serviceInstance.createServiceUrl(`/projects/list?fiscal_year_id=${fyId}`);
+		return fetchJSON(url)
+			.then((response) => {
+				setProjects(response.result.projects || []);
+			});
+	}
+
+	// Initialize projects list: use selected fiscal year if any, else current fiscal year
+	function initProjects()
+	{
+		const selectedFy = formInstance.getFieldValue('fiscalyear_id') || (dataObject && dataObject.fiscalyear_id);
+		if(selectedFy){
+			return loadProjectsForFiscalYear(selectedFy);
+		}
+		return loadCurrentFiscalYear()
+			.then((fyId) => loadProjectsForFiscalYear(fyId));
 	}
 
 	// Form management
@@ -215,6 +253,7 @@ const AccountingOperationsEdit = (props) => {
 	const fiscalYearOptions = fiscalYears.map(y => ({ value: y.id, label: y.title }));
 	const categoryOptions = getCategoriesOptions();
 	const accountOptions = accounts.map(a => ({ value: a.id, label: a.label }));
+	const projectOptions = projects.map(p => ({ value: p.id, label: p.name }));
 
 	// Handle dataObject update
 	React.useEffect(() => {
@@ -226,6 +265,14 @@ const AccountingOperationsEdit = (props) => {
 			<FormEdit
 				name="accounting-operation-edit-form"
 				onFinish={onFinish}
+				onValuesChange={(changed, all) => {
+					if(Object.prototype.hasOwnProperty.call(changed, 'fiscalyear_id')){
+						const fyId = changed.fiscalyear_id;
+						// Reload projects for selected fiscal year and clear project selection
+						loadProjectsForFiscalYear(fyId);
+						formInstance.setFieldsValue({ project_id: null });
+					}
+				}}
 				form={formInstance}
 			>
 				<PageContentAlertError pageLoader={pageLoader} />
@@ -289,7 +336,7 @@ const AccountingOperationsEdit = (props) => {
 					</Form.Item>
 
 					<Form.Item name={['project_id']} label={i18n.t('models.accounting_operation.project_id')}>
-						<InputNumber min={0} />
+						<Select options={projectOptions} allowClear />
 					</Form.Item>
 
 					<Form.Item name={['checked']} valuePropName="checked" label={i18n.t('models.accounting_operation.checked')}>
