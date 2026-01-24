@@ -148,7 +148,7 @@ $migrateHandler = function (Request $request, Response $response) {
         return $response->withHeader('Content-Type', 'application/json');
     } catch (Exception $e) {
         $response = $response->withStatus(500);
-        $response->getBody()->write(json_encode(['error' => $e->getMessage()]));
+        $response->getBody()->write(json_encode(['errors' => $e->getMessage()]));
         return $response->withHeader('Content-Type', 'application/json');
     }
 };

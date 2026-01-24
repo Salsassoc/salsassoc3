@@ -43,8 +43,7 @@ const Migration = () => {
 				return loadList();
 			})
 			.catch((e) => {
-				// Message d'erreur explicite lorsque /migrations/migrate échoue
-				const errText = (typeof e?.toString === 'function') ? e.toString() : (e?.message || String(e));
+				const errText = e.json.errors;
 				setError(i18n.t('migrations.run.failure', { error: errText }));
 			})
 			.finally(() => setRunning(false));
