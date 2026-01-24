@@ -42,3 +42,4 @@ require __DIR__ . '/services/accounting_operations.php';
 require __DIR__ . '/services/members.php';
 require __DIR__ . '/services/memberships.php';
 require __DIR__ . '/services/migrations.php';
+require __DIR__ . '/services/projects.php';

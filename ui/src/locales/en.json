@@ -4,6 +4,7 @@
 		"settings": "Settings",
 		"fiscal_years": "Fiscal years",
 		"cotisations": "Cotisations",
+		"projects": "Projects",
 		"members": "Members",
 		"memberships": "Memberships",
 		"accounting": "Accounting",
@@ -168,6 +169,11 @@
 		}
 	},
 	"models": {
+		"project": {
+			"name": "Name",
+			"project_date": "Project date",
+			"fiscal_year": "Fiscal year"
+		},
 		"fiscal_years": {
 			"title": "Label",
 			"start_date": "Start date",
@@ -270,6 +276,19 @@
 			"payment_method_card": "Credit card",
 			"payment_method_banktransfert": "Bank transfert",
 			"payment_method_helloasso": "HelloAsso"
+		}
+	},
+	"pages": {
+		"projects": {
+			"title": "Projects",
+			"remove": "Remove project '{{label}}' ?",
+			"list": "Number of projects: {{count}}"
+		},
+		"project": {
+			"add_title": "Add project",
+			"edit_title": "Edit project",
+			"section_general": "General",
+			"saved": "The project has been saved successfully"
 		}
 	},
 	"migrations": {

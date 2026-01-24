@@ -1,0 +1,6 @@
+CREATE TABLE project (
+   id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+   name VARCHAR(50) NOT NULL,
+   project_date DATE NULL,
+   fiscal_year_id INTEGER NOT NULL
+)

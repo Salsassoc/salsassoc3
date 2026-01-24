@@ -19,6 +19,8 @@ import AccountingAccountsEdit from '../pages/accountingaccounts/AccountingAccoun
 import AccountingOperationsList from '../pages/accountingoperations/AccountingOperationsList.js';
 import AccountingOperationsEdit from '../pages/accountingoperations/AccountingOperationsEdit.js';
 import AccountingOperationsFinancialReport from '../pages/accountingoperations/AccountingOperationsFinancialReport.js';
+import ProjectsList from '../pages/projects/ProjectsList.js';
+import ProjectsEdit from '../pages/projects/ProjectsEdit.js';
 import MembersList from '../pages/members/MembersList.js';
 import MembersEdit from '../pages/members/MembersEdit.js';
 import MembershipsList from '../pages/memberships/MembershipsList.js';
@@ -65,6 +67,19 @@ const AppRoutes = () => {
         {
             path: "/cotisations/add",
             element: <AppRouteWrapper component={CotisationsEdit} />,
+        },
+        // Projects
+        {
+            path: "/projects/list",
+            element: <AppRouteWrapper component={ProjectsList} />,
+        },
+        {
+            path: "/projects/add",
+            element: <AppRouteWrapper component={ProjectsEdit} />,
+        },
+        {
+            path: "/projects/edit/:id",
+            element: <AppRouteWrapper component={ProjectsEdit} />,
         },
         {
             path: "/cotisations/edit/:id",

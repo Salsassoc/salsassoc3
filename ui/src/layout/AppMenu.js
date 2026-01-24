@@ -6,7 +6,8 @@ import {
   CalendarOutlined,
   ProductOutlined,
   BankOutlined,
-  UserOutlined
+  UserOutlined,
+  ProjectOutlined
 } from '@ant-design/icons';
 
 import {AppContext} from "../layout/AppContext.js";
@@ -82,6 +83,14 @@ export function getAppMenu()
         routes: subRoutes,
     });
 
+   	// Projects
+   	appMenu.route.routes.push({
+   		name: i18n.t('menu.projects'),
+   		path: getAdminUrl("/projects/list"),
+   		icon: <ProjectOutlined />,
+   		exact: true,
+   	});
+
     // Fiscal years
     appMenu.route.routes.push({
         name: i18n.t('menu.fiscal_years'),
@@ -90,13 +99,13 @@ export function getAppMenu()
         exact: true,
     });
 
-    // Cotisations
-    appMenu.route.routes.push({
-        name: i18n.t('menu.cotisations'),
-        path: getAdminUrl("/cotisations/list"),
-        icon: <ProductOutlined />,
-        exact: true,
-    });
+   	// Cotisations
+   	appMenu.route.routes.push({
+   		name: i18n.t('menu.cotisations'),
+   		path: getAdminUrl("/cotisations/list"),
+   		icon: <ProductOutlined />,
+   		exact: true,
+   	});
 
     // Settings
     /*

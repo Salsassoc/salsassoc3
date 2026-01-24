@@ -4,6 +4,7 @@
 		"settings": "Paramètres",
 		"fiscal_years": "Années fiscales",
 		"cotisations": "Cotisations",
+		"projects": "Projets",
 		"members": "Membres",
 		"memberships": "Adhésions",
 		"accounting": "Comptabilité",
@@ -113,6 +114,17 @@
 			"outcomes": "Dépenses",
 			"report": "Rapport"
 		},
+		"projects": {
+			"title": "Projets",
+			"remove": "Supprimer le projet '{{label}}' ?",
+			"list": "Nombre de projets: {{count}}"
+		},
+		"project": {
+			"add_title": "Ajouter un projet",
+			"edit_title": "Modifier un projet",
+			"section_general": "Général",
+			"saved": "Le projet a bien été sauvegardé"
+		},
 		"members": {
 			"title": "Membres",
 			"remove": "Supprimer le membre '{{label}}' ?",
@@ -168,6 +180,11 @@
 		}
 	},
 	"models": {
+		"project": {
+			"name": "Nom",
+			"project_date": "Date du projet",
+			"fiscal_year": "Année fiscale"
+		},
 		"fiscal_years": {
 			"title": "Libellé",
 			"start_date": "Date de début",
