@@ -2,6 +2,7 @@ import React from 'react';
 import { Button, Table, Tag, Space, Alert } from 'antd';
 import { AppContext } from '../layout/AppContext.js';
 import { fetchJSON } from '../authentication/backend.js';
+import i18n from '../utils/i18n.js';
 
 const Migration = () => {
 	const appContext = React.useContext(AppContext);
@@ -24,7 +25,7 @@ const Migration = () => {
 				list.sort((a, b) => (b.num || 0) - (a.num || 0));
 				setItems(list);
 			})
-			.catch((e) => setError(e?.message || String(e)))
+			.catch((e) => setError(i18n.t('migrations.list.failure', { error: e?.message || String(e) })))
 			.finally(() => setLoading(false));
 	}
 
@@ -38,10 +39,14 @@ const Migration = () => {
 			.then((res) => {
 				const applied = (res.result && res.result.migrate && res.result.migrate.applied) || [];
 				const skipped = (res.result && res.result.migrate && res.result.migrate.skipped) || [];
-				setMessage(`Migrations appliquées: ${applied.length}, ignorées: ${skipped.length}`);
+				setMessage(i18n.t('migrations.run.success', { applied: applied.length, skipped: skipped.length }));
 				return loadList();
 			})
-			.catch((e) => setError(e?.message || String(e)))
+			.catch((e) => {
+				// Message d'erreur explicite lorsque /migrations/migrate échoue
+				const errText = (typeof e?.toString === 'function') ? e.toString() : (e?.message || String(e));
+				setError(i18n.t('migrations.run.failure', { error: errText }));
+			})
 			.finally(() => setRunning(false));
 	}
 
@@ -50,22 +55,22 @@ const Migration = () => {
 	}, []);
 
 	const columns = [
-		{ title: 'Num', dataIndex: 'num', key: 'num', width: 90 },
-		{ title: 'Fichier', dataIndex: 'filename', key: 'filename' },
-		{ title: 'Statut', key: 'passed', width: 140, render: (_, r) => (r.passed ? <Tag color="green">Passée</Tag> : <Tag>En attente</Tag>) },
-		{ title: 'Date (UTC)', dataIndex: 'migration_date', key: 'migration_date', width: 220 },
+		{ title: i18n.t('migrations.columns.num'), dataIndex: 'num', key: 'num', width: 90 },
+		{ title: i18n.t('migrations.columns.filename'), dataIndex: 'filename', key: 'filename' },
+		{ title: i18n.t('migrations.columns.status'), key: 'passed', width: 140, render: (_, r) => (r.passed ? <Tag color="green">{i18n.t('migrations.status.passed')}</Tag> : <Tag>{i18n.t('migrations.status.pending')}</Tag>) },
+		{ title: i18n.t('migrations.columns.dateUtc'), dataIndex: 'migration_date', key: 'migration_date', width: 220 },
 	];
 
 	return (
 		<div style={{ padding: 16 }}>
 			<h2 style={{ marginBottom: 12 }}>/migrations</h2>
-			<p>Liste des migrations disponibles et leur statut.</p>
+			<p>{i18n.t('migrations.description')}</p>
 			<Space style={{ marginBottom: 12 }}>
 				<Button type="primary" onClick={runMigrations} loading={running}>
-					Exécuter les migrations
+					{i18n.t('migrations.actions.run')}
 				</Button>
 				<Button onClick={loadList} disabled={running} loading={loading}>
-					Rafraîchir
+					{i18n.t('common.refresh')}
 				</Button>
 			</Space>
 			{error ? (

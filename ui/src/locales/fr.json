@@ -37,7 +37,8 @@
 		},
 		"sort": "Trier par",
 		"none": "Aucun",
-		"details": "Détails"
+		"details": "Détails",
+		"refresh": "Rafraîchir"
 	},
 	"pages": {
 		"login": {
@@ -269,6 +270,29 @@
 			"payment_method_card": "Carte bancaire",
             "payment_method_banktransfert": "Virement",
             "payment_method_helloasso": "HelloAsso"
+		}
+	},
+	"migrations": {
+		"description": "Liste des migrations disponibles et leur statut.",
+		"actions": {
+			"run": "Exécuter les migrations"
+		},
+		"columns": {
+			"num": "Num",
+			"filename": "Fichier",
+			"status": "Statut",
+			"dateUtc": "Date (UTC)"
+		},
+		"status": {
+			"passed": "Passée",
+			"pending": "En attente"
+		},
+		"run": {
+			"success": "Migrations appliquées: {{applied}}, ignorées: {{skipped}}",
+			"failure": "Échec de l'exécution des migrations: {{error}}"
+		},
+		"list": {
+			"failure": "Échec du chargement des migrations: {{error}}"
 		}
 	}
 }

@@ -37,7 +37,8 @@
 		},
 		"sort": "Sort by",
 		"none": "None",
-		"details": "Details"
+		"details": "Details",
+		"refresh": "Refresh"
 	},
 	"pages": {
 		"login": {
@@ -269,6 +270,29 @@
 			"payment_method_card": "Credit card",
 			"payment_method_banktransfert": "Bank transfert",
 			"payment_method_helloasso": "HelloAsso"
+		}
+	},
+	"migrations": {
+		"description": "List of available migrations and their status.",
+		"actions": {
+			"run": "Run migrations"
+		},
+		"columns": {
+			"num": "Num",
+			"filename": "File",
+			"status": "Status",
+			"dateUtc": "Date (UTC)"
+		},
+		"status": {
+			"passed": "Passed",
+			"pending": "Pending"
+		},
+		"run": {
+			"success": "Migrations applied: {{applied}}, skipped: {{skipped}}",
+			"failure": "Failed to execute migrations: {{error}}"
+		},
+		"list": {
+			"failure": "Failed to load migrations: {{error}}"
 		}
 	}
 }
