@@ -12,6 +12,7 @@ import { AppContext } from '../../layout/AppContext.js';
 import PageContentLayout from '../../layout/PageContentLayout.js';
 
 import AccountingOperationsFinancialReportSearchForm from './AccountingOperationsFinancialReportSearchForm.js';
+import AccountingOperationsFinancialReportGroup from './AccountingOperationsFinancialReportGroup.js';
 
 const AccountingOperationsFinancialReport = (props) => {
 
@@ -22,6 +23,9 @@ const AccountingOperationsFinancialReport = (props) => {
 
 	// State
 	const [items, setItems] = React.useState([]);
+	const [projectGroups, setProjectGroups] = React.useState([]);
+	const [rawOperations, setRawOperations] = React.useState([]);
+	const [projects, setProjects] = React.useState([]);
 	const [fiscalYears, setFiscalYears] = React.useState([]);
 	const [accounts, setAccounts] = React.useState([]);
 	const [filter, setFilter] = React.useState({
@@ -35,7 +39,8 @@ const AccountingOperationsFinancialReport = (props) => {
 	function loadData() {
 		return loadOperationsList()
 			.then(_result => loadFiscalYears())
-			.then(_result => loadAccounts());
+			.then(_result => loadAccounts())
+			.then(_result => loadProjects());
 	}
 
 	function loadOperationsList() {
@@ -58,7 +63,12 @@ const AccountingOperationsFinancialReport = (props) => {
 		return fetchJSON(url)
 			.then((response) => {
 				const rawItems = response.result.accounting_operations || [];
+				setRawOperations(rawItems);
+				// Compute global report
 				setItems(computeItemsByCategory(rawItems));
+				// Compute groups by project
+				const groups = computeGroupsByProject(rawItems);
+				setProjectGroups(groups);
 			});
 	}
 
@@ -76,6 +86,25 @@ const AccountingOperationsFinancialReport = (props) => {
 			setAccounts(res.result.accounting_accounts || [])
 		});
 	}
+
+	function loadProjects() {
+		// Optionally filter by fiscal year if selected
+		let params = '';
+		if (filter.fiscalYearId) {
+			params += `?fiscal_year_id=${filter.fiscalYearId}`;
+		}
+		const url = serviceInstance.createServiceUrl('/projects/list' + params);
+		return fetchJSON(url).then(res => {
+			setProjects(res.result.projects || []);
+		});
+	}
+
+	// Recompute grouping when projects list changes (labels may change)
+	React.useEffect(() => {
+		if (rawOperations && rawOperations.length >= 0) {
+			setProjectGroups(computeGroupsByProject(rawOperations));
+		}
+	}, [projects]);
 
 	function computeItemsByCategory(operations) {
 		let incomes = new Map();
@@ -135,6 +164,40 @@ const AccountingOperationsFinancialReport = (props) => {
 			incomes: { items: incomes, total: incomes_amount },
 			outcomes: { items: outcomes, total: outcomes_amount }
 		}
+	}
+
+	function computeGroupsByProject(operations) {
+		// Build a map projectKey -> operations[]
+		const map = new Map();
+		operations.forEach(op => {
+			const key = (op.project_id !== null && op.project_id !== undefined) ? op.project_id : '__general__';
+			if (!map.has(key)) {
+				map.set(key, []);
+			}
+			map.get(key).push(op);
+		});
+		// Prepare label map for projects
+		const projectName = (id) => {
+			if (id === '__general__') { return i18n.t('pages.accounting_operations_financial_report.general'); }
+			const p = (projects || []).find(pp => pp.id === id);
+			return p ? p.name : ('#' + id);
+		};
+		// Build array of { key, title, items }
+		let groups = [];
+		map.forEach((ops, key) => {
+			groups.push({
+				key: key,
+				title: projectName(key),
+				items: computeItemsByCategory(ops)
+			});
+		});
+		// Sort: General first, then by title asc
+		groups.sort((a, b) => {
+			if (a.key === '__general__') { return -1; }
+			if (b.key === '__general__') { return 1; }
+			return ('' + a.title).localeCompare('' + b.title);
+		});
+		return groups;
 	}
 
 	// Helpers
@@ -234,7 +297,8 @@ const AccountingOperationsFinancialReport = (props) => {
 
 	// Reload list when filter changes
 	React.useEffect(() => {
-		loadOperationsList();
+		loadOperationsList()
+			.then(() => loadProjects());
 	}, [filter]);
 
 	const form = (
@@ -266,14 +330,14 @@ const AccountingOperationsFinancialReport = (props) => {
 					</Descriptions.Item>
 				</Descriptions>
 			</Card>
-			<Row gutter={16}>
-				<Col xs={24} md={12}>
-					{renderColumn(i18n.t('pages.accounting_operations_financial_report.incomes'), items.incomes)}
-				</Col>
-				<Col xs={24} md={12}>
-					{renderColumn(i18n.t('pages.accounting_operations_financial_report.outcomes'), items.outcomes)}
-				</Col>
-			</Row>
+			{projectGroups.map(g => (
+				<Card key={g.key} title={g.title} size="small">
+					<AccountingOperationsFinancialReportGroup
+						items={g.items}
+						renderColumn={renderColumn}
+					/>
+				</Card>
+			))}
 		</Space>
 	);
 

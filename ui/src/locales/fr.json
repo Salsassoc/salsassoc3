@@ -112,7 +112,8 @@
 			"title": "Bilan financier",
 			"incomes": "Recettes",
 			"outcomes": "Dépenses",
-			"report": "Rapport"
+			"report": "Rapport",
+			"general": "Général"
 		},
 		"projects": {
 			"title": "Projets",

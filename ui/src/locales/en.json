@@ -78,7 +78,8 @@
 			"title": "Financial report",
 			"incomes": "Incomes",
 			"outcomes": "Outcomes",
-			"report": "Report"
+			"report": "Report",
+			"general": "General"
 		},
 		"cotisations": {
 			"title": "Cotisations",
