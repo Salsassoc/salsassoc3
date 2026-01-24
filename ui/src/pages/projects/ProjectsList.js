@@ -133,6 +133,41 @@ const ProjectsList = (props) => {
 		return y ? y.title : id;
 	}
 
+	function formatCurrency(value) {
+		try {
+			return new Intl.NumberFormat(i18n.language || 'fr-FR', { style: 'currency', currency: 'EUR' }).format(value || 0);
+		} catch (e) {
+			return (value || 0).toFixed(2);
+		}
+	}
+
+	function renderOperations(_text, record){
+		const count = record.operation_count || 0;
+		const label = `${count} ${i18n.t('pages.fiscal_years.operations_suffix')}`;
+		const href = serviceInstance.createAdminUrl(`/accounting/operations/list?project_id=${record.id}`);
+		return (
+			<Link to={href} style={{textWrap:'nowrap'}}>{label}</Link>
+		);
+	}
+
+	function renderIncome(_text, record){
+		return formatCurrency(record.income_amount || 0);
+	}
+
+	function renderOutcome(_text, record){
+		return formatCurrency(record.outcome_amount || 0);
+	}
+
+	function getBalance(record){
+		return record.income_amount + record.outcome_amount;
+	}
+
+	function renderBalance(_text, record){
+		const value = getBalance(record) || 0;
+		const color = value > 0 ? '#3f8600' : (value < 0 ? '#cf1322' : undefined);
+		return (<span style={{ color }}>{formatCurrency(value)}</span>);
+	}
+
 	function getColumns()
 	{
 		return [
@@ -160,31 +195,31 @@ const ProjectsList = (props) => {
 				dataIndex: 'operation_count',
 				key: 'operation_count',
 				align: 'right',
-				render: (value) => (value != null ? value : 0),
+				sorter: (a, b) => ((a.operation_count||0) - (b.operation_count||0)),
+				render: renderOperations
 			},
 			{
 				title: i18n.t('pages.fiscal_years.income'),
 				dataIndex: 'income_amount',
 				key: 'income_amount',
 				align: 'right',
-				render: (value) => (value != null ? Number(value).toFixed(2) : '0.00'),
+				sorter: (a, b) => ((a.income_amount||0) - (b.income_amount||0)),
+				render: renderIncome,
 			},
 			{
 				title: i18n.t('pages.fiscal_years.outcome'),
 				dataIndex: 'outcome_amount',
 				key: 'outcome_amount',
 				align: 'right',
-				render: (value) => (value != null ? Number(value).toFixed(2) : '0.00'),
+				sorter: (a, b) => ((a.outcome_amount||0) - (b.outcome_amount||0)),
+				render: renderOutcome,
 			},
 			{
 				title: i18n.t('pages.fiscal_years.balance'),
 				key: 'balance',
 				align: 'right',
-				render: (_text, record) => {
-					const income = Number(record.income_amount || 0);
-					const outcome = Number(record.outcome_amount || 0);
-					return (income - outcome).toFixed(2);
-				},
+				sorter: (a, b) => (getBalance(a) - getBalance(b)),
+				render: renderBalance,
 			},
 			{
 				title: i18n.t('common.actions'),

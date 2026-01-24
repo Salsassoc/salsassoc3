@@ -27,17 +27,20 @@ const AccountingOperationsList = (props) => {
 	const params = new URLSearchParams(window.location.search || '');
 	const paramFiscalYearId = (params.has('fiscal_year_id') ? parseInt(params.get('fiscal_year_id')) : null);
 	const paramAccountId = (params.has('account_id') ? parseInt(params.get('account_id')) : null);
+	const paramProjectId = (params.has('project_id') ? parseInt(params.get('project_id')) : null);
 
 	// Define data state
 	const [items, setItems] = React.useState([]);
 	const [fiscalYears, setFiscalYears] = React.useState([]);
 	const [accounts, setAccounts] = React.useState([]);
 	const [categories, setCategories] = React.useState([]);
+	const [projects, setProjects] = React.useState([]);
 	const [filter, setFilter] = React.useState({
 		fiscalYearId: null,
 		year: null,
 		accountingAccountId: null,
 		categoryId: null,
+		projectId: null,
 		amountMin: null,
 		amountMax: null,
 		sortBy: null,
@@ -49,7 +52,8 @@ const AccountingOperationsList = (props) => {
 		return loadOperationsList()
 			.then(_result => loadFiscalYears())
 			.then(_result => loadAccounts())
-			.then(_result => loadCategories());
+			.then(_result => loadCategories())
+			.then(_result => loadProjects());
 	}
 
 	function loadOperationsList()
@@ -66,6 +70,9 @@ const AccountingOperationsList = (props) => {
 		}
 		if (filter.categoryId) {
 			params += "&accounting_operations_category=" + filter.categoryId;
+		}
+		if (filter.projectId) {
+			params += "&project_id=" + filter.projectId;
 		}
 		if (filter.amountMin !== null && filter.amountMin !== undefined && filter.amountMin !== '') {
 			params += "&amount_min=" + filter.amountMin;
@@ -109,6 +116,16 @@ const AccountingOperationsList = (props) => {
 		return fetchJSON(url)
 			.then((response) => {
 				setCategories(response.result.accounting_operations_categories || []);
+			});
+	}
+
+	// Load projects for a given fiscal year
+	function loadProjects()
+	{
+		const url = serviceInstance.createServiceUrl("/projects/list");
+		return fetchJSON(url)
+			.then((response) => {
+				setProjects(response.result.projects || []);
 			});
 	}
 
@@ -318,6 +335,7 @@ const AccountingOperationsList = (props) => {
 			year: values.year,
 			accountingAccountId: values.accounting_account_id,
 			categoryId: values.accounting_operations_category,
+			projectId: values.project_id,
 			amountMin: values.amount_min,
 			amountMax: values.amount_max,
 			sortBy: values.sort_by
@@ -341,6 +359,14 @@ const AccountingOperationsList = (props) => {
 		}
 	}, [accounts]);
 
+	React.useEffect(() => {
+		if(projects && projects.length > 0){
+			if(paramProjectId){
+				setFilter({ projectId: paramProjectId });
+			}
+		}
+	}, [projects]);
+
 	// Reload list when filter changes
 	React.useEffect(() => {
 		loadOperationsList();
@@ -351,8 +377,10 @@ const AccountingOperationsList = (props) => {
 			fiscalYears={fiscalYears}
 			defaultFiscalYearId={filter.fiscalYearId}
 			defaultAccountId={filter.accountingAccountId}
+			defaultProjectId={filter.projectId}
 			accounts={accounts}
 			categories={categories}
+			projects={projects}
 			onFinish={onFormSearchFinished}
 		/>
 	);

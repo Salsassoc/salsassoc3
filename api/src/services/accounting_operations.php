@@ -18,6 +18,7 @@ $app->get('/api/accounting/operations/list', function (Request $request, Respons
     $amountMin = $params['amount_min'] ?? null;
     $amountMax = $params['amount_max'] ?? null;
     $sortBy = $params['sort_by'] ?? null;
+    $projectId = $params['project_id'] ?? null; // optional filter by project
 
     $db = $this->get('db');
 
@@ -44,6 +45,10 @@ $app->get('/api/accounting/operations/list', function (Request $request, Respons
     if ($categoryId !== null && $categoryId !== '') {
         $sql .= ' AND ao.category = ?';
         $binds[] = (int)$categoryId;
+    }
+    if ($projectId !== null && $projectId !== '') {
+        $sql .= ' AND ao.project_id = ?';
+        $binds[] = (int)$projectId;
     }
     if ($checked !== null && $checked !== '') {
         $sql .= ' AND ao.checked = ?';

@@ -12,8 +12,10 @@ const AccountingOperationsSearchForm = (props) => {
 	const fiscalYears = props.fiscalYears || [];
 	const defaultFiscalYearId = props.defaultFiscalYearId;
 	const defaultAccountId = props.defaultAccountId;
+	const defaultProjectId = props.defaultProjectId;
 	const accounts = props.accounts || [];
 	const categories = props.categories || [];
+	const projects = props.projects || [];
 
 	// Reflect default selection when provided/changes
 	React.useEffect(() => {
@@ -28,6 +30,13 @@ const AccountingOperationsSearchForm = (props) => {
 		    form.setFieldsValue({ accounting_account_id: defaultAccountId });
 		}
 	}, [defaultAccountId]);
+
+	// Reflect default project selection when provided/changes
+	React.useEffect(() => {
+		if (defaultProjectId !== undefined && defaultProjectId !== null) {
+			form.setFieldsValue({ project_id: defaultProjectId });
+		}
+	}, [defaultProjectId]);
 
 	const currentYear = new Date().getFullYear();
 	const years = [];
@@ -44,6 +53,9 @@ const AccountingOperationsSearchForm = (props) => {
 	);
 	const categoryOptions = [{ value: '', label: i18n.t("models.accounting_operation_category.all")}].concat(
 		(categories || []).map(c => ({ value: c.id, label: c.label }))
+	);
+	const projectOptions = [{ value: '', label: i18n.t('models.fiscal_years.all') }].concat(
+		(projects || []).map(p => ({ value: p.id, label: p.name }))
 	);
 	const sortByOptions = [
 		{ value: '', label: i18n.t("common.none")},
@@ -91,6 +103,15 @@ const AccountingOperationsSearchForm = (props) => {
 					/>
 				</Form.Item>
 				<Form.Item
+					name={`project_id`}
+					label={i18n.t('models.accounting_operation.project_id')}
+				>
+					<SelectResponsive 
+						style={{width: "260px"}}
+						options={projectOptions}
+					/>
+				</Form.Item>
+				<Form.Item
 					name={`amount_min`}
 					label={i18n.t("common.amount.min")}
 				>
@@ -120,17 +141,18 @@ const AccountingOperationsSearchForm = (props) => {
   };
 
   return (
-    <AdvancedSearchForm
-      form={form}
-      onFinish={props.onFinish}
-	initialValues={{
-		fiscal_year_id: defaultFiscalYearId ?? '',
-		year: '',
-		accounting_account_id: defaultAccountId ?? '',
-		accounting_operations_category: '',
-		sort_by: ''
-	}}
-    >
+   	<AdvancedSearchForm
+	      form={form}
+	      onFinish={props.onFinish}
+		initialValues={{
+			fiscal_year_id: defaultFiscalYearId ?? '',
+			year: '',
+			accounting_account_id: defaultAccountId ?? '',
+			accounting_operations_category: '',
+			project_id: defaultProjectId ?? '',
+			sort_by: ''
+		}}
+	    >
         {getFields()}
     </AdvancedSearchForm>
   );
