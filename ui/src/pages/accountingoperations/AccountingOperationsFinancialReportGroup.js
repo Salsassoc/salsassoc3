@@ -51,7 +51,7 @@ const AccountingOperationsFinancialReportGroup = (props) => {
 										<Typography.Text type="default">{formatDate(it.date)} - {it.label}</Typography.Text>
 									</Link>
 								</span>
-								<span><CurrencyText value={category.amount}/></span>
+								<span><CurrencyText value={it.amount}/></span>
 							</div>
 						))}
 					</div>
