@@ -14,6 +14,7 @@ import PageContentLayout from '../../layout/PageContentLayout.js';
 
 import TCALayout from '../../components/layout/TCALayout.js';
 import ButtonAdd from '../../components/buttons/ButtonAdd.js';
+import CurrencyText from "../common/CurrencyText.js";
 
 const FiscalYearsList = (props) => {
 
@@ -108,14 +109,6 @@ const FiscalYearsList = (props) => {
 		return dayjs(record.end_date, "YYYY-MM-DD").format(i18n.t('common.date_format'));
 	}
 
-	function formatCurrency(value) {
-		try {
-			return new Intl.NumberFormat(i18n.language || 'fr-FR', { style: 'currency', currency: 'EUR' }).format(value || 0);
-		} catch (e) {
-			return (value || 0).toFixed(2);
-		}
-	}
-
 	function renderMembers(_text, record){
 		const count = record.membership_count || 0;
 		const label = `${count} ${i18n.t('pages.fiscal_years.members_suffix')}`;
@@ -127,7 +120,7 @@ const FiscalYearsList = (props) => {
 
 	function renderAmount(_text, record){
 		const amount = record.membership_amount || 0;
-		return formatCurrency(amount);
+		return <CurrencyText value={amount} />;
 	}
 
 	function renderOperations(_text, record){
@@ -140,11 +133,11 @@ const FiscalYearsList = (props) => {
 	}
 
 	function renderIncome(_text, record){
-		return formatCurrency(record.income_amount || 0);
+		return <CurrencyText value={record.income_amount || 0} />;
 	}
 
 	function renderOutcome(_text, record){
-		return formatCurrency(record.outcome_amount || 0);
+		return <CurrencyText value={record.outcome_amount || 0} />;
 	}
 
 	function getBalance(record){
@@ -153,8 +146,7 @@ const FiscalYearsList = (props) => {
 
 	function renderBalance(_text, record){
 		const value = getBalance(record) || 0;
-		const color = value > 0 ? '#3f8600' : (value < 0 ? '#cf1322' : undefined);
-		return (<span style={{ color }}>{formatCurrency(value)}</span>);
+		return <CurrencyText value={value} colored={true} />;
 	}
 
 	function getColumns()

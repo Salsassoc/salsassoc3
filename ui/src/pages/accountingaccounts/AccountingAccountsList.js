@@ -12,6 +12,7 @@ import PageContentLayout from '../../layout/PageContentLayout.js';
 
 import TCALayout from '../../components/layout/TCALayout.js';
 import ButtonAdd from '../../components/buttons/ButtonAdd.js';
+import CurrencyText from "../common/CurrencyText.js";
 
 const AccountingAccountsList = (props) => {
 
@@ -105,14 +106,6 @@ const AccountingAccountsList = (props) => {
 		);
 	}
 
-	function formatCurrency(value) {
-		try {
-			return new Intl.NumberFormat(i18n.language === 'fr' ? 'fr-FR' : 'en-US', { style: 'currency', currency: 'EUR' }).format(value || 0);
-		} catch (e) {
-			return `${value}`;
-		}
-	}
-
 	function renderOperationsCount(_text, record){
 		const count = record.operation_count || 0;
 		const label = `${count} ${i18n.t('pages.fiscal_years.operations_suffix')}`;
@@ -123,11 +116,11 @@ const AccountingAccountsList = (props) => {
 	}
 
 	function renderIncome(_text, record){
-		return formatCurrency(record.income_amount);
+		return <CurrencyText value={record.income_amount} />;
 	}
 
 	function renderOutcome(_text, record){
-		return formatCurrency(record.outcome_amount);
+		return <CurrencyText value={record.outcome_amount} />;
 	}
 
 	function getBalance(record){
@@ -136,8 +129,7 @@ const AccountingAccountsList = (props) => {
 
 	function renderBalance(_text, record){
 		const value = getBalance(record) || 0;
-		const color = value > 0 ? '#3f8600' : (value < 0 ? '#cf1322' : undefined);
-		return (<span style={{ color }}>{formatCurrency(value)}</span>);
+		return <CurrencyText value={value} colored={true} />;
 	}
 
 	function getColumns()

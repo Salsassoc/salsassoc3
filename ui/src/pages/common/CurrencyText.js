@@ -3,6 +3,7 @@ import React from 'react';
 const CurrencyText = (props) => {
 	const value = props.value;
 	const colored = props.colored || false;
+	const negativeOnly = props.negativeOnly || false;
 
 	function formatCurrency(value) {
 		try {
@@ -14,9 +15,16 @@ const CurrencyText = (props) => {
 	}
 
 	const valueText = formatCurrency(value);
-	if(colored){
-		const valueColor = value > 0 ? '#3f8600' : (value < 0 ? '#cf1322' : undefined);
-		return <span style={{ color: valueColor }}>{valueText}</span>
+	if(colored) {
+		if(negativeOnly) {
+			if(value < 0) {
+				const valueColor = '#cf1322';
+				return <span style={{color: valueColor}}>{valueText}</span>
+			}
+		}else{
+			const valueColor = value > 0 ? '#3f8600' : (value < 0 ? '#cf1322' : undefined);
+			return <span style={{ color: valueColor }}>{valueText}</span>;
+		}
 	}
 	return valueText;
 };

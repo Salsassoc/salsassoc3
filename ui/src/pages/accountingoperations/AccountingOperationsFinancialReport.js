@@ -199,16 +199,6 @@ const AccountingOperationsFinancialReport = (props) => {
 		return groups;
 	}
 
-	// Helpers
-	function formatCurrency(value) {
-		try {
-			const n = Number(value || 0);
-			return new Intl.NumberFormat(undefined, { style: 'currency', currency: 'EUR' }).format(n);
-		} catch (_e) {
-			return (Number(value || 0)).toFixed(2) + ' €';
-		}
-	}
-
 	function onFormSearchFinished(values) {
 		const f = { ...filter };
 		f.fiscalYearId = values.fiscal_year_id || null;

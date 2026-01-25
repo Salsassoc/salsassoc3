@@ -9,6 +9,7 @@ import dayjs from 'dayjs';
 import {AppContext} from "../../layout/AppContext.js";
 
 import i18n from '../../utils/i18n.js';
+import CurrencyText from "../common/CurrencyText.js";
 
 const MembershipsResults = (props) => {
 
@@ -111,16 +112,9 @@ const MembershipsResults = (props) => {
 		const label = map[record.membership_type] || record.membership_type;
 		return <span>{label}</span>;
 	}
-	function formatCurrency(value) {
-		try {
-			const n = Number(value || 0);
-			return new Intl.NumberFormat(undefined, { style: 'currency', currency: 'EUR' }).format(n);
-		} catch(_e){
-			return (Number(value || 0)).toFixed(2) + ' €';
-		}
-	}
+
 	function renderCollectedAmount(_text, record){
-		return <span>{formatCurrency(record.collected_amount)}</span>;
+		return <CurrencyText value={record.collected_amount || 0} />
 	}
 	function renderPaymentMethods(_text, record){
 		const map = {

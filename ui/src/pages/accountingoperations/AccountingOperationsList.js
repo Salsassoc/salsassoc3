@@ -16,6 +16,7 @@ import TCALayout from '../../components/layout/TCALayout.js';
 import ButtonAdd from '../../components/buttons/ButtonAdd.js';
 
 import AccountingOperationsSearchForm from './AccountingOperationsSearchForm.js';
+import CurrencyText from "../common/CurrencyText.js";
 
 const AccountingOperationsList = (props) => {
 
@@ -226,25 +227,14 @@ const AccountingOperationsList = (props) => {
 		return <span>{map[record.op_method] || record.op_method}</span>;
 	}
 
-	function formatCurrency(value) {
-		try {
-			const n = Number(value || 0);
-			return new Intl.NumberFormat(undefined, { style: 'currency', currency: 'EUR' }).format(n);
-		} catch(_e){
-			return (Number(value || 0)).toFixed(2) + ' €';
-		}
-	}
-
 	function renderAmount(_text, record){
 		const value = record.amount || 0;
-		const color = value > 0 ? '#3f8600' : (value < 0 ? '#cf1322' : undefined);
-		return (<span style={{ color }}>{formatCurrency(value)}</span>);
+		return <CurrencyText value={value} colored={true} />;
 	}
 
 	function renderAccumulation(_text, record){
 		const value = record.accumulation || 0;
-		const color = value > 0 ? null : (value < 0 ? '#cf1322' : undefined);
-		return (<span style={{ color }}>{formatCurrency(value)}</span>);
+		return <CurrencyText value={value} colored={true} negativeOnly={true} />;
 	}
 
 	function renderFiscalYear(_text, record){

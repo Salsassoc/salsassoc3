@@ -2,15 +2,7 @@ import React from 'react';
 import { Card, Descriptions } from 'antd';
 import dayjs from 'dayjs';
 import i18n from '../../utils/i18n.js';
-
-function formatCurrency(value) {
-  try {
-    const n = Number(value || 0);
-    return new Intl.NumberFormat(undefined, { style: 'currency', currency: 'EUR' }).format(n);
-  } catch(_e){
-    return (Number(value || 0)).toFixed(2) + ' €';
-  }
-}
+import CurrencyText from "../common/CurrencyText.js";
 
 const DashboardCurrentFiscalYear = ({ fiscalYear, loading = false }) => {
   if (loading) {
@@ -46,20 +38,20 @@ const DashboardCurrentFiscalYear = ({ fiscalYear, loading = false }) => {
   return (
       <Card title={title} size="small">
           <Descriptions size="small" column={{xs:1, lg:3}} >
-            <Descriptions.Item label={i18n.t('pages.dashboard.period') || 'Période'} span={2}>
+            <Descriptions.Item label={i18n.t('pages.dashboard.period')} span={2}>
               {formatDate(fiscalYear.start_date)} → {formatDate(fiscalYear.end_date)}
             </Descriptions.Item>
-            <Descriptions.Item label={i18n.t('pages.fiscal_years.members') || 'Adhésions'}>
+            <Descriptions.Item label={i18n.t('pages.fiscal_years.members')}>
               {Number(fiscalYear.membership_count || 0)}
             </Descriptions.Item>
-            <Descriptions.Item label={i18n.t('pages.fiscal_years.income') || 'Recettes'}>
-              {formatCurrency(income)}
+            <Descriptions.Item label={i18n.t('pages.fiscal_years.income')}>
+	            <CurrencyText value={income} />
             </Descriptions.Item>
-            <Descriptions.Item label={i18n.t('pages.fiscal_years.outcome') || 'Dépenses'}>
-              {formatCurrency(outcome)}
+            <Descriptions.Item label={i18n.t('pages.fiscal_years.outcome')}>
+	            <CurrencyText value={outcome} />
             </Descriptions.Item>
-            <Descriptions.Item label={i18n.t('pages.fiscal_years.balance') || 'Balance'} span={3}>
-              <span style={{ color: balanceColor }}>{formatCurrency(balance)}</span>
+            <Descriptions.Item label={i18n.t('pages.fiscal_years.balance')} span={3}>
+	            <CurrencyText value={balance} colored={true} />
             </Descriptions.Item>
           </Descriptions>
       </Card>
