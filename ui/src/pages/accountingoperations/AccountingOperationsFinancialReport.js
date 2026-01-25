@@ -1,7 +1,5 @@
-import React from 'react';
+import React, {Fragment} from 'react';
 import { Row, Col, Card, Descriptions, Space } from 'antd';
-
-import dayjs from 'dayjs';
 
 import i18n from '../../utils/i18n.js';
 import { fetchJSON } from '../../authentication/backend.js';
@@ -13,6 +11,7 @@ import PageContentLayout from '../../layout/PageContentLayout.js';
 
 import AccountingOperationsFinancialReportSearchForm from './AccountingOperationsFinancialReportSearchForm.js';
 import AccountingOperationsFinancialReportGroup from './AccountingOperationsFinancialReportGroup.js';
+import CurrencyText from "../common/CurrencyText.js";
 
 const AccountingOperationsFinancialReport = (props) => {
 
@@ -242,49 +241,6 @@ const AccountingOperationsFinancialReport = (props) => {
 		return layoutData;
 	}
 
-	function formatDate(date_value)
-	{
-		if(!date_value){
-			return "--/--/----";
-		}
-		return dayjs(date_value).format(i18n.t('common.date_format'));
-	}
-
-	function renderColumnContent(data) {
-		const values = Array.from(data);
-		return values.map(([key, category]) => {
-			return (
-				<div key={category.id} style={{ marginBottom: 16 }}>
-					<div style={{ fontWeight: 600, display: 'flex', justifyContent: 'space-between', borderBottom: '1px solid #eee', paddingBottom: 4 }}>
-						<span>{category.label} - {category.account_number}</span>
-						<span>{formatCurrency(category.total_amount)}</span>
-					</div>
-					<div>
-						{category.operations.map((it, idx) => (
-							<div key={it.id || idx} style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 0' }}>
-								<span>{formatDate(it.date)} - {it.label}</span>
-								<span>{formatCurrency((Number(it.amount)))}</span>
-							</div>
-						))}
-					</div>
-				</div>
-			)
-		});
-	}
-
-	function renderColumnContentEmpty() {
-		return i18n.t('common.no_data');
-	}
-
-	function renderColumn(title, data) {
-		const content = (data && data.items.size > 0 ? renderColumnContent(data.items) : renderColumnContentEmpty());
-		return (
-			<Card title={title} variant="outlined" size="small">
-				{content}
-			</Card>
-		);
-	}
-
 	// Default to current fiscal year when list is loaded
 	React.useEffect(() => {
 		if (fiscalYears && fiscalYears.length > 0) {
@@ -313,30 +269,26 @@ const AccountingOperationsFinancialReport = (props) => {
 	const incomesTotal = items?.incomes?.total || 0;
 	const outcomesTotal = items?.outcomes?.total || 0;
 	const balance = (incomesTotal + outcomesTotal);
-	const balanceColor = balance > 0 ? '#3f8600' : (balance < 0 ? '#cf1322' : undefined);
 
 	const tableContent = (
 		<Space orientation='vertical'>
 			<Card>
-				<Descriptions size="small" column={3} >
+				<Descriptions size="small" column={{xs:1, lg:3}}>
 					<Descriptions.Item label={i18n.t('pages.fiscal_years.income')}>
-						{formatCurrency(incomesTotal)}
+						<CurrencyText value={incomesTotal} />
 					</Descriptions.Item>
 					<Descriptions.Item label={i18n.t('pages.fiscal_years.outcome')}>
-						{formatCurrency(outcomesTotal)}
+						<CurrencyText value={outcomesTotal} />
 					</Descriptions.Item>
 					<Descriptions.Item label={i18n.t('pages.fiscal_years.balance')}>
-						<span style={{ color: balanceColor }}>{formatCurrency(balance)}</span>
+						<CurrencyText value={balance} colored={true} />
 					</Descriptions.Item>
 				</Descriptions>
 			</Card>
 			{projectGroups.map(g => (
-				<Card key={g.key} title={g.title} size="small">
-					<AccountingOperationsFinancialReportGroup
-						items={g.items}
-						renderColumn={renderColumn}
-					/>
-				</Card>
+				<AccountingOperationsFinancialReportGroup
+					group={g}
+				/>
 			))}
 		</Space>
 	);
