@@ -201,7 +201,7 @@ const ProjectsEdit = (props) => {
 					<Form.Item name={["project_date"]} label={i18n.t('models.project.project_date')}> 
 						<DatePicker format={i18n.t("common.date_format")} />
 					</Form.Item>
-					<Form.Item name={["fiscal_year_id"]} label={i18n.t('models.project.fiscal_year')} rules={[{ required: true }]}> 
+					<Form.Item name={["fiscal_year_id"]} label={i18n.t('models.project.fiscal_year')}>
 						<Select options={fiscalYearOptions} style={{width: "300px"}} />
 					</Form.Item>
 				</FormEditSection>
