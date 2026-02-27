@@ -106,6 +106,8 @@
 			"add_title": "Ajouter une opération",
 			"edit_title": "Modifier une opération",
 			"section_general": "Général",
+		  	"section_transaction": "Transaction",
+		  	"section_invoice": "Facturation",
 			"saved": "L'opération a bien été sauvegardée"
 		},
 		"accounting_operations_financial_report": {

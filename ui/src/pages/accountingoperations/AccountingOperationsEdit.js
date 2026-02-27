@@ -283,16 +283,36 @@ const AccountingOperationsEdit = (props) => {
 
 				<FormEditSection title={i18n.t("pages.accounting_operation.section_general")}>
 
+					<Form.Item name={['label']} label={i18n.t("models.accounting_operation.label")} rules={[{ required: true }]}>
+						<Input />
+					</Form.Item>
+
 					<Form.Item name={['date_value']} label={i18n.t("models.accounting_operation.date_value")}>
 						<DatePicker format={i18n.t("common.date_format")} />
 					</Form.Item>
 
-					<Form.Item name={['date_effective']} label={i18n.t("models.accounting_operation.date_effective")}>
-						<DatePicker format={i18n.t("common.date_format")} />
+					<Form.Item name={['category']} label={i18n.t('models.accounting_operation.category')}>
+						<Select options={categoryOptions} />
 					</Form.Item>
 
-					<Form.Item name={['label']} label={i18n.t("models.accounting_operation.label")} rules={[{ required: true }]}>
-						<Input />
+					<Form.Item name={['fiscalyear_id']} label={i18n.t("models.accounting_operation.fiscal_year")} rules={[{ required: true }]}>
+						<Select options={fiscalYearOptions} />
+					</Form.Item>
+
+					<Form.Item name={['project_id']} label={i18n.t('models.accounting_operation.project_id')}>
+						<Select options={projectOptions} allowClear />
+					</Form.Item>
+
+				</FormEditSection>
+
+				<FormEditSection title={i18n.t("pages.accounting_operation.section_transaction")}>
+
+					<Form.Item name={['account_id']} label={i18n.t('models.accounting_operation.account')} rules={[{ required: true }]}>
+						<Select options={accountOptions} />
+					</Form.Item>
+
+					<Form.Item name={['date_effective']} label={i18n.t("models.accounting_operation.date_effective")}>
+						<DatePicker format={i18n.t("common.date_format")} />
 					</Form.Item>
 
 					<Form.Item name="op_method" label={i18n.t("models.accounting_operation.op_method")}>
@@ -315,14 +335,6 @@ const AccountingOperationsEdit = (props) => {
 						<Input />
 					</Form.Item>
 
-					<Form.Item name={['category']} label={i18n.t('models.accounting_operation.category')}>
-						<Select options={categoryOptions} />
-					</Form.Item>
-
-					<Form.Item name={['account_id']} label={i18n.t('models.accounting_operation.account')} rules={[{ required: true }]}>
-						<Select options={accountOptions} />
-					</Form.Item>
-
 					<Form.Item name={['amount_debit']} label={i18n.t('models.accounting_operation.amount_debit')}>
 						<InputNumber max={0} step={0.01} />
 					</Form.Item>
@@ -334,17 +346,12 @@ const AccountingOperationsEdit = (props) => {
 					<Form.Item name={['label_bank']} label={i18n.t('models.accounting_operation.label_bank')}>
 						<Input.TextArea />
 					</Form.Item>
+				</FormEditSection>
 
-					<Form.Item name={['project_id']} label={i18n.t('models.accounting_operation.project_id')}>
-						<Select options={projectOptions} allowClear />
-					</Form.Item>
+				<FormEditSection title={i18n.t("pages.accounting_operation.section_invoice")}>
 
 					<Form.Item name={['checked']} valuePropName="checked" label={i18n.t('models.accounting_operation.checked')}>
 						<Switch />
-					</Form.Item>
-
-					<Form.Item name={['fiscalyear_id']} label={i18n.t("models.accounting_operation.fiscal_year")} rules={[{ required: true }]}>
-						<Select options={fiscalYearOptions} />
 					</Form.Item>
 
 				</FormEditSection>

@@ -113,6 +113,8 @@
 			"add_title": "Add operation",
 			"edit_title": "Edit operation",
 			"section_general": "General",
+			"section_transaction": "Transaction",
+			"section_invoice": "Invoice",
 			"saved": "The operation has been saved successfully"
 		},
 		"members": {
