@@ -313,10 +313,25 @@ const MembershipsEdit = (props) => {
 	}));
 
 	function onMemberSelect(value, option) {
+
+		console.log(value);
+		console.log(option);
+
 		const m = option.m;
 		// Set person fields and person_id
 		const patch = {
 			person_id: m.id,
+			lastname: m.lastname,
+			firstname: m.firstname,
+			gender: m.gender,
+			birthdate: m.birthdate ? dayjs(m.birthdate, 'YYYY-MM-DD') : null,
+			address: m.address || '',
+			zipcode: m.zipcode || null,
+			city: m.city || '',
+			email: m.email || '',
+			phonenumber: m.phonenumber || '',
+			phonenumber2: m.phonenumber2 || '',
+			image_rights: m.image_rights,
 		};
 		form.setFieldsValue(patch);
 		setMemberChanged(true);
