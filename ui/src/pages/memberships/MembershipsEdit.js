@@ -413,7 +413,7 @@ const MembershipsEdit = (props) => {
 							marginBottom: 6
 						}}>
 							<input type="checkbox" checked={current.checked}
-							       onChange={e => updateLine({checked: e.target.checked})}/>
+							       onChange={e => updateLine({checked: e.target.checked, date: defaultDate})}/>
 							<span>{c.label}</span>
 							<InputNumber
 								min={0}
