@@ -252,12 +252,39 @@ $app->post('/api/memberships/save', function (Request $request, Response $respon
                     $canUpdatePerson = false;
                 }
 
-                if ($canUpdatePerson) {
-                    $stmt = $db->prepare('UPDATE person 
-                        SET lastname = ?, firstname = ?, gender = ?, birthdate = ?, email = ?, phonenumber = ?, image_rights = ?, address = ?, zipcode = ?, city = ?, phonenumber2 = ?
-                        WHERE id = ?');
-                    $stmt->execute([$lastname, $firstname, $gender, $birthdate, $email, $phonenumber, $imageRights, $address, $zipcode, $city, $phonenumber2, $personId]);
-                }
+            	if ($canUpdatePerson) {
+					// Only update non-empty person fields; keep existing DB values when incoming values are null or empty string
+					$fields = [
+						'lastname' => $lastname,
+						'firstname' => $firstname,
+						'gender' => $gender,
+						'birthdate' => $birthdate,
+						'email' => $email,
+						'phonenumber' => $phonenumber,
+						'image_rights' => $imageRights,
+						'address' => $address,
+						'zipcode' => $zipcode,
+						'city' => $city,
+						'phonenumber2' => $phonenumber2,
+					];
+
+					$setClauses = [];
+					$params = [];
+					foreach ($fields as $col => $val) {
+						// Allow updating falsy but meaningful values like 0 or '0'; skip only null and empty string
+						if ($val !== null && $val !== '') {
+							$setClauses[] = "$col = ?";
+							$params[] = $val;
+						}
+					}
+
+					if (!empty($setClauses)) {
+						$sql = 'UPDATE person SET ' . implode(', ', $setClauses) . ' WHERE id = ?';
+						$params[] = $personId;
+						$stmt = $db->prepare($sql);
+						$stmt->execute($params);
+					}
+				}
             } else {
                 // creation_date set to now, is_member true by default for a membership
                 $creationDate = date('Y-m-d H:i:s');
