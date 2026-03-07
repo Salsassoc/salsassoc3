@@ -168,6 +168,10 @@
 		"dashboard": {
 			"title": "Tableau de bord",
 			"memberships_trend": "Évolution des adhésions par année fiscale",
+			"memberships_renewal": "Répartition des renouvellements d'adhésion",
+			"memberships_renewal_new": "Nouveaux adhérents",
+			"memberships_renewal_last_year": "Anciens adhérents (Renouvelants)",
+			"memberships_renewal_older": "Anciens adhérents (Retournants)",
 			"balance_trend": "Évolution de la balance par année fiscale",
 			"balance": "Balance",
 			"axis_year": "Année fiscale",

@@ -67,7 +67,59 @@ $app->get('/api/fiscal_years/list', function (Request $request, Response $respon
             WHERE accounting_operation.fiscalyear_id = fiscal_year.id
             AND accounting_operation_category.id = accounting_operation.category
             AND accounting_operation_category.is_internal_move = FALSE
-        ) AS outcome_amount
+        ) AS outcome_amount,
+        -- New vs renewal breakdown
+        (
+            SELECT COUNT(1)
+            FROM membership m
+            WHERE m.fiscal_year_id = fiscal_year.id
+              AND NOT EXISTS (
+                SELECT 1
+                FROM membership m2
+                INNER JOIN fiscal_year fy2 ON fy2.id = m2.fiscal_year_id
+                WHERE m2.person_id = m.person_id
+                  AND fy2.end_date < fiscal_year.end_date
+              )
+        ) AS memberships_new,
+        (
+            SELECT COUNT(1)
+            FROM membership m
+            WHERE m.fiscal_year_id = fiscal_year.id
+              AND EXISTS (
+                SELECT 1 FROM membership m2
+                WHERE m2.person_id = m.person_id
+                  AND m2.fiscal_year_id = (
+                    SELECT fy_prev.id
+                    FROM fiscal_year fy_prev
+                    WHERE fy_prev.end_date < fiscal_year.end_date
+                    ORDER BY fy_prev.end_date DESC
+                    LIMIT 1
+                  )
+              )
+        ) AS memberships_last_year,
+        (
+            SELECT COUNT(1)
+            FROM membership m
+            WHERE m.fiscal_year_id = fiscal_year.id
+              AND EXISTS (
+                SELECT 1
+                FROM membership m2
+                INNER JOIN fiscal_year fy2 ON fy2.id = m2.fiscal_year_id
+                WHERE m2.person_id = m.person_id
+                  AND fy2.end_date < fiscal_year.end_date
+              )
+              AND NOT EXISTS (
+                SELECT 1 FROM membership m3
+                WHERE m3.person_id = m.person_id
+                  AND m3.fiscal_year_id = (
+                    SELECT fy_prev.id
+                    FROM fiscal_year fy_prev
+                    WHERE fy_prev.end_date < fiscal_year.end_date
+                    ORDER BY fy_prev.end_date DESC
+                    LIMIT 1
+                  )
+              )
+        ) AS memberships_older
         FROM fiscal_year';
 
     if($order){
@@ -115,6 +167,17 @@ $app->get('/api/fiscal_years/list', function (Request $request, Response $respon
                 ? (float)$year['memberships_avg_age']
                 : null;
         }
+
+        // Build memberships_renewal object in response
+        $newCount = isset($year['memberships_new']) ? (int)$year['memberships_new'] : 0;
+        $lastYearCount = isset($year['memberships_last_year']) ? (int)$year['memberships_last_year'] : 0;
+        $olderCount = isset($year['memberships_older']) ? (int)$year['memberships_older'] : 0;
+        $year['memberships_renewal'] = [
+            'new' => $newCount,
+            'last_year' => $lastYearCount,
+            'older' => $olderCount,
+        ];
+        unset($year['memberships_new'], $year['memberships_last_year'], $year['memberships_older']);
 
         // Build memberships_gender object in response
         $male = isset($year['membership_gender_male']) ? (int)$year['membership_gender_male'] : 0;

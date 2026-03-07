@@ -12,6 +12,7 @@ import DashboardBalance from './DashboardBalance.js';
 import DashboardCurrentFiscalYear from './DashboardCurrentFiscalYear.js';
 import DashboardMembershipsGender from './DashboardMembershipsGender.js';
 import DashboardAverageAge from './DashboardAverageAge.js';
+import DashboardMembershipsRenewal from './DashboardMembershipsRenewal.js';
 
 const Dashboard = () => {
   const appContext = React.useContext(AppContext);
@@ -56,33 +57,39 @@ const Dashboard = () => {
     return { pageTitle, pageStatic: true };
   }
 
-  const content = (
-    <div style={{width: "100%"}}>
-      <Row gutter={[16, 16]} style={{width: "100%"}}>
-        <Col span={24}>
-          <DashboardCurrentFiscalYear fiscalYear={currentFiscalYear} loading={loading} />
-        </Col>
-      </Row>
-      <br/>
-      <Row gutter={[16, 16]} style={{width: "100%"}}>
-        <Col xs={24} lg={12}>
-          <DashboardMemberships fiscalYears={fiscalYears} loading={loading} />
-        </Col>
-        <Col xs={24} lg={12}>
-          <DashboardBalance fiscalYears={fiscalYears} loading={loading} />
-        </Col>
-      </Row>
-      <br/>
-      <Row gutter={[16, 16]} style={{width: "100%"}}>
-        <Col xs={24} xl={16}>
-          <DashboardMembershipsGender fiscalYears={fiscalYears} loading={loading} />
-        </Col>
-        <Col xs={24} xl={8}>
-          <DashboardAverageAge fiscalYears={fiscalYears} loading={loading} />
-        </Col>
-      </Row>
-    </div>
-  );
+ 	const content = (
+		<div style={{width: "100%"}}>
+			<Row gutter={[16, 16]} style={{width: "100%"}}>
+				<Col span={24}>
+					<DashboardCurrentFiscalYear fiscalYear={currentFiscalYear} loading={loading} />
+				</Col>
+			</Row>
+			<br/>
+			<Row gutter={[16, 16]} style={{width: "100%"}}>
+				<Col xs={24} lg={12}>
+					<DashboardMemberships fiscalYears={fiscalYears} loading={loading} />
+				</Col>
+				<Col xs={24} lg={12}>
+					<DashboardBalance fiscalYears={fiscalYears} loading={loading} />
+				</Col>
+			</Row>
+			<br/>
+			<Row gutter={[16, 16]} style={{width: "100%"}}>
+				<Col span={24}>
+					<DashboardMembershipsRenewal fiscalYears={fiscalYears} loading={loading} />
+				</Col>
+			</Row>
+			<br/>
+			<Row gutter={[16, 16]} style={{width: "100%"}}>
+				<Col xs={24} xl={16}>
+					<DashboardMembershipsGender fiscalYears={fiscalYears} loading={loading} />
+				</Col>
+				<Col xs={24} xl={8}>
+					<DashboardAverageAge fiscalYears={fiscalYears} loading={loading} />
+				</Col>
+			</Row>
+		</div>
+	);
 
   return (
     <PageContentLayout layoutData={getLayoutData()} loadData={loadData}>

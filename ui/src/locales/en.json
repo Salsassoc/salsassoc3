@@ -157,6 +157,10 @@
 		"dashboard": {
 			"title": "Dashboard",
 			"memberships_trend": "Memberships trend by fiscal year",
+			"memberships_renewal": "Membership renewals repartition",
+			"memberships_renewal_new": "New members",
+			"memberships_renewal_last_year": "Former members (also last year)",
+			"memberships_renewal_older": "Former members (not last year)",
 			"balance_trend": "Balance trend by fiscal year",
 			"balance": "Balance",
 			"axis_year": "Fiscal year",
