@@ -88,7 +88,8 @@ const MembershipsList = (props) => {
 		fetchJSON(url, opts)
 			.then((_result) => {
 				pageLoader.endRemoving();
-				return loadData();
+				return loadData()
+					.then(_result => loadMembershipsList());
 			})
 			.catch((error) => {
 				pageLoader.errorRemoving(error);
