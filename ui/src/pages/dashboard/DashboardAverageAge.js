@@ -2,8 +2,14 @@ import React from 'react';
 import { Card } from 'antd';
 import { Line } from '@ant-design/charts';
 import i18n from '../../utils/i18n.js';
+import dayjs from "dayjs";
 
 const DashboardAverageAge = ({ fiscalYears = [], loading = false }) => {
+
+	function getShortYear(year) {
+		return dayjs(year.start_date).format('YYYY') + "/" + dayjs(year.end_date).format('YY');
+	}
+
 	const data = React.useMemo(() => {
 		return [...(fiscalYears || [])]
 			.reverse()
@@ -11,6 +17,7 @@ const DashboardAverageAge = ({ fiscalYears = [], loading = false }) => {
 			.map((y) => ({
 				label: y.title,
 				value: Number(y.memberships_avg_age),
+				year_short: getShortYear(y)
 			}));
 	}, [fiscalYears]);
 
@@ -33,7 +40,7 @@ const DashboardAverageAge = ({ fiscalYears = [], loading = false }) => {
 
 	const config = {
 		data,
-		xField: 'label',
+		xField: 'year_short',
 		yField: 'value',
 		smooth: true,
 		label: {
@@ -44,12 +51,15 @@ const DashboardAverageAge = ({ fiscalYears = [], loading = false }) => {
 		xAxis: { title: { text: i18n.t('pages.dashboard.axis_year') || '' } },
 		yAxis: { title: { text: i18n.t('pages.dashboard.axis_age') || '' } },
 		axis: {
-			x: false,
+			x: {
+				labelFormatter: (d) => d,
+				//labelAutoRotate: false,
+				//labelAutoWrap: true,
+			},
 			y: {
 				labelFormatter: (d) => `${d} ${i18n.language === 'fr' ? 'ans' : 'y'}`,
 			},
 		},
-		height: 300,
 		animation: false,
 		tooltip: {
 			items: [

@@ -2,6 +2,7 @@ import React from 'react';
 import { Card } from 'antd';
 import { Column } from '@ant-design/plots';
 import i18n from '../../utils/i18n.js';
+import dayjs from "dayjs";
 
 const DashboardMembershipsGender = ({ fiscalYears = [], loading = false }) => {
 
@@ -15,6 +16,10 @@ const DashboardMembershipsGender = ({ fiscalYears = [], loading = false }) => {
 		return '#8c8c8c'; // grey
 	}
 
+	function getShortYear(year) {
+		return dayjs(year.start_date).format('YYYY') + "/" + dayjs(year.end_date).format('YY');
+	}
+
 	const data = React.useMemo(() => {
 		const out = [];
 		const years = [...(fiscalYears || [])].reverse();
@@ -26,9 +31,9 @@ const DashboardMembershipsGender = ({ fiscalYears = [], loading = false }) => {
 		  const unknown = Number(g.unknown || 0);
 		  const toPercent = (n) => (total > 0 ? (n * 100) / total : 0);
 		  out.push(
-		    { label: y.title, type: 'female', value: toPercent(female), percent: toPercent(female), count: female, color: getColor('female'), year: y.title },
-		    { label: y.title, type: 'male', value: toPercent(male), percent: toPercent(male), count: male, color: getColor('male'), year: y.title },
-		    { label: y.title, type: 'unknown', value: toPercent(unknown), percent: toPercent(unknown), count: unknown, color: getColor('unknown'), year: y.title },
+		    { label: y.title, type: 'female', value: toPercent(female), percent: toPercent(female), count: female, color: getColor('female'), year: y.title, year_short: getShortYear(y) },
+		    { label: y.title, type: 'male', value: toPercent(male), percent: toPercent(male), count: male, color: getColor('male'), year: y.title, year_short: getShortYear(y) },
+		    { label: y.title, type: 'unknown', value: toPercent(unknown), percent: toPercent(unknown), count: unknown, color: getColor('unknown'), year: y.title, year_short: getShortYear(y) },
 		  );
 		});
 		return out;
@@ -63,7 +68,7 @@ const DashboardMembershipsGender = ({ fiscalYears = [], loading = false }) => {
 
 	const config = {
 		data,
-		xField: 'label',
+		xField: 'year_short',
 		yField: 'value',
 		stack: true,
 		percent: true,
@@ -77,7 +82,11 @@ const DashboardMembershipsGender = ({ fiscalYears = [], loading = false }) => {
 			// Keep default legend (series names). Counts are displayed in tooltip per data item.
 		},
 		axis: {
-			x: false,
+			x: {
+				labelFormatter: (d) => d,
+				//labelAutoRotate: false,
+				//labelAutoWrap: true,
+			},
 			y: {
 				labelFormatter: (d) => d*100 + " %",
 			},
@@ -85,12 +94,10 @@ const DashboardMembershipsGender = ({ fiscalYears = [], loading = false }) => {
 		tooltip: {
 			title: (d) => `${d.year}`,
 			items: [
-				{
-				    channel: 'y',
-					field: 'percent',
-					name: i18n.t('pages.dashboard.percent'),
-					valueFormatter: (d) => d.toFixed(0) + " %",
-				},
+				(datum, index, data, column) => ({
+					name: getTypeLabel(datum.type),
+					value: datum.value.toFixed(0) + " %",
+				}),
 			],
 		},
 		label: {

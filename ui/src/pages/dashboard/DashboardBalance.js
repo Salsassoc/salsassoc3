@@ -2,14 +2,24 @@ import React from 'react';
 import { Card } from 'antd';
 import { Column } from '@ant-design/charts';
 import i18n from '../../utils/i18n.js';
+import dayjs from "dayjs";
 
 const DashboardBalance = ({ fiscalYears = [], loading = false }) => {
+
+	function getShortYear(year) {
+		return dayjs(year.start_date).format('YYYY') + "/" + dayjs(year.end_date).format('YY');
+	}
+
   const data = React.useMemo(() => {
     return [...(fiscalYears || [])].reverse().map((y) => {
       const income = y.income_amount || 0;
       const outcome = y.outcome_amount || 0;
       const balance = (income + outcome);
-      return { label: y.title, value: balance };
+      return {
+		  label: y.title,
+	      value: balance,
+	      year_short: getShortYear(y)
+	  };
     });
   }, [fiscalYears]);
 
@@ -32,17 +42,20 @@ const DashboardBalance = ({ fiscalYears = [], loading = false }) => {
 
   const config = {
     data,
-    xField: 'label',
+    xField: 'year_short',
     yField: 'value',
     xAxis: { title: { text: i18n.t('pages.dashboard.axis_year') || '' } },
     yAxis: { title: { text: i18n.t('pages.dashboard.axis_value') || '' } },
-    height: 300,
     animation: false,
     axis: {
-      x: false,
-      y: {
-        labelFormatter: (d) => d + " €",
-      },
+	    x: {
+		    labelFormatter: (d) => d,
+		    //labelAutoRotate: false,
+		    //labelAutoWrap: true,
+	    },
+		y: {
+			labelFormatter: (d) => d + " €",
+		},
     },
     tooltip: {
       items: [

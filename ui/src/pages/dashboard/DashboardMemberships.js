@@ -2,12 +2,19 @@ import React from 'react';
 import { Card } from 'antd';
 import { Line } from '@ant-design/charts';
 import i18n from '../../utils/i18n.js';
+import dayjs from "dayjs";
 
 const DashboardMemberships = ({ fiscalYears = [], loading = false }) => {
+
+	function getShortYear(year) {
+		return dayjs(year.start_date).format('YYYY') + "/" + dayjs(year.end_date).format('YY');
+	}
+
   const data = React.useMemo(() => {
     return [...(fiscalYears || [])].reverse().map((y) => ({
-      label: y.title,
-      value: Number(y.membership_count || 0),
+		label: y.title,
+		value: Number(y.membership_count || 0),
+		year_short: getShortYear(y)
     }));
   }, [fiscalYears]);
 
@@ -30,7 +37,7 @@ const DashboardMemberships = ({ fiscalYears = [], loading = false }) => {
 
   const config = {
     data,
-    xField: 'label',
+    xField: 'year_short',
     yField: 'value',
     smooth: true,
     label: {
@@ -41,9 +48,21 @@ const DashboardMemberships = ({ fiscalYears = [], loading = false }) => {
     xAxis: { title: { text: i18n.t('pages.dashboard.axis_year') || '' } },
     yAxis: { title: { text: i18n.t('pages.dashboard.axis_value') || '' } },
     axis: {
-      x: false,
+	    x: {
+		    labelFormatter: (d) => d,
+		    //labelAutoRotate: false,
+		    //labelAutoWrap: true,
+	    },
     },
-    height: 300,
+	  tooltip: {
+		  title: (d) => `${d.year}`,
+		  items: [
+			  (datum, index, data, column) => ({
+				  name: i18n.t('pages.members.membership_count'),
+				  value: datum.value,
+			  }),
+		  ],
+	  },
     animation: false,
   };
 
