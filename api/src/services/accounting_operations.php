@@ -25,6 +25,7 @@ $app->get('/api/accounting/operations/list', function (Request $request, Respons
     $sql = 'SELECT ao.*, 
         c.label AS category_label,
         c.account_number AS category_account_number,
+        c.account_type AS category_account_type,
         fy.title AS fiscal_year_title,
         acc.label AS account_label
         FROM accounting_operation ao

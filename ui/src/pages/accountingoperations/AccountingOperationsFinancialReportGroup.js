@@ -70,9 +70,6 @@ const AccountingOperationsFinancialReportGroup = (props) => {
 		);
 	}
 
-	const balance = group.items.incomes.total + group.items.outcomes.total;
-	const total = <CurrencyText value={balance} colored={true}/>;
-
 	return (
 		<Row gutter={16}>
 			<Col xs={24} md={12}>

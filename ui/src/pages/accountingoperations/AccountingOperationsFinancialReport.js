@@ -104,6 +104,20 @@ const AccountingOperationsFinancialReport = (props) => {
 		}
 	}, [projects, rawOperations])
 
+	function isOperationOutcome(operation, amount)
+	{
+		if(operation.category_account_type == 6){
+			return true;
+		}
+		if(operation.category_account_type == 7){
+			return false;
+		}
+		if(amount < 0){
+			return true;
+		}
+		return false;
+	}
+
 	function computeItemsByCategory(operations) {
 		let incomes = new Map();
 		let incomes_amount = 0.0;
@@ -123,7 +137,9 @@ const AccountingOperationsFinancialReport = (props) => {
 
 			let group = null;
 
-			if (amount < 0) {
+			let isOutcome = isOperationOutcome(operation, amount);
+
+			if (isOutcome) {
 				if (outcomes.has(categoryId)) {
 					group = outcomes.get(categoryId);
 				} else {
