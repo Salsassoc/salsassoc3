@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react';
-import { Row, Col, Card, Descriptions, Space } from 'antd';
+import {Space, Descriptions} from 'antd';
 
 import i18n from '../../utils/i18n.js';
 import { fetchJSON } from '../../authentication/backend.js';
@@ -10,8 +10,9 @@ import { AppContext } from '../../layout/AppContext.js';
 import PageContentLayout from '../../layout/PageContentLayout.js';
 
 import AccountingOperationsFinancialReportSearchForm from './AccountingOperationsFinancialReportSearchForm.js';
-import AccountingOperationsFinancialReportGroup from './AccountingOperationsFinancialReportGroup.js';
-import CurrencyText from "../common/CurrencyText.js";
+import AccountingOperationsFinancialReportSummary from "./AccountingOperationsFinancialReportSummary.js";
+import AccountingOperationsFinancialReportProjectsSummary from "./AccountingOperationsFinancialReportProjectsSummary.js";
+import AccountingOperationsFinancialReportProjectsDetails from "./AccountingOperationsFinancialReportProjectsDetails.js";
 
 const AccountingOperationsFinancialReport = (props) => {
 
@@ -65,9 +66,6 @@ const AccountingOperationsFinancialReport = (props) => {
 				setRawOperations(rawItems);
 				// Compute global report
 				setItems(computeItemsByCategory(rawItems));
-				// Compute groups by project
-				const groups = computeGroupsByProject(rawItems);
-				setProjectGroups(groups);
 			});
 	}
 
@@ -98,12 +96,13 @@ const AccountingOperationsFinancialReport = (props) => {
 		});
 	}
 
-	// Recompute grouping when projects list changes (labels may change)
-	React.useEffect(() => {
+	React.useMemo(() => {
+		// Compute groups by project
 		if (rawOperations && rawOperations.length >= 0) {
-			setProjectGroups(computeGroupsByProject(rawOperations));
+			const groups = computeGroupsByProject(rawOperations);
+			setProjectGroups(groups);
 		}
-	}, [projects]);
+	}, [projects, rawOperations])
 
 	function computeItemsByCategory(operations) {
 		let incomes = new Map();
@@ -261,32 +260,24 @@ const AccountingOperationsFinancialReport = (props) => {
 	const balance = (incomesTotal + outcomesTotal);
 
 	const tableContent = (
-		<Space orientation='vertical'>
-			<Card>
-				<Descriptions size="small" column={{xs:1, lg:3}}>
-					<Descriptions.Item label={i18n.t('pages.fiscal_years.income')}>
-						<CurrencyText value={incomesTotal} />
-					</Descriptions.Item>
-					<Descriptions.Item label={i18n.t('pages.fiscal_years.outcome')}>
-						<CurrencyText value={outcomesTotal} />
-					</Descriptions.Item>
-					<Descriptions.Item label={i18n.t('pages.fiscal_years.balance')}>
-						<CurrencyText value={balance} colored={true} />
-					</Descriptions.Item>
-				</Descriptions>
-			</Card>
-			{projectGroups.map(g => (
-				<AccountingOperationsFinancialReportGroup
-					group={g}
-				/>
-			))}
+		<Space orientation='vertical' size={16}>
+			<AccountingOperationsFinancialReportSummary
+				incomesTotal={incomesTotal}
+				outcomesTotal={outcomesTotal}
+				balance={balance}
+			/>
+			<AccountingOperationsFinancialReportProjectsSummary
+				projectGroups={projectGroups}
+			/>
+			<AccountingOperationsFinancialReportProjectsDetails
+				projectGroups={projectGroups}
+			/>
 		</Space>
 	);
 
 	return (
 		<PageContentLayout layoutData={getLayoutData()} loadData={loadData}>
 			<TCALayout
-				title={i18n.t("pages.accounting_operations_financial_report.report", { count: (items ? items.length : 0) })}
 				content={tableContent}
 				form={form}
 			//actions={tableActions}

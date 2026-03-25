@@ -115,7 +115,10 @@
 			"incomes": "Recettes",
 			"outcomes": "Dépenses",
 			"report": "Rapport",
-			"general": "Général"
+		  	"projects_report": "Rapport par projet",
+		  	"projects_details": "Détail par projet",
+			"general": "Général",
+		  	"total": "Total"
 		},
 		"projects": {
 			"title": "Projets",

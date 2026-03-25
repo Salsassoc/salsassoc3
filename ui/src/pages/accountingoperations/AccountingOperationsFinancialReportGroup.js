@@ -74,16 +74,14 @@ const AccountingOperationsFinancialReportGroup = (props) => {
 	const total = <CurrencyText value={balance} colored={true}/>;
 
 	return (
-		<Card title={group.title} size={"small"} extra={total}>
-			<Row gutter={16}>
-				<Col xs={24} md={12}>
-					{renderColumn(i18n.t('pages.accounting_operations_financial_report.incomes'), group.items.incomes)}
-				</Col>
-				<Col xs={24} md={12}>
-					{renderColumn(i18n.t('pages.accounting_operations_financial_report.outcomes'), group.items.outcomes)}
-				</Col>
-			</Row>
-		</Card>
+		<Row gutter={16}>
+			<Col xs={24} md={12}>
+				{renderColumn(i18n.t('pages.accounting_operations_financial_report.incomes'), group.items.incomes)}
+			</Col>
+			<Col xs={24} md={12}>
+				{renderColumn(i18n.t('pages.accounting_operations_financial_report.outcomes'), group.items.outcomes)}
+			</Col>
+		</Row>
 	);
 };
 

@@ -79,7 +79,10 @@
 			"incomes": "Incomes",
 			"outcomes": "Outcomes",
 			"report": "Report",
-			"general": "General"
+		  	"projects_report": "Projects report",
+		  	"projects_details": "Projects detail",
+			"general": "General",
+		  	"total": "Total"
 		},
 		"cotisations": {
 			"title": "Cotisations",
