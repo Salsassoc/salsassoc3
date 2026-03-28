@@ -11,12 +11,31 @@ import AccountingOperationsFinancialReportSectionTitle from "./AccountingOperati
 const AccountingOperationsFinancialReportProjectsSummary = (props) => {
 	const projectGroups = props.projectGroups;
 
+	const screens = Grid.useBreakpoint();
+
 	let columnCount = 1;
 
-	const screens = Grid.useBreakpoint();
+	function getDescriptionLayout(){
+		if(screens.lg){
+			return undefined;
+		}
+		return "vertical"
+	}
+
+	function getDescriptionStyle(){
+		return {
+			label: {
+				textWrap: 'nowrap'
+			}
+		};
+	}
+
 	if(screens.xs){
 		columnCount = 1;
 	}
+
+	const descriptionLayout = getDescriptionLayout();
+	const descriptionStyle = getDescriptionStyle();
 
 	return (
 		<Space orientation="vertical">
@@ -25,7 +44,8 @@ const AccountingOperationsFinancialReportProjectsSummary = (props) => {
 				size="small"
 				bordered={true}
 				column={columnCount}
-				styles={{label: {minWidth: '250px'}}}
+				layout={descriptionLayout}
+				styles={descriptionStyle}
 			>
 				{projectGroups.map(group => {
 					const balance = group.items.incomes.total + group.items.outcomes.total;

@@ -17,9 +17,28 @@ const AccountingOperationsFinancialReportSummary = (props) => {
 	let columnCount = 1;
 
 	const screens = Grid.useBreakpoint();
+
+	function getDescriptionLayout(){
+		if(screens.lg){
+			return undefined;
+		}
+		return "vertical"
+	}
+
+	function getDescriptionStyle(){
+		return {
+			label: {
+				textWrap: 'nowrap'
+			}
+		};
+	}
+
 	if(screens.xs){
 		columnCount = 1;
 	}
+
+	const descriptionLayout = getDescriptionLayout();
+	const descriptionStyle = getDescriptionStyle();
 
 	return (
 		<Space orientation="vertical">
@@ -28,7 +47,8 @@ const AccountingOperationsFinancialReportSummary = (props) => {
 				size="small"
 				bordered={true}
 				column={columnCount}
-				styles={{label: {minWidth: '250px'}}}
+				layout={descriptionLayout}
+				styles={descriptionStyle}
 			>
 				<Descriptions.Item label={i18n.t('pages.accounting_operations_financial_report.total')}>
 					<AccountingOperationsFinancialReportSummaryItem
