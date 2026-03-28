@@ -5,6 +5,7 @@ import PrivateRoute from '../layout/PrivateRoute.js';
 import NotFound from '../layout/NotFound.js';
 
 import Login from '../pages/Login.js';
+import Initialize from '../pages/Initialize.js';
 import Logout from '../pages/Logout.js';
 import Dashboard from '../pages/dashboard/Dashboard.js';
 import Migration from '../pages/Migration.js';
@@ -186,6 +187,7 @@ const AppRoutes = () => {
         </Route>
         {/* Public migrations page (no authentication) */}
         <Route path='/migrations' element={<AppRouteWrapper component={Migration} /> } />
+        <Route path='/initialize' element={<AppRouteWrapper component={Initialize} /> } />
         <Route path='/logout' element={<AppRouteWrapper component={Logout} /> } />
         <Route path='/login' element={<AppRouteWrapper component={Login} /> } />
         <Route path="*" element={<AppRouteWrapper component={NotFound} /> } />

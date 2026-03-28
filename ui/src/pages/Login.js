@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { Layout, Button, Card, Form, Input, Alert } from 'antd';
 
 import i18n from '../utils/i18n.js';
@@ -16,6 +17,17 @@ const Login = (props) =>
 
 	const [error, setError] = useState(null);
 	const [loading, setLoading] = useState(false);
+	const [userCount, setUserCount] = useState(null);
+
+	useEffect(() => {
+		const url = serviceInstance.createServiceUrl("/users/count");
+		fetch(url)
+			.then(res => res.json())
+			.then(data => {
+				setUserCount(data.count);
+			})
+			.catch(err => console.error("Failed to check user count", err));
+	}, [serviceInstance]);
 
 	function onFinish(values)
 	{
@@ -79,6 +91,16 @@ const Login = (props) =>
                 }}
             >
 				<Card title={i18n.t("pages.login.login")} style={{ margin: 'auto', width: "100%", maxWidth: "450px" }}>
+					{userCount === 0 && (
+						<Alert
+							type="info"
+							message={i18n.t("pages.login.no_user")}
+							description={
+								<Link to="/initialize">{i18n.t("pages.login.create_first_user")}</Link>
+							}
+							style={{ marginBottom: 12 }}
+						/>
+					)}
 					{error && <Alert type="error" message={error} style={{ marginBottom: 12 }} />}
 					<Form
 						name="login"

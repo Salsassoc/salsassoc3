@@ -45,7 +45,9 @@
 		"login": {
 			"login": "Connexion",
 			"username": "Utilisateur",
-			"password": "Mot de passe"
+			"password": "Mot de passe",
+			"no_user": "Aucun utilisateur n'est configuré.",
+			"create_first_user": "Créer le premier utilisateur"
 		},
 		"fiscal_years": {
 			"title": "Années fiscales",
@@ -139,6 +141,18 @@
 			"collected_amount": "Montant perçu",
 			"membership_suffix": "{{count}} adhésion(s)",
 			"search_name_placeholder": "Nom ou prénom..."
+		},
+		"initialize": {
+			"title": "Configuration initiale",
+			"intro": "Bienvenue dans Salsassoc. Pour commencer, vous devez créer le premier compte administrateur.",
+			"first_name": "Prénom",
+			"last_name": "Nom",
+			"email": "Email",
+			"password": "Mot de passe",
+			"confirm_password": "Confirmer le mot de passe",
+			"password_mismatch": "Les mots de passe ne correspondent pas",
+			"create": "Créer le compte",
+			"success": "Compte administrateur créé avec succès. Vous pouvez maintenant vous connecter."
 		},
 		"member": {
 			"add_title": "Ajouter un membre",

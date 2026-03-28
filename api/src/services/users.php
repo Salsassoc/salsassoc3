@@ -109,6 +109,63 @@ $app->post('/api/users/save', function (Request $request, Response $response)
 	return $response->withHeader('Content-Type', 'application/json');
 })->add($adminMiddleware);
 
+// Check if any user exists
+$app->get('/api/users/count', function (Request $request, Response $response)
+{
+	$db = $this->get('db');
+	$stmt = $db->query('SELECT COUNT(*) FROM user WHERE deleted = 0');
+	$count = (int)$stmt->fetchColumn();
+
+	$response->getBody()->write(json_encode(['count' => $count]));
+	return $response->withHeader('Content-Type', 'application/json');
+});
+
+// Initial user creation (only if no user exists)
+$app->post('/api/users/init', function (Request $request, Response $response)
+{
+	$db = $this->get('db');
+	
+	// Check if any user exists first
+	$stmt = $db->query('SELECT COUNT(*) FROM user WHERE deleted = 0');
+	$count = (int)$stmt->fetchColumn();
+	
+	if ($count > 0) {
+		$response = $response->withStatus(403);
+		$response->getBody()->write(json_encode(['success' => false, 'error' => 'Users already exist']));
+		return $response->withHeader('Content-Type', 'application/json');
+	}
+
+	$data = $request->getParsedBody();
+	$email = $data['email'] ?? null;
+	$firstName = $data['first_name'] ?? null;
+	$lastName = $data['last_name'] ?? null;
+	$password = $data['password'] ?? null;
+
+	if (!$email || !$firstName || !$lastName || !$password) {
+		$response = $response->withStatus(400);
+		$response->getBody()->write(json_encode(['success' => false, 'error' => 'Missing required fields']));
+		return $response->withHeader('Content-Type', 'application/json');
+	}
+
+	$db->beginTransaction();
+	try {
+		$hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+		// First user is always admin
+		$stmt = $db->prepare('INSERT INTO user (email, first_name, last_name, is_admin, password) VALUES (?, ?, ?, 1, ?)');
+		$stmt->execute([$email, $firstName, $lastName, $hashedPassword]);
+		$id = $db->lastInsertId();
+		$db->commit();
+		
+		$response->getBody()->write(json_encode(['success' => true, 'id' => (int)$id]));
+	} catch (Exception $e) {
+		$db->rollBack();
+		$response = $response->withStatus(400);
+		$response->getBody()->write(json_encode(['success' => false, 'error' => $e->getMessage()]));
+	}
+
+	return $response->withHeader('Content-Type', 'application/json');
+});
+
 // Delete a user (soft delete)
 $app->delete('/api/users/delete', function (Request $request, Response $response)
 {
