@@ -3,30 +3,133 @@
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-// Liste des utilisateurs
-$app->get('/api/users/list', $authMiddleware, function (Request $request, Response $response) use ($db) {
-    $stmt = $db->query('SELECT id, email, is_admin FROM users');
-    $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $response->getBody()->write(json_encode($users));
-    return $response->withHeader('Content-Type', 'application/json');
-});
+// List users
+$app->get('/api/users/list', function (Request $request, Response $response)
+{
+	$db = $this->get('db');
 
-// Ajouter ou modifier un utilisateur
-$app->post('/api/users/save', $authMiddleware, $adminMiddleware, function (Request $request, Response $response) use ($db) {
-    $data = $request->getParsedBody();
-    $id = $data['id'] ?? null;
-    $email = $data['email'];
-    $password = password_hash($data['password'], PASSWORD_BCRYPT);
-    $isAdmin = $data['is_admin'] ?? 0;
+	$stmt = $db->query('SELECT id, email, first_name, last_name, is_admin, created_at FROM user WHERE deleted = 0 ORDER BY last_name ASC, first_name ASC');
+	$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    if ($id) {
-        $stmt = $db->prepare('UPDATE users SET email = ?, password = ?, is_admin = ? WHERE id = ?');
-        $stmt->execute([$email, $password, $isAdmin, $id]);
-    } else {
-        $stmt = $db->prepare('INSERT INTO users (email, password, is_admin) VALUES (?, ?, ?)');
-        $stmt->execute([$email, $password, $isAdmin]);
-    }
+	// Normalize types
+	foreach ($rows as &$row) {
+		if (isset($row['is_admin'])) { $row['is_admin'] = (bool)$row['is_admin']; }
+	}
 
-    $response->getBody()->write(json_encode(['success' => true]));
-    return $response->withHeader('Content-Type', 'application/json');
-});
+	$response->getBody()->write(json_encode(['users' => $rows]));
+	return $response->withHeader('Content-Type', 'application/json');
+})->add($adminMiddleware);
+
+// Get single user
+$app->get('/api/users/get', function (Request $request, Response $response)
+{
+	$params = $request->getQueryParams();
+	$id = $params['id'] ?? null;
+
+	if (!$id) {
+		$response = $response->withStatus(400);
+		$response->getBody()->write(json_encode(['error' => 'Missing id']));
+		return $response->withHeader('Content-Type', 'application/json');
+	}
+
+	$db = $this->get('db');
+	$stmt = $db->prepare('SELECT id, email, first_name, last_name, is_admin, created_at FROM user WHERE id = ? AND deleted = 0');
+	$stmt->execute([$id]);
+	$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+	if ($user) {
+		if (isset($user['is_admin'])) { $user['is_admin'] = (bool)$user['is_admin']; }
+		$response->getBody()->write(json_encode(['user' => $user]));
+	} else {
+		$response = $response->withStatus(404);
+		$response->getBody()->write(json_encode(['error' => 'User not found']));
+	}
+
+	return $response->withHeader('Content-Type', 'application/json');
+})->add($adminMiddleware);
+
+// Add or update a user
+$app->post('/api/users/save', function (Request $request, Response $response)
+{
+	$res = true;
+	$error = null;
+
+	// payload can be form or json
+	$data = $request->getParsedBody();
+
+	// id can be query param or body
+	$params = $request->getQueryParams();
+	$id = $params['id'] ?? ($data['id'] ?? null);
+
+	$email = $data['email'] ?? null;
+	$firstName = $data['first_name'] ?? null;
+	$lastName = $data['last_name'] ?? null;
+	$isAdmin = isset($data['is_admin']) ? (bool)$data['is_admin'] : false;
+	$password = $data['password'] ?? null;
+
+	if (!$email || !$firstName || !$lastName || (!$id && !$password)) {
+		$res = false;
+		$error = 'Missing required fields';
+	}
+
+	if ($res) {
+		$db = $this->get('db');
+		$db->beginTransaction();
+		try {
+			if ($id) {
+				if ($password) {
+					$hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+					$stmt = $db->prepare('UPDATE user SET email = ?, first_name = ?, last_name = ?, is_admin = ?, password = ? WHERE id = ?');
+					$stmt->execute([$email, $firstName, $lastName, $isAdmin ? 1 : 0, $hashedPassword, $id]);
+				} else {
+					$stmt = $db->prepare('UPDATE user SET email = ?, first_name = ?, last_name = ?, is_admin = ? WHERE id = ?');
+					$stmt->execute([$email, $firstName, $lastName, $isAdmin ? 1 : 0, $id]);
+				}
+			} else {
+				$hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+				$stmt = $db->prepare('INSERT INTO user (email, first_name, last_name, is_admin, password) VALUES (?, ?, ?, ?, ?)');
+				$stmt->execute([$email, $firstName, $lastName, $isAdmin ? 1 : 0, $hashedPassword]);
+				$id = $db->lastInsertId();
+			}
+			$db->commit();
+		} catch (Exception $e) {
+			$db->rollBack();
+			$res = false;
+			$error = $e->getMessage();
+		}
+	}
+
+	if ($res) {
+		$response->getBody()->write(json_encode(['success' => true, 'id' => (int)$id]));
+	} else {
+		$response = $response->withStatus(400);
+		$response->getBody()->write(json_encode(['success' => false, 'error' => $error]));
+	}
+
+	return $response->withHeader('Content-Type', 'application/json');
+})->add($adminMiddleware);
+
+// Delete a user (soft delete)
+$app->delete('/api/users/delete', function (Request $request, Response $response)
+{
+	$params = $request->getQueryParams();
+	$id = $params['id'] ?? null;
+
+	if (!$id) {
+		$response = $response->withStatus(400);
+		$response->getBody()->write(json_encode(['error' => 'Missing id']));
+		return $response->withHeader('Content-Type', 'application/json');
+	}
+
+	$db = $this->get('db');
+	try {
+		$stmt = $db->prepare('UPDATE user SET deleted = 1 WHERE id = ?');
+		$stmt->execute([$id]);
+		$response->getBody()->write(json_encode(['success' => true]));
+	} catch (Exception $e) {
+		$response = $response->withStatus(400);
+		$response->getBody()->write(json_encode(['success' => false, 'error' => $e->getMessage()]));
+	}
+
+	return $response->withHeader('Content-Type', 'application/json');
+})->add($adminMiddleware);
