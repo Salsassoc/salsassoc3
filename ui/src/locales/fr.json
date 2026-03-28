@@ -186,7 +186,9 @@
 			"period": "Période",
 		  	"memberships_gender": "Répartition du genre des adhérents",
 			"percent": "Pourcentage",
-			"average_age_trend": "Âge moyen des adhérents par année fiscale"
+			"average_age_trend": "Âge moyen des adhérents par année fiscale",
+		  	"membership_type_only": "Adhérent uniquement",
+		  	"membership_type_course": "Adhérent avec cotisation aux cours"
 		}
 	},
 	"models": {

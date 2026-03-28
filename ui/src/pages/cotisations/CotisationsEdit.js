@@ -15,6 +15,7 @@ import PageContentAlertError from '../../layout/PageContentAlertError.js';
 import FormEdit from '../../components/forms/FormEdit.js';
 import FormEditSection from '../../components/forms/FormEditSection.js';
 import FormEditItemSubmit from '../../components/forms/FormEditItemSubmit.js';
+import CotisationType from '../../models/CotisationType.js';
 
 const CotisationsEdit = (props) => {
 
@@ -202,16 +203,9 @@ const CotisationsEdit = (props) => {
 						<Input />
 					</Form.Item>
 
-					<Form.Item name="type" label={i18n.t("models.cotisation.type")} rules={[{ required: true }]}>
-						<Select
-							options={[
-								{ value: 1, label: i18n.t("models.cotisation.type_membership") },
-								{ value: 2, label: i18n.t("models.cotisation.type_course") },
-								{ value: 3, label: i18n.t("models.cotisation.type_donation") },
-								{ value: 4, label: i18n.t("models.cotisation.type_credit") },
-							]}
-						/>
-					</Form.Item>
+ 				<Form.Item name="type" label={i18n.t("models.cotisation.type")} rules={[{ required: true }]}>
+ 					<Select options={CotisationType.getAll()} />
+ 				</Form.Item>
 
 					<Form.Item name={['amount']} label={i18n.t('models.cotisation.amount')} rules={[{ required: true }]}>
 						<InputNumber min={0} step={0.01} />

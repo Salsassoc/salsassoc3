@@ -31,6 +31,14 @@ $app->get('/api/fiscal_years/list', function (Request $request, Response $respon
             WHERE membership.fiscal_year_id = fiscal_year.id
         ) AS membership_count,
         (
+            SELECT COUNT(DISTINCT m.id)
+            FROM membership m
+            LEFT JOIN membership_cotisation mc ON mc.membership_id = m.id
+            LEFT JOIN cotisation c ON c.id = mc.cotisation_id
+            WHERE m.fiscal_year_id = fiscal_year.id
+              AND c.type = 2
+        ) AS memberships_course_count,
+        (
             SELECT COUNT(1)
             FROM membership
             WHERE membership.fiscal_year_id = fiscal_year.id
@@ -140,6 +148,9 @@ $app->get('/api/fiscal_years/list', function (Request $request, Response $respon
             $year['membership_count'] = (int)$year['membership_count'];
             $gender_unknown = $year['membership_count'];
         }
+        if (isset($year['memberships_course_count'])) {
+            $year['memberships_course_count'] = (int)$year['memberships_course_count'];
+        }
         if (isset($year['membership_gender_male'])) {
             $year['membership_gender_male'] = (int)$year['membership_gender_male'];
             $gender_unknown -= $year['membership_gender_male'];
@@ -226,6 +237,14 @@ $app->get('/api/fiscal_years/current', function (Request $request, Response $res
             WHERE membership.fiscal_year_id = fiscal_year.id
         ) AS membership_count,
         (
+            SELECT COUNT(DISTINCT m.id)
+            FROM membership m
+            LEFT JOIN membership_cotisation mc ON mc.membership_id = m.id
+            LEFT JOIN cotisation c ON c.id = mc.cotisation_id
+            WHERE m.fiscal_year_id = fiscal_year.id
+              AND c.type = 2
+        ) AS memberships_course_count,
+        (
             SELECT IFNULL(SUM(membership_cotisation.amount), 0)
             FROM membership
             LEFT JOIN membership_cotisation ON membership_cotisation.membership_id = membership.id
@@ -261,6 +280,9 @@ $app->get('/api/fiscal_years/current', function (Request $request, Response $res
         $row['is_current'] = (bool)($row['is_current'] == "true");
         if (isset($row['membership_count'])) {
             $row['membership_count'] = (int)$row['membership_count'];
+        }
+        if (isset($row['memberships_course_count'])) {
+            $row['memberships_course_count'] = (int)$row['memberships_course_count'];
         }
         if (isset($row['membership_amount'])) {
             $row['membership_amount'] = (float)$row['membership_amount'];

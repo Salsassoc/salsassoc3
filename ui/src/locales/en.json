@@ -175,7 +175,9 @@
 			"period": "Period",
 		  	"memberships_gender": "Membership gender repartition",
 			"percent": "Percent",
-			"average_age_trend": "Average member age by fiscal year"
+			"average_age_trend": "Average member age by fiscal year",
+			"membership_type_only": "Membership only",
+			"membership_type_course": "Membership with course cotisation"
 		}
 	},
 	"models": {
