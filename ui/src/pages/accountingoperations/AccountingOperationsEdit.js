@@ -33,6 +33,8 @@ const AccountingOperationsEdit = (props) => {
 	const [accounts, setAccounts] = React.useState([]);
 	const [projects, setProjects] = React.useState([]);
 
+	const [currentFiscalYears, setCurrentFiscalYears] = React.useState(null);
+
 	// Create form instance
 	const [formInstance] = Form.useForm();
 
@@ -145,6 +147,7 @@ const AccountingOperationsEdit = (props) => {
 		return fetchJSON(url)
 			.then((response) => {
 				const fy = response.result.fiscal_year;
+				setCurrentFiscalYears(fy);
 				return fy ? fy.id : null;
 			});
 	}
@@ -259,6 +262,32 @@ const AccountingOperationsEdit = (props) => {
 	React.useEffect(() => {
 		formInstance.setFieldsValue(dataObject);
 	}, [dataObject]);
+
+	// Handle default values
+	React.useEffect(() => {
+		if(currentFiscalYears) {
+			formInstance.setFieldsValue({
+				fiscalyear_id: currentFiscalYears.id,
+			});
+		}
+	}, [currentFiscalYears]);
+	React.useEffect(() => {
+		if(accounts) {
+			let iBestId = null;
+			accounts.forEach((account => {
+				if(iBestId == null){
+					iBestId = account.id;
+				}else if(account.type == 2 && iBestId > account.id){
+					iBestId = account.id;
+				}
+			}));
+			if(iBestId) {
+				formInstance.setFieldsValue({
+					account_id: iBestId,
+				});
+			}
+		}
+	}, [accounts]);
 
 	return (
 		<PageContentLayout layoutData={getLayoutData()} loadData={loadData}>
