@@ -58,6 +58,16 @@ const AppHeader = () => {
         return "NONE";*/
     }
 
+	function getUserLabel(user){
+		const userObject = user.data;
+		if(userObject.username){
+			return userObject.username;
+		}
+		if(userObject.first_name && userObject.last_name){
+			return userObject.first_name + " " + userObject.last_name;
+		}
+		return userObject.email;
+	}
 
 	function getMenuAccount()
 	{
@@ -66,7 +76,7 @@ const AppHeader = () => {
 		if(shortMode){
 			items.push({
 				key: 'menu-account-username',
-				label: user.getUsername(),
+				label: getUserLabel(user),
 				disabled: true
 			});
 			items.push({
@@ -96,7 +106,7 @@ const AppHeader = () => {
 		return (
 			<Dropdown menu={{ items }} placement="bottomRight" trigger={dropdownTrigger} >
 				<a className="app-header-dropdown-link" onClick={e => e.preventDefault()}>
-					{shortMode ? "" : user.getUsername()} <UserOutlined /><CaretDownOutlined />
+					{shortMode ? "" : getUserLabel(user)} <UserOutlined /><CaretDownOutlined />
 				</a>
 			</Dropdown>
 		);

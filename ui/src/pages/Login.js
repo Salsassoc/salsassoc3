@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Layout, Button, Card, Form, Input, Alert } from 'antd';
 
 import i18n from '../utils/i18n.js';
+import User from '../models/User.js';
 
 import { userService } from '../authentication/user.service.js';
 
@@ -46,8 +47,8 @@ const Login = (props) =>
 		userService.login(username, password)
 			.then(
 				user => {
-					//const objUser = new User(user);
-					//appContext.setUser(objUser);
+					const objUser = new User(user);
+					appContext.setUser(objUser);
 					setError(null);
 					setLoading(false);
 					const { from } = props.router.location.state || { from: { pathname: "/" } };

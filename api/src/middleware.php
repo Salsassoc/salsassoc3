@@ -85,8 +85,6 @@ $adminMiddleware = function (Request $request, $handler) use ($app) {
 		return buildUnauthorizedResponse($app);
 	}
 
-
-
 	if (empty($userData['is_admin'])) {
 		$response = $app->getResponseFactory()->createResponse(403);
 		$response->getBody()->write(json_encode(['error' => 'Forbidden']));
