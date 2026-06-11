@@ -26,6 +26,8 @@ import MembersList from '../pages/members/MembersList.js';
 import MembersEdit from '../pages/members/MembersEdit.js';
 import MembershipsList from '../pages/memberships/MembershipsList.js';
 import MembershipsEdit from '../pages/memberships/MembershipsEdit.js';
+import UsersList from '../pages/users/UsersList.js';
+import UsersEdit from '../pages/users/UsersEdit.js';
 
 export const AppRouteWrapper = ({ component, ...rest }) => {
     const router = {
@@ -155,6 +157,19 @@ const AppRoutes = () => {
         {
             path: "/memberships/edit/:id",
             element: <AppRouteWrapper component={MembershipsEdit} />,
+        },
+        // Users
+        {
+            path: "/users/list",
+            element: <AppRouteWrapper component={UsersList} />,
+        },
+        {
+            path: "/users/add",
+            element: <AppRouteWrapper component={UsersEdit} />,
+        },
+        {
+            path: "/users/edit/:id",
+            element: <AppRouteWrapper component={UsersEdit} />,
         },
     ];
 

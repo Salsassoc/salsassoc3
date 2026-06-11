@@ -4,6 +4,7 @@
 		"settings": "Paramètres",
 		"fiscal_years": "Années fiscales",
 		"cotisations": "Cotisations",
+		"users": "Utilisateurs",
 		"projects": "Projets",
 		"members": "Membres",
 		"memberships": "Adhésions",
@@ -170,6 +171,19 @@
 			"list": "Nombre d'adhésions: {{count}}",
 			"search_name_placeholder": "Nom ou prénom..."
 		},
+		"users": {
+			"title": "Utilisateurs",
+			"remove": "Supprimer l'utilisateur '{{name}}' ?",
+			"list": "Nombre d'utilisateurs: {{count}}",
+			"search_placeholder": "Nom, email..."
+		},
+		"user": {
+			"add_title": "Ajouter un utilisateur",
+			"edit_title": "Modifier un utilisateur",
+			"section_general": "Général",
+			"saved": "L'utilisateur a bien été sauvegardé",
+			"password_extra": "Laisser vide pour ne pas modifier le mot de passe"
+		},
 		"membership": {
 			"add_title": "Ajouter une adhésion",
 			"edit_title": "Modifier une adhésion",
@@ -317,6 +331,14 @@
 			"payment_method_card": "Carte bancaire",
             "payment_method_banktransfert": "Virement",
             "payment_method_helloasso": "HelloAsso"
+		},
+		"user": {
+			"last_name": "Nom",
+			"first_name": "Prénom",
+			"email": "Email",
+			"password": "Mot de passe",
+			"is_admin": "Administrateur",
+			"admin": "Admin"
 		}
 	},
 	"migrations": {

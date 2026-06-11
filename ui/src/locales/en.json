@@ -4,6 +4,7 @@
 		"settings": "Settings",
 		"fiscal_years": "Fiscal years",
 		"cotisations": "Cotisations",
+		"users": "Users",
 		"projects": "Projects",
 		"members": "Members",
 		"memberships": "Memberships",
@@ -159,6 +160,19 @@
 			"list": "Number of memberships: {{count}}",
 			"search_name_placeholder": "Last name or first name..."
 		},
+		"users": {
+			"title": "Users",
+			"remove": "Remove user '{{name}}' ?",
+			"list": "Number of users: {{count}}",
+			"search_placeholder": "Name, email..."
+		},
+		"user": {
+			"add_title": "Add user",
+			"edit_title": "Edit user",
+			"section_general": "General",
+			"saved": "The user has been saved successfully",
+			"password_extra": "Leave empty to keep current password"
+		},
 		"membership": {
 			"add_title": "Add membership",
 			"edit_title": "Edit membership",
@@ -306,6 +320,14 @@
 			"payment_method_card": "Credit card",
 			"payment_method_banktransfert": "Bank transfert",
 			"payment_method_helloasso": "HelloAsso"
+		},
+		"user": {
+			"last_name": "Last name",
+			"first_name": "First name",
+			"email": "Email",
+			"password": "Password",
+			"is_admin": "Administrator",
+			"admin": "Admin"
 		}
 	},
 	"pages": {

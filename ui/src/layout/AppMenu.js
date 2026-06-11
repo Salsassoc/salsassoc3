@@ -107,6 +107,14 @@ export function getAppMenu()
    		exact: true,
    	});
 
+	// Users
+	appMenu.route.routes.push({
+		name: i18n.t('menu.users'),
+		path: getAdminUrl("/users/list"),
+		icon: <UserOutlined />,
+		exact: true,
+	});
+
     // Settings
     /*
     subRoutes = [];
