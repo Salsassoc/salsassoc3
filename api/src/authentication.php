@@ -45,14 +45,14 @@ function isBasicAuthValid(Request $request, &$userData = null): bool
 
     // Check if user table exists
     if($res){
-        $stmt = $db->prepare('SELECT name FROM sqlite_master WHERE type=\'table\' AND name=\'user\';');
+        $stmt = $db->prepare('SELECT COUNT(*) FROM sqlite_master WHERE type=\'table\' AND name=\'user\';');
         $res = $stmt->execute();
-        if($res && $stmt->rowCount() == 1){
+        if($res && $stmt->fetchColumn() == 1){
+            $rowCount = $stmt->fetchColumn();
             $stmt = $db->prepare('SELECT count(id) FROM user');
             $res = $stmt->execute();
             if($res){
                 $count = $stmt->fetch(PDO::FETCH_ASSOC);
-                error_log("count: $count");
                 if($count > 0){
                     $bUseUserTable = true;
                 }
@@ -66,7 +66,6 @@ function isBasicAuthValid(Request $request, &$userData = null): bool
             $stmt = $db->prepare('SELECT id, email, password, first_name, last_name, is_admin FROM user WHERE email = ? AND deleted = 0');
             $stmt->execute([$authUsername]);
             $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
             if ($user && password_verify($authPassword, $user['password'])) {
                 // Remove password from user data before returning
                 unset($user['password']);
