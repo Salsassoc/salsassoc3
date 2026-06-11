@@ -208,13 +208,15 @@ $app->delete('/api/users/delete', function (Request $request, Response $response
         }
 	}
 
-	try {
-		$stmt = $db->prepare('UPDATE user SET deleted = 1 WHERE id = ?');
-		$stmt->execute([$id]);
-	} catch (Exception $e) {
-	    $res = false;
-		$error = $e->getMessage();
-	}
+	if ($res) {
+        try {
+            $stmt = $db->prepare('UPDATE user SET deleted = 1 WHERE id = ?');
+            $stmt->execute([$id]);
+        } catch (Exception $e) {
+            $res = false;
+            $error = $e->getMessage();
+        }
+    }
 
 	if ($res) {
 		$response->getBody()->write(json_encode(['success' => true, 'id' => (int)$id]));
