@@ -13,6 +13,10 @@
 		"accounting_operations": "Operations",
 		"accounting_financial_report": "Financial report"
 	},
+  	"menu_account": {
+	  	"my_account": "My account",
+	  	"logout": "Logout"
+	},
 	"common": {
 		"home": "Home",
 		"add": "Add",

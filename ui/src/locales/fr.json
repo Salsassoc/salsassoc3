@@ -13,6 +13,10 @@
 		"accounting_operations": "Opérations",
 		"accounting_financial_report": "Bilan financier"
 	},
+	"menu_account": {
+	  "my_account": "Mon compte",
+	  "logout": "Se deconnecter"
+	},
 	"common": {
 		"home": "Acceuil",
 		"add": "Ajouter",
