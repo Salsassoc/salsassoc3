@@ -78,7 +78,9 @@ export class FetchJsonResultError extends FetchResultError {
         let errorMsgArr = [];
         if (this.json.errors && this.json.errors.main_error) {
             errorMsgArr.push(this.json.errors.main_error.text);
-        } 
+        } else if (this.json.error) {
+            errorMsgArr.push(this.json.error);
+        }
         
         if (this.json.errors && this.json.errors.list) {
             errorMsgArr = errorMsgArr.concat(this._joinErrorsArray(this.json.errors.list));
@@ -90,6 +92,8 @@ export class FetchJsonResultError extends FetchResultError {
         let errors = [];
         if (this.json.errors && this.json.errors.main_error) {
             errors.push(this.json.errors.main_error.text);
+        } else if (this.json.error) {
+            errors.push(this.json.error);
         }
         if (this.json.errors && this.json.errors.list) {
             for (let i = 0; i < this.json.errors.list.length; i++) {

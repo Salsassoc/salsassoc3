@@ -17,7 +17,12 @@ export class AppError {
         || error instanceof FetchXmlResultError) {
             this.is_fatal = false;
             this.message = null;
-            this.description = error.errorString();
+            let description = error.errorString();
+            if (description && description.includes('.')) {
+                this.description = i18n.t(description);
+            } else {
+                this.description = description;
+            }
         }
     }
 

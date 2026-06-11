@@ -171,7 +171,8 @@
 			"edit_title": "Edit user",
 			"section_general": "General",
 			"saved": "The user has been saved successfully",
-			"password_extra": "Leave empty to keep current password"
+			"password_extra": "Leave empty to keep current password",
+			"error_at_least_one_admin": "There must be at least one administrator."
 		},
 		"membership": {
 			"add_title": "Add membership",

@@ -74,6 +74,20 @@ $app->post('/api/users/save', function (Request $request, Response $response)
 
 	if ($res) {
 		$db = $this->get('db');
+
+		// Check at least one admin security
+		if ($id && !$isAdmin) {
+			$stmt = $db->prepare('SELECT COUNT(*) FROM user WHERE is_admin = 1 AND deleted = 0 AND id <> ?');
+			$stmt->execute([$id]);
+            $adminCount = (int)$stmt->fetchColumn();
+            if ($adminCount <= 1) {
+                $res = false;
+                $error = 'Must have at least one administrator';
+            }
+		}
+    }
+
+	if ($res) {
 		$db->beginTransaction();
 		try {
 			if ($id) {
@@ -179,13 +193,34 @@ $app->delete('/api/users/delete', function (Request $request, Response $response
 	}
 
 	$db = $this->get('db');
+
+	// Check at least one admin security
+	$stmt = $db->prepare('SELECT is_admin FROM user WHERE id = ? AND deleted = 0');
+	$stmt->execute([$id]);
+	$userToDelete = $stmt->fetch(PDO::FETCH_ASSOC);
+	if ($userToDelete && (bool)$userToDelete['is_admin']) {
+	    $stmt = $db->prepare('SELECT COUNT(*) FROM user WHERE is_admin = 1 AND deleted = 0 AND id <> ?');
+	    $stmt->execute([$id]);
+		$adminCount = (int)$stmt->fetchColumn();
+        if ($adminCount <= 1) {
+            $res = false;
+            $error = 'Must have at least one administrator';
+        }
+	}
+
 	try {
 		$stmt = $db->prepare('UPDATE user SET deleted = 1 WHERE id = ?');
 		$stmt->execute([$id]);
-		$response->getBody()->write(json_encode(['success' => true]));
 	} catch (Exception $e) {
+	    $res = false;
+		$error = $e->getMessage();
+	}
+
+	if ($res) {
+		$response->getBody()->write(json_encode(['success' => true, 'id' => (int)$id]));
+	} else {
 		$response = $response->withStatus(400);
-		$response->getBody()->write(json_encode(['success' => false, 'error' => $e->getMessage()]));
+		$response->getBody()->write(json_encode(['success' => false, 'error' => $error]));
 	}
 
 	return $response->withHeader('Content-Type', 'application/json');
