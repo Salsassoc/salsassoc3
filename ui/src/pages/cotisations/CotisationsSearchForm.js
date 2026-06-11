@@ -11,17 +11,16 @@ const CotisationsSearchForm = (props) => {
 
 	const fiscalYears = props.fiscalYears || [];
 
-	const fiscalYearOptions = [{ value: '', label: i18n.language === 'fr' ? 'Toutes' : 'All' }].concat(
+	const fiscalYearOptions = [{ value: '', label: i18n.t('models.fiscal_years.all') }].concat(
 		(fiscalYears || []).map(y => ({ value: y.id, label: y.title }))
 	);
 	const typeOptions = [
-		{ value: '', label: i18n.language === 'fr' ? 'Tous' : 'All' },
+		{ value: '', label: i18n.t('models.cotisation.type_all') },
 		{ value: 1, label: i18n.t('models.cotisation.type_membership') },
 		{ value: 2, label: i18n.t('models.cotisation.type_course') },
 		{ value: 3, label: i18n.t('models.cotisation.type_donation') },
 		{ value: 4, label: i18n.t('models.cotisation.type_credit') },
 	];
-
 
 	const getFields = () => {
 		return (

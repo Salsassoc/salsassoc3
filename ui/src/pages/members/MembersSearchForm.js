@@ -15,7 +15,7 @@ const MembersSearchForm = (props) => {
     const defaultSearch = props.defaultSearch;
 
 	// Reflect default selection when provided/changes
- React.useEffect(() => {
+    React.useEffect(() => {
         if (defaultFiscalYearId !== undefined && defaultFiscalYearId !== null) {
             form.setFieldsValue({ fiscal_year_id: defaultFiscalYearId });
         }
@@ -35,12 +35,12 @@ const MembersSearchForm = (props) => {
         }
     }, [defaultSearch]);
 
- const fiscalYearOptions = [{ value: '', label: i18n.language === 'fr' ? 'Toutes' : 'All' }].concat(
+ const fiscalYearOptions = [{ value: '', label: i18n.t('models.fiscal_years.all') }].concat(
         (fiscalYears || []).map(y => ({ value: y.id, label: y.title }))
     );
 
     const genderOptions = [
-        { value: '', label: i18n.language === 'fr' ? 'Tous' : 'All' },
+        { value: '', label: i18n.t('models.member.gender_all') },
         { value: 0, label: i18n.t('models.member.gender_unknown') },
         { value: 1, label: i18n.t('models.member.gender_male') },
         { value: 2, label: i18n.t('models.member.gender_female') },
