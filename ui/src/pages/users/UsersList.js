@@ -102,6 +102,14 @@ const UsersList = (props) => {
 		return null;
 	}
 
+	function renderIsActive(_text, record)
+	{
+		if (record.deleted) {
+			return <Tag color="error">{i18n.t('models.user.inactive')}</Tag>;
+		}
+		return <Tag color="success">{i18n.t('models.user.active')}</Tag>;
+	}
+
 	function renderActions(_text, record)
 	{
 		return (
@@ -139,6 +147,12 @@ const UsersList = (props) => {
 				dataIndex: 'is_admin',
 				key: 'is_admin',
 				render: renderIsAdmin
+			},
+			{
+				title: i18n.t('models.user.is_active'),
+				dataIndex: 'deleted',
+				key: 'is_active',
+				render: renderIsActive
 			},
 			{
 				title: i18n.t('common.actions'),

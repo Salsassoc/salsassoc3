@@ -45,6 +45,7 @@ const UsersEdit = (props) => {
 				last_name: "",
 				email: "",
 				is_admin: false,
+				is_active: true,
 				password: "",
 			}
 		}
@@ -72,6 +73,7 @@ const UsersEdit = (props) => {
 		return fetchJSON(url)
 			.then((response) => {
 				const newDataObject = response.result.user;
+				newDataObject.is_active = !newDataObject.deleted;
 				setDataObject(newDataObject);
 				formInstance.setFieldsValue(newDataObject);
 			});
@@ -90,9 +92,14 @@ const UsersEdit = (props) => {
 		}
 		let url = serviceInstance.createServiceUrl(path);
 
+		const body = {
+			...values,
+			deleted: !values.is_active
+		};
+
 		const opts = {
 			method: "POST",
-			body: JSON.stringify(values)
+			body: JSON.stringify(body)
 		};
 
 		fetchJSON(url, opts)
@@ -170,6 +177,10 @@ const UsersEdit = (props) => {
 					</Form.Item>
 
 					<Form.Item name={['is_admin']} label={i18n.t("models.user.is_admin")} valuePropName="checked">
+						<Switch />
+					</Form.Item>
+
+					<Form.Item name={['is_active']} label={i18n.t("models.user.is_active")} valuePropName="checked">
 						<Switch />
 					</Form.Item>
 

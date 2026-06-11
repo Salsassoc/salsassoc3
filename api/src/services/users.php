@@ -8,12 +8,13 @@ $app->get('/api/users/list', function (Request $request, Response $response)
 {
 	$db = $this->get('db');
 
-	$stmt = $db->query('SELECT id, email, first_name, last_name, is_admin, created_at FROM user WHERE deleted = 0 ORDER BY last_name ASC, first_name ASC');
+	$stmt = $db->query('SELECT id, email, first_name, last_name, is_admin, deleted, created_at FROM user ORDER BY last_name ASC, first_name ASC');
 	$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 	// Normalize types
 	foreach ($rows as &$row) {
 		if (isset($row['is_admin'])) { $row['is_admin'] = (bool)$row['is_admin']; }
+		if (isset($row['deleted'])) { $row['deleted'] = (bool)$row['deleted']; }
 	}
 
 	$response->getBody()->write(json_encode(['users' => $rows]));
@@ -33,12 +34,13 @@ $app->get('/api/users/get', function (Request $request, Response $response)
 	}
 
 	$db = $this->get('db');
-	$stmt = $db->prepare('SELECT id, email, first_name, last_name, is_admin, created_at FROM user WHERE id = ? AND deleted = 0');
+	$stmt = $db->prepare('SELECT id, email, first_name, last_name, is_admin, deleted, created_at FROM user WHERE id = ?');
 	$stmt->execute([$id]);
 	$user = $stmt->fetch(PDO::FETCH_ASSOC);
 
 	if ($user) {
 		if (isset($user['is_admin'])) { $user['is_admin'] = (bool)$user['is_admin']; }
+		if (isset($user['deleted'])) { $user['deleted'] = (bool)$user['deleted']; }
 		$response->getBody()->write(json_encode(['user' => $user]));
 	} else {
 		$response = $response->withStatus(404);
@@ -65,6 +67,7 @@ $app->post('/api/users/save', function (Request $request, Response $response)
 	$firstName = $data['first_name'] ?? null;
 	$lastName = $data['last_name'] ?? null;
 	$isAdmin = isset($data['is_admin']) ? (bool)$data['is_admin'] : false;
+	$deleted = isset($data['deleted']) ? (bool)$data['deleted'] : false;
 	$password = $data['password'] ?? null;
 
 	if (!$email || !$firstName || !$lastName || (!$id && !$password)) {
@@ -76,14 +79,21 @@ $app->post('/api/users/save', function (Request $request, Response $response)
 		$db = $this->get('db');
 
 		// Check at least one admin security
-		if ($id && !$isAdmin) {
-			$stmt = $db->prepare('SELECT COUNT(*) FROM user WHERE is_admin = 1 AND deleted = 0 AND id <> ?');
+		if ($id && (!$isAdmin || $deleted)) {
+			// If we are disabling admin or removing admin rights, check if there is another admin
+			$stmt = $db->prepare('SELECT is_admin, deleted FROM user WHERE id = ?');
 			$stmt->execute([$id]);
-            $adminCount = (int)$stmt->fetchColumn();
-            if ($adminCount <= 1) {
-                $res = false;
-                $error = 'Must have at least one administrator';
-            }
+			$currentUser = $stmt->fetch(PDO::FETCH_ASSOC);
+			
+			if ($currentUser && (bool)$currentUser['is_admin'] && !(bool)$currentUser['deleted']) {
+				$stmt = $db->prepare('SELECT COUNT(*) FROM user WHERE is_admin = 1 AND deleted = 0 AND id <> ?');
+				$stmt->execute([$id]);
+				$adminCount = (int)$stmt->fetchColumn();
+				if ($adminCount < 1) {
+					$res = false;
+					$error = 'Must have at least one administrator';
+				}
+			}
 		}
     }
 
@@ -93,11 +103,11 @@ $app->post('/api/users/save', function (Request $request, Response $response)
 			if ($id) {
 				if ($password) {
 					$hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-					$stmt = $db->prepare('UPDATE user SET email = ?, first_name = ?, last_name = ?, is_admin = ?, password = ? WHERE id = ?');
-					$stmt->execute([$email, $firstName, $lastName, $isAdmin ? 1 : 0, $hashedPassword, $id]);
+					$stmt = $db->prepare('UPDATE user SET email = ?, first_name = ?, last_name = ?, is_admin = ?, deleted = ?, password = ? WHERE id = ?');
+					$stmt->execute([$email, $firstName, $lastName, $isAdmin ? 1 : 0, $deleted ? 1 : 0, $hashedPassword, $id]);
 				} else {
-					$stmt = $db->prepare('UPDATE user SET email = ?, first_name = ?, last_name = ?, is_admin = ? WHERE id = ?');
-					$stmt->execute([$email, $firstName, $lastName, $isAdmin ? 1 : 0, $id]);
+					$stmt = $db->prepare('UPDATE user SET email = ?, first_name = ?, last_name = ?, is_admin = ?, deleted = ? WHERE id = ?');
+					$stmt->execute([$email, $firstName, $lastName, $isAdmin ? 1 : 0, $deleted ? 1 : 0, $id]);
 				}
 			} else {
 				$hashedPassword = password_hash($password, PASSWORD_BCRYPT);

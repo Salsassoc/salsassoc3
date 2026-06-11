@@ -328,7 +328,10 @@
 			"email": "Email",
 			"password": "Password",
 			"is_admin": "Administrator",
-			"admin": "Admin"
+			"admin": "Admin",
+			"is_active": "Active",
+			"active": "Active",
+			"inactive": "Inactive"
 		}
 	},
 	"pages": {

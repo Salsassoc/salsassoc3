@@ -339,7 +339,10 @@
 			"email": "Email",
 			"password": "Mot de passe",
 			"is_admin": "Administrateur",
-			"admin": "Admin"
+			"admin": "Admin",
+			"is_active": "Actif",
+			"active": "Actif",
+			"inactive": "Inactif"
 		}
 	},
 	"migrations": {
