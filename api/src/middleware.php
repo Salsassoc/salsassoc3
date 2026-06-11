@@ -71,19 +71,27 @@ final class Authorization
 
 // Middleware to check authentication via HTTP Basic
 $authMiddleware = function (Request $request, $handler) use ($app) {
-    $hasBasic = isBasicAuthValid($request);
-    if (!($hasBasic)) {
-        return buildUnauthorizedResponse($app);
-    }
-    return $handler->handle($request);
+	if (!(isBasicAuthValid($request))) {
+		return buildUnauthorizedResponse($app);
+	}
+	return $handler->handle($request);
 };
 
-// Middleware to check if the user is admin (same as authenticated for now)
+// Middleware to check if the user is admin
 $adminMiddleware = function (Request $request, $handler) use ($app) {
-    $username = null;
-    $hasBasic = isBasicAuthValid($request, $username);
-    if (!($hasBasic)) {
-        return buildUnauthorizedResponse($app);
-    }
-    return $handler->handle($request);
+	$userData = null;
+	$hasBasic = isBasicAuthValid($request, $userData);
+	if (!($hasBasic)) {
+		return buildUnauthorizedResponse($app);
+	}
+
+
+
+	if (empty($userData['is_admin'])) {
+		$response = $app->getResponseFactory()->createResponse(403);
+		$response->getBody()->write(json_encode(['error' => 'Forbidden']));
+		return $response->withHeader('Content-Type', 'application/json');
+	}
+
+	return $handler->handle($request);
 };

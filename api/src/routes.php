@@ -20,17 +20,17 @@ $app->post('/api/data', function (Request $request, Response $response) {
 
 // Simple session-based authentication routes
 $app->post('/api/authenticate', function (Request $request, Response $response) use ($app) {
-    $username = null;
-    $hasBasic = isBasicAuthValid($request, $username);
-    if (!($hasBasic)) {
-        return buildUnauthorizedResponse($app);
-    }
+	$userData = null;
+	$hasBasic = isBasicAuthValid($request, $userData);
+	if (!($hasBasic)) {
+		return buildUnauthorizedResponse($app);
+	}
 
-    $user = ['user' => ['username' => $username]];
+	$user = ['user' => $userData];
 
-    $resp = $app->getResponseFactory()->createResponse(200);
-    $resp->getBody()->write(json_encode($user));
-    return $resp->withHeader('Content-Type', 'application/json');
+	$resp = $app->getResponseFactory()->createResponse(200);
+	$resp->getBody()->write(json_encode($user));
+	return $resp->withHeader('Content-Type', 'application/json');
 });
 
 require __DIR__ . '/services/fiscal_years.php';

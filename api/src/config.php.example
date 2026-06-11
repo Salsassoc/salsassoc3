@@ -1,11 +1,6 @@
 <?php
 
 // Application configuration
-// Change these values to set your login, password and database path
-
-// Simple credentials for backend authentication
-$LOGIN_USERNAME = 'admin';
-$LOGIN_PASSWORD = 'password';
 
 // Path to the SQLite database file used by the API
 // Default points to the project-level db.sqlite next to this src folder
