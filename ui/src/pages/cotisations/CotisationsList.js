@@ -28,8 +28,8 @@ const CotisationsList = (props) => {
 	const [items, setItems] = React.useState([]);
 	const [fiscalYears, setFiscalYears] = React.useState([]);
 	const [filter, setFilter] = React.useState({
-		fiscalYearId: null,
-		cotisationType: null,
+		fiscalYearId: '',
+		cotisationType: '',
 	});
 
 	// Data loading and initialization
@@ -234,6 +234,7 @@ const CotisationsList = (props) => {
 	const form = (
 		<CotisationsSearchForm
 			fiscalYears={fiscalYears}
+			filter={filter}
 			onFinish={onFormSearchFinished}
 		/>
 	);

@@ -37,11 +37,11 @@ const AccountingOperationsList = (props) => {
 	const [categories, setCategories] = React.useState([]);
 	const [projects, setProjects] = React.useState([]);
 	const [filter, setFilter] = React.useState({
-		fiscalYearId: null,
-		year: null,
-		accountingAccountId: null,
-		categoryId: null,
-		projectId: null,
+		fiscalYearId: '',
+		year: '',
+		accountingAccountId: '',
+		categoryId: '',
+		projectId: '',
 		amountMin: null,
 		amountMax: null,
 		sortBy: null,
@@ -365,9 +365,7 @@ const AccountingOperationsList = (props) => {
 	const form = (
 		<AccountingOperationsSearchForm
 			fiscalYears={fiscalYears}
-			defaultFiscalYearId={filter.fiscalYearId}
-			defaultAccountId={filter.accountingAccountId}
-			defaultProjectId={filter.projectId}
+			filter={filter}
 			accounts={accounts}
 			categories={categories}
 			projects={projects}

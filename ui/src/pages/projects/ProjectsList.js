@@ -30,8 +30,8 @@ const ProjectsList = (props) => {
 	const [items, setItems] = React.useState([]);
 	const [fiscalYears, setFiscalYears] = React.useState([]);
 	const [filter, setFilter] = React.useState({
-		fiscalYearId: null,
-		name: null,
+		fiscalYearId: '',
+		name: '',
 	});
 
 	// Data loading and initialization
@@ -241,6 +241,7 @@ const ProjectsList = (props) => {
 		<ProjectsSearchForm
 			fiscalYears={fiscalYears}
 			onFinish={onFormSearchFinished}
+			filter={filter}
 		/>
 	);
 

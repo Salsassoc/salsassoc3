@@ -10,33 +10,10 @@ const AccountingOperationsSearchForm = (props) => {
 	const [form] = Form.useForm();
 
 	const fiscalYears = props.fiscalYears || [];
-	const defaultFiscalYearId = props.defaultFiscalYearId;
-	const defaultAccountId = props.defaultAccountId;
-	const defaultProjectId = props.defaultProjectId;
 	const accounts = props.accounts || [];
 	const categories = props.categories || [];
 	const projects = props.projects || [];
-
-	// Reflect default selection when provided/changes
-	React.useEffect(() => {
-		if (defaultFiscalYearId !== undefined && defaultFiscalYearId !== null) {
-			form.setFieldsValue({ fiscal_year_id: defaultFiscalYearId });
-		}
-	}, [defaultFiscalYearId]);
-
-	// Reflect default account selection when provided/changes
-	React.useEffect(() => {
-		if (defaultAccountId !== undefined && defaultAccountId !== null) {
-		    form.setFieldsValue({ accounting_account_id: defaultAccountId });
-		}
-	}, [defaultAccountId]);
-
-	// Reflect default project selection when provided/changes
-	React.useEffect(() => {
-		if (defaultProjectId !== undefined && defaultProjectId !== null) {
-			form.setFieldsValue({ project_id: defaultProjectId });
-		}
-	}, [defaultProjectId]);
+	const filter = props.filter;
 
 	const currentYear = new Date().getFullYear();
 	const years = [];
@@ -140,22 +117,22 @@ const AccountingOperationsSearchForm = (props) => {
     	);
   };
 
-  return (
-   	<AdvancedSearchForm
-	      form={form}
-	      onFinish={props.onFinish}
+	return (
+	<AdvancedSearchForm
+		form={form}
+		onFinish={props.onFinish}
 		initialValues={{
-			fiscal_year_id: defaultFiscalYearId ?? '',
-			year: '',
-			accounting_account_id: defaultAccountId ?? '',
-			accounting_operations_category: '',
-			project_id: defaultProjectId ?? '',
+			fiscal_year_id: filter.fiscalYearId,
+			year: filter.year,
+			accounting_account_id: filter.accountingAccountId,
+			accounting_operations_category: filter.categoryId,
+			project_id: filter.projectId,
 			sort_by: ''
 		}}
-	    >
-        {getFields()}
-    </AdvancedSearchForm>
-  );
+		    >
+		    {getFields()}
+		</AdvancedSearchForm>
+	);
 };
 
 export default AccountingOperationsSearchForm;

@@ -10,32 +10,16 @@ const MembersSearchForm = (props) => {
     const [form] = Form.useForm();
 
     const fiscalYears = props.fiscalYears || [];
-    const defaultFiscalYearId = props.defaultFiscalYearId;
-    const defaultGender = props.defaultGender;
-    const defaultSearch = props.defaultSearch;
+    const filter = props.filter;
 
-	// Reflect default selection when provided/changes
+	// Update the default fiscal year
     React.useEffect(() => {
-        if (defaultFiscalYearId !== undefined && defaultFiscalYearId !== null) {
-            form.setFieldsValue({ fiscal_year_id: defaultFiscalYearId });
-        }
-    }, [defaultFiscalYearId]);
+		if(filter.fiscalYearId != null) {
+			form.setFieldsValue({fiscal_year_id: filter.fiscalYearId});
+		}
+    }, [filter]);
 
-    // Reflect default gender when provided/changes
-    React.useEffect(() => {
-        if (defaultGender !== undefined) {
-            form.setFieldsValue({ gender: defaultGender });
-        }
-    }, [defaultGender]);
-
-    // Reflect default search when provided/changes
-    React.useEffect(() => {
-        if (defaultSearch !== undefined) {
-            form.setFieldsValue({ search: defaultSearch });
-        }
-    }, [defaultSearch]);
-
- const fiscalYearOptions = [{ value: '', label: i18n.t('models.fiscal_years.all') }].concat(
+    const fiscalYearOptions = [{ value: '', label: i18n.t('models.fiscal_years.all') }].concat(
         (fiscalYears || []).map(y => ({ value: y.id, label: y.title }))
     );
 
@@ -48,7 +32,7 @@ const MembersSearchForm = (props) => {
 
 	const getFields = () => {
 		return (
-   <Fragment>
+            <Fragment>
                 <Form.Item
                     name={`fiscal_year_id`}
                     label={i18n.t("models.cotisation.fiscal_year")}
@@ -90,6 +74,11 @@ const MembersSearchForm = (props) => {
     <AdvancedSearchForm
       form={form}
       onFinish={props.onFinish}
+      initialValues={{
+	      fiscal_year_id: filter.fiscalYearId,
+	      gender: filter.gender,
+	      search: filter.search,
+      }}
     >
         {getFields()}
     </AdvancedSearchForm>

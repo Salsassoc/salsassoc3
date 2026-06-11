@@ -10,6 +10,7 @@ const CotisationsSearchForm = (props) => {
 	const [form] = Form.useForm();
 
 	const fiscalYears = props.fiscalYears || [];
+	const filter = props.filter;
 
 	const fiscalYearOptions = [{ value: '', label: i18n.t('models.fiscal_years.all') }].concat(
 		(fiscalYears || []).map(y => ({ value: y.id, label: y.title }))
@@ -56,6 +57,10 @@ const CotisationsSearchForm = (props) => {
     <AdvancedSearchForm
       form={form}
       onFinish={props.onFinish}
+      initialValues={{
+	      fiscal_year_id: filter.fiscalYearId,
+	      cotisation_type: filter.cotisationType,
+      }}
     >
         {getFields()}
     </AdvancedSearchForm>

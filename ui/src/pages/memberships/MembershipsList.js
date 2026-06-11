@@ -152,9 +152,7 @@ const MembershipsList = (props) => {
 	const form = (
 		<MembershipsSearchForm
 			fiscalYears={fiscalYears}
-			defaultFiscalYearId={filter.fiscalYearId}
-			defaultGender={filter.gender}
-			defaultSearch={filter.search}
+			filter={filter}
 			onFinish={onFormSearchFinished}
 		/>
 	);
