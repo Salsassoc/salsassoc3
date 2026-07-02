@@ -272,7 +272,7 @@ const AccountingOperationsEdit = (props) => {
 		}
 	}, [currentFiscalYears]);
 	React.useEffect(() => {
-		if(accounts) {
+		if(accounts && isModeAdd()) {
 			let iBestId = null;
 			accounts.forEach((account => {
 				if(iBestId == null){
