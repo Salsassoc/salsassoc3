@@ -1,6 +1,6 @@
 import React from 'react'
 import {Link} from "react-router-dom";
-import {Space, Popconfirm, Table, Tag} from 'antd';
+import {Space, Popconfirm, Table, Tag, Typography} from 'antd';
 import {EditOutlined, DeleteOutlined} from '@ant-design/icons';
 
 import dayjs from 'dayjs';
@@ -197,7 +197,12 @@ const AccountingOperationsList = (props) => {
 	}
 
 	function renderLabel(_text, record){
-		return <span>{record.label}</span>;
+		return (
+			<span>
+				{record.label}
+				{record.provider ? <Typography.Text type="secondary">&nbsp;- {record.provider}</Typography.Text> : null}
+			</span>
+		);
 	}
 
 	function renderNumber(_text, record){

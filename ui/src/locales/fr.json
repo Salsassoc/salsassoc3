@@ -273,6 +273,7 @@
 			"date_value": "Date",
 			"date_effective": "Date effective",
 			"label": "Libellé",
+			"provider": "Fournisseur",
 			"op_number": "Numéro",
 			"category": "Catégorie",
 			"category_account_number": "Numéro du compte de la catégorie",

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Form, Input, Button, DatePicker, Select, InputNumber, Switch} from 'antd';
+import {Form, Input, Button, DatePicker, Select, InputNumber, Switch, AutoComplete} from 'antd';
 
 import dayjs from 'dayjs';
 
@@ -32,6 +32,7 @@ const AccountingOperationsEdit = (props) => {
 	const [categories, setCategories] = React.useState([]);
 	const [accounts, setAccounts] = React.useState([]);
 	const [projects, setProjects] = React.useState([]);
+	const [providerOptions, setProviderOptions] = React.useState([]);
 
 	const [currentFiscalYears, setCurrentFiscalYears] = React.useState(null);
 
@@ -52,6 +53,7 @@ const AccountingOperationsEdit = (props) => {
 				date_value: null,
 				date_effective: null,
 				label: "",
+				provider: "",
 				category: null,
 				op_method: 0,
 				op_number: "",
@@ -88,6 +90,7 @@ const AccountingOperationsEdit = (props) => {
 			.then(_result => loadFiscalYears())
 			.then(_result => loadCategories())
 			.then(_result => loadAccounts())
+			.then(_result => loadProviders())
 			.then(_result => initProjects());
 	}
 
@@ -137,6 +140,17 @@ const AccountingOperationsEdit = (props) => {
 		return fetchJSON(url)
 			.then((response) => {
 				setAccounts(response.result.accounting_accounts || []);
+			});
+	}
+
+	// Load provider suggestions (distinct providers from operations, most recently used first)
+	function loadProviders()
+	{
+		const url = serviceInstance.createServiceUrl("/service/provider/list?order_by=last_usage");
+		return fetchJSON(url)
+			.then((response) => {
+				const providers = response.result.providers || [];
+				setProviderOptions(providers.map(p => ({ value: p.name, label: p.name })));
 			});
 	}
 
@@ -314,6 +328,14 @@ const AccountingOperationsEdit = (props) => {
 
 					<Form.Item name={['label']} label={i18n.t("models.accounting_operation.label")} rules={[{ required: true }]}>
 						<Input />
+					</Form.Item>
+
+					<Form.Item name={['provider']} label={i18n.t("models.accounting_operation.provider")}>
+						<AutoComplete
+							options={providerOptions}
+							onFocus={loadProviders}
+							allowClear
+						/>
 					</Form.Item>
 
 					<Form.Item name={['date_value']} label={i18n.t("models.accounting_operation.date_value")}>

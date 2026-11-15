@@ -187,6 +187,7 @@ $app->post('/api/accounting/operations/save', function (Request $request, Respon
     $fiscalYearId = isset($data['fiscalyear_id']) ? (int)$data['fiscalyear_id'] : (isset($data['fiscal_year_id']) ? (int)$data['fiscal_year_id'] : null);
     $accountId = isset($data['account_id']) ? (int)$data['account_id'] : null;
     $labelBank = $data['label_bank'] ?? '';
+    $provider = (isset($data['provider']) && trim($data['provider']) !== '') ? trim($data['provider']) : null;
 
     // Validation minimal
     if (!$label || $fiscalYearId === null) {
@@ -212,17 +213,17 @@ $app->post('/api/accounting/operations/save', function (Request $request, Respon
         $db->beginTransaction();
         try {
             if ($id) {
-                $stmt = $db->prepare('UPDATE accounting_operation 
-                    SET date_value = ?, label = ?, category = ?, op_method = ?, op_method_number = ?, amount_debit = ?, amount_credit = ?, date_effective = ?, project_id = ?, checked = ?, fiscalyear_id = ?, account_id = ?, label_bank = ?
+                $stmt = $db->prepare('UPDATE accounting_operation
+                    SET date_value = ?, label = ?, provider = ?, category = ?, op_method = ?, op_method_number = ?, amount_debit = ?, amount_credit = ?, date_effective = ?, project_id = ?, checked = ?, fiscalyear_id = ?, account_id = ?, label_bank = ?
                     WHERE id = ?');
                 $stmt->execute([
-                    $dateValue, $label, $category, $opMethod, $opNumber, $amountDebit, $amountCredit, $dateEffective, $projectId, $checked, $fiscalYearId, $accountId, $labelBank, $id
+                    $dateValue, $label, $provider, $category, $opMethod, $opNumber, $amountDebit, $amountCredit, $dateEffective, $projectId, $checked, $fiscalYearId, $accountId, $labelBank, $id
                 ]);
             } else {
-                $stmt = $db->prepare('INSERT INTO accounting_operation (date_value, label, category, op_method, op_method_number, amount_debit, amount_credit, date_effective, project_id, checked, fiscalyear_id, account_id, label_bank)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+                $stmt = $db->prepare('INSERT INTO accounting_operation (date_value, label, provider, category, op_method, op_method_number, amount_debit, amount_credit, date_effective, project_id, checked, fiscalyear_id, account_id, label_bank)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
                 $stmt->execute([
-                    $dateValue, $label, $category, $opMethod, $opNumber, $amountDebit, $amountCredit, $dateEffective, $projectId, $checked, $fiscalYearId, $accountId, $labelBank
+                    $dateValue, $label, $provider, $category, $opMethod, $opNumber, $amountDebit, $amountCredit, $dateEffective, $projectId, $checked, $fiscalYearId, $accountId, $labelBank
                 ]);
                 $id = $db->lastInsertId();
             }

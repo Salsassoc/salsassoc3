@@ -262,6 +262,7 @@
 			"date_value": "Date",
 			"date_effective": "Effective date",
 			"label": "Label",
+			"provider": "Provider",
 			"op_number": "Number",
 			"category": "Category",
 			"category_account_number": "Category account number",
